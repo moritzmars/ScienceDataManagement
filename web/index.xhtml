@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:a4j="http://richfaces.org/a4j"
+                xmlns:rich="http://richfaces.org/rich">   
+    <h:form id="systemInstanceMangementForm">
+        <h:head>
+            <title>Facelet Title</title>
+        </h:head>
+        <h:body>
+
+            <rich:tabPanel switchType="server" id="myTabPanel" headerPosition="top" activeItem="#{indexManagement.tabSelected}">
+                <a4j:ajax event="itemchange" onerror="handleAjaxError" listener="" render="myTabPanel" />
+
+                <rich:tab id="searchTab" header="Search">
+                    <ui:include src="SearchManagement.xhtml">
+                    </ui:include>
+                </rich:tab>
+                <rich:tab id="searchDefinition" header="Search definition">
+                    <ui:include src="SearchDefinitionManagement.xhtml">
+                    </ui:include>
+                </rich:tab>
+                <rich:tab id="searchHistory" header="Search history">
+
+                    <ui:include src="SearchHistoryManagement.xhtml">
+                    </ui:include>
+
+                </rich:tab>
+                 <rich:tab id="searchAnalyticsManagement" header="Search analytics management">
+
+                    <ui:include src="SearchAnalyticsManagement.xhtml">
+                    </ui:include>
+
+                </rich:tab>
+                <rich:tab id="systemInstanceManagement" header="System Instance Management">
+                    <ui:include src="SystemInstanceManagement.xhtml">
+                    </ui:include>
+                </rich:tab>
+                <rich:tab id="DataExportInstanceManagement" header="Data Export Instance Management">
+                    <ui:include src="DataExportInstanceManagement.xhtml">
+                    </ui:include>
+                </rich:tab>
+
+                <rich:tab id="loggingManagement" header="Logging Management">
+                    <ui:include src="LoggingManagement.xhtml">
+                    </ui:include>
+                </rich:tab>
+                <rich:tab id="settings" header="Settings">
+                    <ui:include src="SettingsManagement.xhtml">
+                    </ui:include>
+                </rich:tab>
+
+            </rich:tabPanel>
+        </h:body>
+    </h:form>
+
+</ui:composition>
+
+

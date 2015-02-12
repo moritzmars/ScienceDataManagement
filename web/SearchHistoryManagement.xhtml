@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:ui="http://java.sun.com/jsf/facelets" 
+                xmlns:a4j="http://richfaces.org/a4j"
+                xmlns:rich="http://richfaces.org/rich">
+    <h:body>
+          <h:messages styleClass="errorMessage" globalOnly="true" />
+   
+        <f:view contentType="text/html">
+            <f:event type="preRenderView" listener="#{searchHistory.onLoad}" />
+            <f:attribute name="roles" value="ROLE" />
+        </f:view>
+        <rich:panel header="Overview system instances">
+            <rich:dataTable id="searchExecutionForSearchDefinitions" var="searchExecutionDefinition" value="#{searchHistory.loadedSearchDefinitionExecutions}">
+                <f:facet name="header">
+                    <rich:columnGroup>
+                        <rich:column>
+                            <h:outputText value="ID" />
+                        </rich:column>
+                        <rich:column>
+                            <h:outputText value="Total Items" />
+                        </rich:column>
+                        <rich:column>
+                            <h:outputText value="Crawled Items" />
+                        </rich:column>
+                        <rich:column>
+                            <h:outputText value="Query" />
+                        </rich:column>
+                        <rich:column>
+                            <h:outputText value="Request URL" />
+                        </rich:column>
+                        <rich:column>
+                            <h:outputText value="Start time" />
+                        </rich:column>
+                        <rich:column>
+                            <h:outputText value="Finished time" />
+                        </rich:column>
+
+                        <rich:column>
+                            <h:outputText value="System Instance Name" />
+                        </rich:column>
+                        <rich:column>
+                            <h:outputText value="Search state" />
+                        </rich:column>
+                    </rich:columnGroup>
+                </f:facet>
+                <rich:columnGroup>
+                    <rich:column>
+                        <h:outputText value="#{searchExecutionDefinition.ID}"></h:outputText> 
+
+                    </rich:column>
+                    <rich:column>
+                        <h:outputText value="#{searchExecutionDefinition.totalItems}"></h:outputText> 
+                    </rich:column>
+                    <rich:column>
+                        <h:outputText value="#{searchExecutionDefinition.crawledItems}"></h:outputText> 
+                    </rich:column>
+                    <rich:column>
+                        <h:outputText value="#{searchExecutionDefinition.query}"></h:outputText> 
+                    </rich:column>
+                    <rich:column>
+                        <h:outputText value="#{searchExecutionDefinition.requestUrl}"></h:outputText> 
+                    </rich:column>
+
+                    <rich:column>
+                        <h:outputText value="#{searchExecutionDefinition.startExecutionTimestamp}"></h:outputText> 
+                    </rich:column>
+                    <rich:column>
+                        <h:outputText value="#{searchExecutionDefinition.finishedExecutionTimestamp}"></h:outputText> 
+                    </rich:column>
+                    <rich:column>
+                        <h:outputText value="#{searchExecutionDefinition.systemInstance.name}"></h:outputText> 
+                    </rich:column>
+                    <rich:column>
+                        <h:outputText value="#{searchExecutionDefinition.searchState}"></h:outputText> 
+                    </rich:column>
+
+                </rich:columnGroup>
+
+            </rich:dataTable>
+        </rich:panel>
+
+    </h:body>
+</ui:composition>
+
+

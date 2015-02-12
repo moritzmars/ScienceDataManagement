@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:ui="http://java.sun.com/jsf/facelets" 
+                xmlns:a4j="http://richfaces.org/a4j"
+                xmlns:rich="http://richfaces.org/rich">
+    <h:head>
+        <title></title>
+    </h:head>
+    <h:body>
+        <f:view contentType="text/html">
+            <f:event type="preRenderView" listener="#{searchDefinitionEdit.onLoad}" />
+            <f:attribute name="roles" value="ROLE" />
+
+
+        </f:view>
+
+        <h:form>
+   <h:messages styleClass="errorMessage" globalOnly="true" />
+            <rich:panel header="Edit search definition">
+                <h:panelGrid>
+                    <rich:panel style="width:560px;">
+                        <h:outputLabel value="Name: " style="font-weight:bold" />
+                        <h:inputText value="#{searchDefinitionEdit.searchDefinitionName}" />
+
+                    </rich:panel>
+                    <rich:panel style="width:560px;">
+                        <f:facet name="header">
+                            <h:outputText value="System Instances"></h:outputText>
+                        </f:facet>
+                        <rich:pickList value="#{searchDefinitionEdit.selectedSystemInstanceList}" sourceCaption="Available system instances" targetCaption="Selected system instances" listWidth="165px" listHeight="100px" converter="SystemInstanceConverter">
+                            <f:selectItems value="#{searchDefinitionEdit.systemInstanceList}" var="systemInstance" itemValue="#{systemInstance}" itemLabel="#{systemInstance.name}" />
+                            <f:converter converterId="SystemInstanceConverter" /> 
+                        </rich:pickList>
+
+
+                    </rich:panel>
+                    <rich:panel style="width:560px;">   
+                        <f:facet name="header">
+                            <h:outputText value="Search query"></h:outputText>
+                        </f:facet>
+                        <h:panelGrid columns="3">
+                            <h:panelGroup>
+                                <h:outputLabel value="Term: " style="font-weight:bold" />
+                                <h:inputText value="#{searchDefinitionEdit.currentTerm}" />
+                            </h:panelGroup> 
+                            <h:panelGroup>     
+                                <h:outputLabel value="Operation: " style="font-weight:bold" />
+                                <h:selectOneMenu id="SearchTermOperationDefinition"
+                                                 value="#{searchDefinitionEdit.currentOperation}">
+                                    <f:selectItem id="item1" itemLabel="AND" itemValue="AND" />
+                                    <f:selectItem id="item2" itemLabel="OR" itemValue="OR" />
+                                    <f:selectItem id="item3" itemLabel="" itemValue="" />
+                                </h:selectOneMenu>
+                            </h:panelGroup> 
+                            <h:panelGroup>     
+                                <h:commandButton value="Add" action="#{searchDefinitionEdit.addSearchTerm()}" />
+                            </h:panelGroup> 
+                        </h:panelGrid>   
+
+                        <h:dataTable id="searchTermsForSearchDefinition" value="#{searchDefinitionEdit.searchTermsBySearchExecutionDefinition}" var="o"
+                                     styleClass="order-table"
+                                     headerClass="order-table-header"
+                                     rowClasses="order-table-odd-row,order-table-even-row"
+                                     >
+
+                            <h:column>
+                                <!-- column header -->
+                                <f:facet name="header">Term</f:facet>
+                                <!-- row record -->
+                                #{o.term}
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Operation </f:facet>
+                                    #{o.operation}
+                            </h:column>
+                            <h:column>
+
+                                <f:facet name="header">Action</f:facet>
+
+                                <h:commandLink value="Delete" action="#{searchDefinitionEdit.deleteSearchTerm(o)}" />
+
+                            </h:column>
+                        </h:dataTable>
+
+                    </rich:panel>
+                </h:panelGrid>
+                <h:commandButton value="Save" action="#{searchDefinitionEdit.updateSearchDefinition()}" />
+                     <h:commandButton value="Back" action="#{searchDefinitionEdit.redirectBack()}" />
+
+            </rich:panel>    
+        </h:form>
+    </h:body>
+</ui:composition>
+

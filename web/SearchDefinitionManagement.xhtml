@@ -1,0 +1,126 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:ui="http://java.sun.com/jsf/facelets" 
+                xmlns:a4j="http://richfaces.org/a4j"
+                xmlns:rich="http://richfaces.org/rich">
+    <h:head>
+    </h:head>
+    <h:body>
+        <f:view contentType="text/html">
+            <f:event type="preRenderView" listener="#{searchDefinitionManagement.onLoad}" />
+            <f:attribute name="roles" value="ROLE" />
+
+
+        </f:view>
+        <h:form id="searchDefinitionManagementForm">
+              <h:messages styleClass="errorMessage" globalOnly="true" />
+            <h:panelGrid id="grid" columns="1">
+                <h:panelGroup>
+                    <rich:select value="#{searchDefinitionManagement.selectedSearchDefinition}">
+                        <a4j:ajax render="searchTermsForSearchDefinition searchExecutionForSearchDefinitions" listener="#{searchDefinitionManagement.loadTable()}" execute="@this" event="selectitem"/>
+                        <f:selectItems value="#{searchDefinitionManagement.loadedSearchDefinitions}" var="searchDefinition" itemValue="#{searchDefinition.ID}" itemLabel="#{searchDefinition.name}"/>
+                    </rich:select>
+                    <h:commandButton value="New Search Definition" action="SearchDefinitionNew"/>
+                    <h:commandButton value="Edit Search Definition" action="#{searchDefinitionManagement.redirectToEditPage()}"/>
+                    <h:commandButton value="Delete Search Definition" action="#{searchDefinitionManagement.deleteSearchDefinitionByID()}"/>
+
+                </h:panelGroup>
+                <h:dataTable id="searchTermsForSearchDefinition" value="#{searchDefinitionManagement.loadedSearchTerms}" var="o"
+                             styleClass="order-table"
+                             headerClass="order-table-header"
+                             rowClasses="order-table-odd-row,order-table-even-row"
+                             >
+
+                    <h:column>
+                        <!-- column header -->
+                        <f:facet name="header">Search Term: </f:facet>
+                        <!-- row record -->
+                        #{o.term}
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">Operation: </f:facet>
+                            #{o.operation}
+                    </h:column>
+
+                </h:dataTable>
+                <rich:panel header="Overview system instances">
+                    <rich:dataTable id="searchExecutionForSearchDefinitions" var="searchExecutionDefinition" value="#{searchDefinitionManagement.loadedSelectedSearchDefinitionExecutionList}">
+                        <f:facet name="header">
+                            <rich:columnGroup>
+                                <rich:column>
+                                    <h:outputText value="ID" />
+                                </rich:column>
+                                <rich:column>
+                                    <h:outputText value="Total Items" />
+                                </rich:column>
+                                <rich:column>
+                                    <h:outputText value="Crawled Items" />
+                                </rich:column>
+                                <rich:column>
+                                    <h:outputText value="Query" />
+                                </rich:column>
+                                <rich:column>
+                                    <h:outputText value="Request URL" />
+                                </rich:column>
+                                <rich:column>
+                                    <h:outputText value="Start timestamp" />
+                                </rich:column>
+                                <rich:column>
+                                    <h:outputText value="Finished timestamp" />
+                                </rich:column>
+
+                                <rich:column>
+                                    <h:outputText value="System Instance Name" />
+                                </rich:column>
+
+                                <rich:column>
+                                    <h:outputText value="Search state" />
+                                </rich:column>
+                            </rich:columnGroup>
+                        </f:facet>
+
+                        <rich:columnGroup>
+                            <rich:column>
+                                <h:outputText value="#{searchExecutionDefinition.ID}"></h:outputText> 
+
+                            </rich:column>
+                            <rich:column>
+                                <h:outputText value="#{searchExecutionDefinition.totalItems}"></h:outputText> 
+                            </rich:column>
+                            <rich:column>
+                                <h:outputText value="#{searchExecutionDefinition.crawledItems}"></h:outputText> 
+                            </rich:column>
+                            <rich:column>
+                                <h:outputText value="#{searchExecutionDefinition.query}"></h:outputText> 
+                            </rich:column>
+                            <rich:column>
+                                <h:outputText value="#{searchExecutionDefinition.requestUrl}"></h:outputText> 
+                            </rich:column>
+                            <rich:column>
+                                <h:outputText value="#{searchExecutionDefinition.startExecutionTimestamp}"></h:outputText> 
+                            </rich:column>
+                            <rich:column>
+                                <h:outputText value="#{searchExecutionDefinition.finishedExecutionTimestamp}"></h:outputText> 
+                            </rich:column>
+
+                            <rich:column>
+                                <h:outputText value="#{searchExecutionDefinition.systemInstance.name}"></h:outputText> 
+                            </rich:column>
+                            <rich:column>
+                                <h:outputText value="#{searchExecutionDefinition.searchState}"></h:outputText> 
+                            </rich:column>
+                        </rich:columnGroup>
+
+                    </rich:dataTable>
+                </rich:panel>   
+
+            </h:panelGrid>
+
+        </h:form>
+    </h:body>
+</ui:composition>
+

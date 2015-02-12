@@ -1,0 +1,333 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:ui="http://java.sun.com/jsf/facelets" 
+                xmlns:a4j="http://richfaces.org/a4j"
+                xmlns:rich="http://richfaces.org/rich">
+    <h:head>
+    </h:head>
+
+    <h:body>
+        <f:view contentType="text/html">
+            <f:event type="preRenderView" listener="#{search.onLoad}" />
+            <f:attribute name="roles" value="ROLE" />
+
+
+        </f:view>
+        <h:form id="form">
+            <h:messages styleClass="errorMessage" globalOnly="true" />
+            <rich:panel header="Search definition results">
+                <h:panelGrid columns="2" width="100%">
+                    <h:panelGroup>
+                        <h:panelGrid columns="4" width="800px">
+                            <rich:select id="selectSearchExecutionID" value="#{search.selectedItem}" defaultLabel="Select search definition..." >
+                                <a4j:ajax render="scientificPaperMetaInformations searchExecutionForSearchDefinitions search systemInstances" listener="#{search.loadTable()}" execute="@this" event="selectitem"/>
+                                <f:selectItems value="#{search.searchDefinitions}" var="searchDefinition" itemValue="#{searchDefinition.ID}" itemLabel="#{searchDefinition.name}"/>
+                            </rich:select>
+                            <rich:progressBar mode="ajax" value="#{search.currentProgressValue}" interval="5000" id="pb"
+                                              enabled="#{true}" minValue="0" maxValue="100" >
+                                <h:outputText value="#{search.currentProgressValue} %" />
+                            </rich:progressBar>
+                            <h:commandButton value="Start search" action="#{search.execute()}"/>
+                            <h:selectManyCheckbox id="systemInstances" value="#{search.loadedSelectedSystemInstances}" layout="pageDirection" readonly="true">
+                                <f:selectItems value="#{search.loadedSystemInstances}" var="systemInstance" itemValue="#{systemInstance.ID}" itemLabel="#{systemInstance.name}" itemDisabled="true"/>
+                            </h:selectManyCheckbox> 
+                        </h:panelGrid>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+
+                        <rich:select value="#{search.selectedExportInstance}" defaultLabel="Select export module..">
+                            <f:selectItems value="#{search.loadedDataExportInstances}" var="dataExportInstance" itemValue="#{dataExportInstance.ID}" itemLabel="#{dataExportInstance.name}"/>
+                        </rich:select>
+                        <h:commandButton value="Export" action="#{search.export()}"/>  
+                    </h:panelGroup>
+                </h:panelGrid>
+            </rich:panel>
+            <rich:panel header="Overview system instances">
+                <rich:dataTable id="searchExecutionForSearchDefinitions" var="searchExecutionDefinition" value="#{search.loadedSearchExecutionList}">
+                    <f:facet name="header">
+                        <rich:columnGroup>
+                            <rich:column>
+                                <h:outputText value="ID" />
+                            </rich:column>
+                            <rich:column>
+                                <h:outputText value="Total Items" />
+                            </rich:column>
+                            <rich:column>
+                                <h:outputText value="Crawled Items" />
+                            </rich:column>
+                            <rich:column>
+                                <h:outputText value="New Items Found" />
+                            </rich:column>
+                            <rich:column>
+                                <h:outputText value="Local Items Found" />
+                            </rich:column>
+                            <rich:column>
+                                <h:outputText value="Query" />
+                            </rich:column>
+                            <rich:column>
+                                <h:outputText value="Request URL" />
+                            </rich:column>
+                            <rich:column>
+                                <h:outputText value="Start time" />
+                            </rich:column>
+                            <rich:column>
+                                <h:outputText value="Finished time" />
+                            </rich:column>
+
+                            <rich:column>
+                                <h:outputText value="System Instance Name" />
+                            </rich:column>
+                            <rich:column>
+                                <h:outputText value="Search state" />
+                            </rich:column>
+                            <rich:column>
+                                <h:outputText value="Message" />
+                            </rich:column>
+
+                        </rich:columnGroup>
+                    </f:facet>
+                    <rich:columnGroup>
+                        <rich:column>
+                            <h:outputText value="#{searchExecutionDefinition.ID}"></h:outputText> 
+
+                        </rich:column>
+                        <rich:column>
+                            <h:outputText value="#{searchExecutionDefinition.totalItems}"></h:outputText> 
+                        </rich:column>
+                        <rich:column>
+                            <h:outputText value="#{searchExecutionDefinition.crawledItems}"></h:outputText> 
+                        </rich:column>
+                        <rich:column>
+                            <h:outputText value="#{searchExecutionDefinition.newItems}"></h:outputText> 
+                        </rich:column>
+                        <rich:column>
+                            <h:outputText value="#{searchExecutionDefinition.localItemsFound}"></h:outputText> 
+                        </rich:column>
+                        <rich:column>
+                            <h:outputText value="#{searchExecutionDefinition.query}"></h:outputText> 
+                        </rich:column>
+                        <rich:column>
+                            <h:outputText value="#{searchExecutionDefinition.requestUrl}"></h:outputText> 
+                        </rich:column>
+
+                        <rich:column>
+                            <h:outputText value="#{searchExecutionDefinition.startExecutionTimestamp}"></h:outputText> 
+                        </rich:column>
+                        <rich:column>
+                            <h:outputText value="#{searchExecutionDefinition.finishedExecutionTimestamp}"></h:outputText> 
+                        </rich:column>
+                        <rich:column>
+                            <h:outputText value="#{searchExecutionDefinition.systemInstance.name}"></h:outputText> 
+                        </rich:column>
+                        <rich:column>
+                            <h:outputText value="#{searchExecutionDefinition.searchState}"></h:outputText> 
+                        </rich:column>
+                        <rich:column>
+                            <h:outputText value="#{searchExecutionDefinition.message}"></h:outputText> 
+                        </rich:column>
+                    </rich:columnGroup>
+
+                </rich:dataTable>
+            </rich:panel>
+            <rich:panel header="Data">
+                  <rich:dataScroller for="scientificPaperMetaInformations" maxPages="5" />
+              
+                <rich:dataTable id="scientificPaperMetaInformations" var="record" value="#{search.loadedSearchExecutionList}">
+                    <f:facet name="header">
+                        <rich:columnGroup>
+                            <rich:column>
+                                <h:outputText value="ID" />
+                            </rich:column>
+                            <rich:column>
+                                <h:outputText value="Title" />
+                            </rich:column>
+                            <rich:column>
+                                <h:outputText value="Identifier 1" />
+                            </rich:column>
+                            <rich:column>
+                                <h:outputText value="Identifier 2" />
+                            </rich:column>
+                            <rich:column>
+                                <h:outputText value="Identifier 3" />
+                            </rich:column>
+                            <rich:column>
+                                <h:outputText value="Identifier 4" />
+                            </rich:column>
+                            <rich:column>
+                                <h:outputText value="Url 1" />
+                            </rich:column>
+                            <rich:column>
+                                <h:outputText value="Url 2" />
+                            </rich:column>
+                            <rich:column>
+                                <h:outputText value="Text 1" />
+                            </rich:column>
+                            <rich:column>
+                                <h:outputText value="Publication Name" />
+                            </rich:column>
+
+                            <rich:column>
+                                <h:outputText value="Issue Name" />
+                            </rich:column>
+
+                            <rich:column>
+                                <h:outputText value="Publish Date" />
+                            </rich:column>
+
+                            <rich:column>
+                                <h:outputText value="Volume" />
+                            </rich:column>
+
+                            <rich:column>
+                                <h:outputText value="Start Page" />
+                            </rich:column>
+                            <rich:column>
+                                <h:outputText value="Issue Identifier" />
+                            </rich:column>
+                            <rich:column>
+                                <h:outputText value="Authors" />
+                            </rich:column>
+                            <rich:column>
+                                <h:outputText value="Saved on local DB" />
+                            </rich:column>
+                        </rich:columnGroup>
+                    </f:facet>
+
+                    <rich:column colspan="2">
+                        <rich:collapsibleSubTableToggler for="sbtbl" />
+                        <h:outputText value="#{record.systemInstance.name}" />
+                    </rich:column>
+
+                    <rich:collapsibleSubTable  var="expense" value="#{record.scientificPaperMetaInformation}" expanded="#{false}" id="sbtbl" expandMode="client">
+                        <rich:column>
+                            <h:outputText value="#{expense.ID}"></h:outputText>
+                            <f:facet name="footer">
+                                <div></div>
+                            </f:facet>
+                        </rich:column>
+
+                        <rich:column>
+                            <h:outputText value="#{expense.title}"></h:outputText>
+                            <f:facet name="footer">
+                                <div></div>
+                            </f:facet>
+                        </rich:column>
+
+                        <rich:column>
+                            <h:outputText value="#{expense.identifier_1}"></h:outputText>
+                            <f:facet name="footer">
+                                <div></div>
+                            </f:facet>
+                        </rich:column>
+
+                        <rich:column>
+                            <h:outputText value="#{expense.identifier_2}"></h:outputText>
+                            <f:facet name="footer">
+                                <div></div>
+                            </f:facet>
+                        </rich:column>
+
+                        <rich:column>
+                            <h:outputText value="#{expense.identifier_3}"></h:outputText>
+                            <f:facet name="footer">
+                                <div></div>
+                            </f:facet>
+                        </rich:column>
+
+                        <rich:column>
+                            <h:outputText value="#{expense.identifier_4}"></h:outputText>
+                            <f:facet name="footer">
+                                <div></div>
+                            </f:facet>
+                        </rich:column>
+                        <rich:column>
+                            <h:outputText value="#{expense.url_1}"></h:outputText>
+                            <f:facet name="footer">
+                                <div></div>
+                            </f:facet>
+                        </rich:column>
+                        <rich:column>
+                            <h:outputText value="#{expense.url_2}"></h:outputText>
+                            <f:facet name="footer">
+                                <div></div>
+                            </f:facet>
+                        </rich:column>
+                        <rich:column>
+                            <h:outputText value="#{expense.text_1}"></h:outputText>
+                            <f:facet name="footer">
+                                <div></div>
+                            </f:facet>
+                        </rich:column>
+                        <rich:column>
+                            <h:outputText value="#{expense.srcTitle}"></h:outputText>
+                            <f:facet name="footer">
+                                <div></div>
+                            </f:facet>
+                        </rich:column>
+
+                        <rich:column>
+                            <h:outputText value="#{expense.scrPublisherName}"></h:outputText>
+                            <f:facet name="footer">
+                                <div></div>
+                            </f:facet>
+                        </rich:column>
+
+                        <rich:column>
+                            <h:outputText value="#{expense.srcPublicationDate}"></h:outputText>
+                            <f:facet name="footer">
+                                <div></div>
+                            </f:facet>
+                        </rich:column>
+
+                        <rich:column>
+                            <h:outputText value="#{expense.srcVolume}"></h:outputText>
+                            <f:facet name="footer">
+                                <div></div>
+                            </f:facet>
+                        </rich:column>
+
+                        <rich:column>
+                            <h:outputText value="#{expense.srcStartPage}"></h:outputText>
+                            <f:facet name="footer">
+                                <div></div>
+                            </f:facet>
+                        </rich:column>
+
+                        <rich:column>
+                            <h:outputText value="#{expense.scrIdentifier_1}"></h:outputText>
+                            <f:facet name="footer">
+                                <div></div>
+                            </f:facet>
+                        </rich:column>
+                        <rich:column>
+                            <ui:repeat var="innerVar" value="#{expense.authors}">
+                                #{innerVar.givenName} 
+                                <h:outputText value=" "></h:outputText>
+                                    #{innerVar.surName}
+                                <br />
+                            </ui:repeat>
+                            <f:facet name="footer">
+                                <div></div>
+                            </f:facet>
+                        </rich:column>
+                        <rich:column>
+                            <h:outputText value="#{expense.localizedTime}"></h:outputText>
+                            <f:facet name="footer">
+                                <div></div>
+                            </f:facet>
+                        </rich:column>
+                    </rich:collapsibleSubTable>
+
+
+                </rich:dataTable>
+
+            </rich:panel>
+        </h:form>
+
+    </h:body>
+</ui:composition>
+

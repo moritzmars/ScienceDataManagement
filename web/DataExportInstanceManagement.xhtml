@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:ui="http://java.sun.com/jsf/facelets" 
+                xmlns:a4j="http://richfaces.org/a4j"
+                xmlns:rich="http://richfaces.org/rich">
+    <h:body>
+        <f:view contentType="text/html">
+            <f:event type="preRenderView" listener="#{dataExportInstanceManagement.onLoad}" />
+            <f:attribute name="roles" value="ROLE" />
+        </f:view>
+        <h:form id="DataExportManagementForm">
+              <h:messages styleClass="errorMessage" globalOnly="true" />
+            <rich:panel header="">
+                <h:panelGrid id="grid" columns="1">
+                    <h:panelGroup>
+                        <h:commandButton value="Create New Data Export Instance" action="DataExportInstanceNew"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <h:outputText value="System instance:"  />
+                        <br></br>
+                        <rich:select value="#{dataExportInstanceManagement.selectedItem}" style="width:300px;">
+                            <a4j:ajax render="groovyCodePreview" execute="@this" event="selectitem"/>
+                            <f:selectItems value="#{dataExportInstanceManagement.dataExportInstances}" var="dataExportInstance" itemValue="#{dataExportInstance.ID}" itemLabel="#{dataExportInstance.name}"/>
+                        </rich:select>
+                        <h:commandButton value="Edit Data Export Instance" action="#{dataExportInstanceManagement.redirectToEditPage()}"/>
+                        <h:commandButton value="Delete Data Export Instance" action="#{dataExportInstanceManagement.deleteDataExportInstanceByID()}"/>
+
+                    </h:panelGroup>
+                    <h:panelGroup>
+                    </h:panelGroup>
+                    <h:panelGroup>
+
+                    </h:panelGroup>
+
+                    <h:panelGroup >
+                        <h:outputText value="Groovy code preview:"  />
+                        <br></br>
+                        <h:inputTextarea id="groovyCodePreview" value="#{dataExportInstanceManagement.getDataExportInstanceByID().groovyCode}" style="width:100%;" disabled="#{true}" readonly="#{true}" cols="1000" rows="20"/>
+                    </h:panelGroup>
+
+
+                </h:panelGrid>
+            </rich:panel>
+        </h:form>
+    </h:body>
+
+</ui:composition>
+
+

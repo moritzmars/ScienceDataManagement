@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:ui="http://java.sun.com/jsf/facelets" 
+                xmlns:a4j="http://richfaces.org/a4j"
+                xmlns:rich="http://richfaces.org/rich">
+    <h:head>
+       
+    </h:head>
+    <h:body>
+        <h:form>
+               <h:messages styleClass="errorMessage" globalOnly="true" />
+            <rich:panel header="New Data Export instance">
+                 <h:commandButton value="Save" action="#{dataExportInstanceNew.createNewDataExportInstance()}" />
+                <h:commandButton value="Back" action="#{dataExportInstanceNew.redirectBack()}" />
+           
+                <h:panelGrid>
+                    <h:outputLabel value="Data Export Instance Name: " style="font-weight:bold" />
+                    <h:inputText value="#{dataExportInstanceNew.dataExportInstanceName}" />
+                    <h:outputLabel value="Connecotr Code:  " style="font-weight:bold" />
+                    <h:inputTextarea id="search" value="#{dataExportInstanceNew.dataExportInstanceGroovyCode}" style="width:100%;" cols="1000" rows="75"/>
+
+                </h:panelGrid>
+                <h:commandButton value="Save" action="#{dataExportInstanceNew.createNewDataExportInstance()}" />
+                <h:commandButton value="Back" action="#{dataExportInstanceNew.redirectBack()}" />
+            </rich:panel>
+        </h:form>
+    </h:body>
+</ui:composition>
+

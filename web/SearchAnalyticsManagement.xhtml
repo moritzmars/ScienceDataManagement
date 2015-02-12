@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:ui="http://java.sun.com/jsf/facelets" 
+                xmlns:a4j="http://richfaces.org/a4j"
+                xmlns:rich="http://richfaces.org/rich"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+    </h:head>
+    <h:body>
+        <f:view contentType="text/html">
+            <f:event type="preRenderView" listener="#{searchAnalyticsManagement.onLoad}" />
+            <f:attribute name="roles" value="ROLE" />
+
+
+        </f:view>
+        <h:form id="searchAnalyticsManagementForm">
+            <h:messages styleClass="errorMessage" globalOnly="true" />
+            <h:panelGrid id="searchAnalyticsGrid" columns="1">
+                <h:panelGroup>
+                    <rich:select value="#{searchAnalyticsManagement.selectedSearchDefinition}">
+                        <a4j:ajax render="searchDefinitionExecutionsID searchAnalyticDefinitionID" execute="@this" listener="#{searchAnalyticsManagement.loadSearchDefinitionExecution()}" event="selectitem"/>
+                        <f:selectItems value="#{searchAnalyticsManagement.loadedSearchDefinitionList}" var="searchDefinition" itemValue="#{searchDefinition.ID}" itemLabel="#{searchDefinition.name}"/>
+                    </rich:select>
+                    
+                    <rich:select id="searchDefinitionExecutionsID" value="#{searchAnalyticsManagement.selectedSearchDefinitionExecution}">
+                        <a4j:ajax render="searchAnalyticsResult" listener="#{searchAnalyticsManagement.loadTable()}" execute="@this" event="selectitem"/>
+                        <f:selectItems value="#{searchAnalyticsManagement.loadedSearchDefinitionExecutionRunList}" var="searchDefinitionExecutionRun" itemValue="#{searchDefinitionExecutionRun.ID}" itemLabel="#{searchDefinitionExecutionRun.description}"/>
+                    </rich:select>
+                    <rich:select id="searchAnalyticDefinitionID" value="#{searchAnalyticsManagement.selectedSearchAnalytic}">
+                        <a4j:ajax render="searchAnalyticsResult" listener="#{searchAnalyticsManagement.loadTable()}" execute="@this" event="selectitem"/>
+                        <f:selectItems value="#{searchAnalyticsManagement.loadedSearchAnalyticDefinitionList}" var="searchAnalyticDefinition" itemValue="#{searchAnalyticDefinition.ID}" itemLabel="#{searchAnalyticDefinition.name}"/>
+                    </rich:select>
+                    <h:commandButton value="New Search Analytic" action="SearchAnalyticDefinitionNew"/>
+                    <h:commandButton value="Edit Search Analytic" action="#{searchAnalyticsManagement.redirectToEditPage()}"/>
+                    <h:commandButton value="Delete Search Analytic" action="#{searchAnalyticsManagement.deleteSearchAnalyticByID()}"/>
+
+                </h:panelGroup>
+                <h:panelGroup>
+
+                        <rich:select value="#{searchAnalyticsManagement.selectedExportInstance}" defaultLabel="Select export module..">
+                            <f:selectItems value="#{searchAnalyticsManagement.loadedDataExportInstances}" var="dataExportInstance" itemValue="#{dataExportInstance.ID}" itemLabel="#{dataExportInstance.name}"/>
+                        </rich:select>
+                        <h:commandButton value="Export" action="#{searchAnalyticsManagement.export()}"/>  
+                    </h:panelGroup>
+                <rich:panel header="Search analysis result">
+                    <rich:dataTable id="searchAnalyticsResult" var="row" value="#{searchAnalyticsManagement.loadedSearchAnalyticsResultRows}">
+                        <c:forEach items="#{searchAnalyticsManagement.loadedSearchAnalyticsResultColumns}" var="column">  
+                            <rich:column>  
+                                <f:facet name="header">  
+                                    <h:outputText value="#{column}" />  
+                                </f:facet>  
+                                <h:outputText value="#{row[column]}" />  
+                            </rich:column>  
+                   
+                        </c:forEach>  
+                    </rich:dataTable>
+                </rich:panel>   
+
+            </h:panelGrid>
+
+        </h:form>
+    </h:body>
+</ui:composition>
+
