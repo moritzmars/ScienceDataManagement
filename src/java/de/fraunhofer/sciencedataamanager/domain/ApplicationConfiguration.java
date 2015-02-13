@@ -5,6 +5,8 @@
  */
 package de.fraunhofer.sciencedataamanager.domain;
 
+import de.fraunhofer.sciencedataamanager.interfaces.ILoggingManager;
+
 /**
  *
  * @author Moritz Mars
@@ -12,6 +14,15 @@ package de.fraunhofer.sciencedataamanager.domain;
 public class ApplicationConfiguration {
  
     private String sqlConnection; 
+    private ILoggingManager loggingManager; 
+
+    public ILoggingManager getLoggingManager() {
+        return loggingManager;
+    }
+
+    public void setLoggingManager(ILoggingManager loggingManager) {
+        this.loggingManager = loggingManager;
+    }
     
     public String getSqlConnection() {
         return sqlConnection;

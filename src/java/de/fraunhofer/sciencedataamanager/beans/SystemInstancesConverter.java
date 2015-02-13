@@ -7,7 +7,7 @@ package de.fraunhofer.sciencedataamanager.beans;
 import de.fraunhofer.sciencedataamanager.domain.ApplicationConfiguration;
 import de.fraunhofer.sciencedataamanager.domain.SystemInstance;
 import de.fraunhofer.sciencedataamanager.datamanager.ApplicationConfigurationDataManagerFactory;
-import de.fraunhofer.sciencedataamanager.datamanager.LoggingDataManager;
+import de.fraunhofer.sciencedataamanager.datamanager.LoggingDatabaseManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SystemInstanceDataManager;
 import java.util.Collection;
 import java.util.logging.Level;
@@ -37,7 +37,7 @@ public class SystemInstancesConverter implements Converter {
             }
         } catch (Exception ex) {
             Logger.getLogger(SystemInstancesConverter.class.getName()).log(Level.SEVERE, null, ex);
-               LoggingDataManager.logException(ex, applicationConfiguration);
+               this.applicationConfiguration.getLoggingManager().logException(ex);
         }
      return null;
     

@@ -21,6 +21,7 @@ public class ApplicationConfigurationPersistanceDataManager implements IApplicat
         Preferences prefs = Preferences.userRoot().node("de/fraunhofer/sciencedataamanager/persistence");
         ApplicationConfiguration applicationConfiguration = new ApplicationConfiguration();
         applicationConfiguration.setSqlConnection(prefs.get(ApplicationConstants.PREFERENCE_KEY_SQL_CONNECTION_STRING, ""));
+        applicationConfiguration.setLoggingManager(new LoggingDatabaseManager(applicationConfiguration));
         return applicationConfiguration;
     }
 

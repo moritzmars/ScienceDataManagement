@@ -11,7 +11,7 @@ import de.fraunhofer.sciencedataamanager.domain.SearchExecution;
 import de.fraunhofer.sciencedataamanager.domain.SearchTerm;
 import de.fraunhofer.sciencedataamanager.domain.SystemInstance;
 import de.fraunhofer.sciencedataamanager.datamanager.ApplicationConfigurationDataManagerFactory;
-import de.fraunhofer.sciencedataamanager.datamanager.LoggingDataManager;
+import de.fraunhofer.sciencedataamanager.datamanager.LoggingDatabaseManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SearchDefinitionDataManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SearchExecutionDataManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SearchTermDataManager;
@@ -96,7 +96,7 @@ public class SearchDefinitionEdit {
             this.getSelectedSystemInstanceList().addAll(getSearchExecutionBySearchDefinition().getSystemInstances());
         } catch (Exception ex) {
               Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
           
         }
     }
@@ -123,7 +123,7 @@ public class SearchDefinitionEdit {
         } catch (Exception ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
      
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
         }
 
     }
@@ -139,7 +139,7 @@ public class SearchDefinitionEdit {
       
         } catch (Exception ex) {
              Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
            
         }
         return searchExecution;
@@ -153,7 +153,7 @@ public class SearchDefinitionEdit {
             searchTerms = searchDefinitionDataProvider.getSearchDefinitionByID(searchDefinitionID).getSearchTerms();
         } catch (Exception ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
             
         }
         return searchTerms;
@@ -177,7 +177,7 @@ public class SearchDefinitionEdit {
             FacesContext.getCurrentInstance().getExternalContext().redirect("SearchDefinitionEdit.xhtml?SelectedSearchDefinition=" + searchDefinitionID);
         } catch (Exception ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            LoggingDataManager.logException(ex,applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
             
         }
 
@@ -189,7 +189,7 @@ public class SearchDefinitionEdit {
             searchTermDataProvider.deleteSearchTerm(searchTerm);
         } catch (Exception ex) {
              Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            LoggingDataManager.logException(ex,applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
            
         }
     }
@@ -201,7 +201,7 @@ public class SearchDefinitionEdit {
             systemInstances = systemInstanceDataProvider.getSystemInstances();
         } catch (Exception ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
             
         }
         return systemInstances;
@@ -212,7 +212,7 @@ public class SearchDefinitionEdit {
             FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
         } catch (Exception ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
 
         }
 

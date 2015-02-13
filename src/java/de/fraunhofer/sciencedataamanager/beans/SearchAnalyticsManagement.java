@@ -11,7 +11,7 @@ import de.fraunhofer.sciencedataamanager.domain.SearchDefinition;
 import de.fraunhofer.sciencedataamanager.domain.SearchDefinitonExecution;
 import de.fraunhofer.sciencedataamanager.datamanager.ApplicationConfigurationDataManagerFactory;
 import de.fraunhofer.sciencedataamanager.datamanager.DataExportInstanceDataManager;
-import de.fraunhofer.sciencedataamanager.datamanager.LoggingDataManager;
+import de.fraunhofer.sciencedataamanager.datamanager.LoggingDatabaseManager;
 import de.fraunhofer.sciencedataamanager.datamanager.ScientificPaperMetaInformationDataManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SearchAnalyticDefinitionDataManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SearchDefinitionDataManager;
@@ -178,7 +178,7 @@ public class SearchAnalyticsManagement {
 
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -196,7 +196,7 @@ public class SearchAnalyticsManagement {
             dataExportInstances = dataExportInstanceDataManager.getDataExportInstances();
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
         return dataExportInstances;
@@ -217,7 +217,7 @@ public class SearchAnalyticsManagement {
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
 
         }
         return searchExecutionList;
@@ -238,7 +238,7 @@ public class SearchAnalyticsManagement {
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
 
         }
         return searchExecutionRunList;
@@ -252,7 +252,7 @@ public class SearchAnalyticsManagement {
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
 
         }
         return searchDefinitions;
@@ -266,7 +266,7 @@ public class SearchAnalyticsManagement {
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
 
         }
         return searchAnalyticDefinitionList;
@@ -298,7 +298,7 @@ public class SearchAnalyticsManagement {
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
 
         }
         return resultSetMap;
@@ -310,7 +310,7 @@ public class SearchAnalyticsManagement {
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
 
         }
     }
@@ -327,7 +327,7 @@ public class SearchAnalyticsManagement {
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
 
         }
 
@@ -364,7 +364,7 @@ public class SearchAnalyticsManagement {
 
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
 

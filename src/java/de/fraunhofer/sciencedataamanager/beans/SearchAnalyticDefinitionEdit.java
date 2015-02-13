@@ -11,7 +11,7 @@ import de.fraunhofer.sciencedataamanager.domain.SearchExecution;
 import de.fraunhofer.sciencedataamanager.domain.SearchTerm;
 import de.fraunhofer.sciencedataamanager.domain.SystemInstance;
 import de.fraunhofer.sciencedataamanager.datamanager.ApplicationConfigurationDataManagerFactory;
-import de.fraunhofer.sciencedataamanager.datamanager.LoggingDataManager;
+import de.fraunhofer.sciencedataamanager.datamanager.LoggingDatabaseManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SearchAnalyticDefinitionDataManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SearchDefinitionDataManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SearchExecutionDataManager;
@@ -72,7 +72,7 @@ public class SearchAnalyticDefinitionEdit {
             
         } catch (Exception ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
 
         }
     }
@@ -93,7 +93,7 @@ public class SearchAnalyticDefinitionEdit {
         } catch (Exception ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
 
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
         }
 
     }
@@ -103,7 +103,7 @@ public class SearchAnalyticDefinitionEdit {
             FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
         } catch (Exception ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
 
         }
 

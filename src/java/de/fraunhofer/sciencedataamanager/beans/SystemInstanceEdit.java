@@ -8,7 +8,7 @@ package de.fraunhofer.sciencedataamanager.beans;
 import de.fraunhofer.sciencedataamanager.domain.ApplicationConfiguration;
 import de.fraunhofer.sciencedataamanager.domain.SystemInstance;
 import de.fraunhofer.sciencedataamanager.datamanager.ApplicationConfigurationDataManagerFactory;
-import de.fraunhofer.sciencedataamanager.datamanager.LoggingDataManager;
+import de.fraunhofer.sciencedataamanager.datamanager.LoggingDatabaseManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SystemInstanceDataManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,7 +57,7 @@ public class SystemInstanceEdit {
             this.setSystemInstanceGroovyCode(StringEscapeUtils.unescapeJava(systemInstance.getGroovyCode()));
         } catch (Exception ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
 
         }
     }
@@ -74,7 +74,7 @@ public class SystemInstanceEdit {
             FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
         } catch (Exception ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
 
         }
 
@@ -85,7 +85,7 @@ public class SystemInstanceEdit {
             FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
         } catch (Exception ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
 
         }
 

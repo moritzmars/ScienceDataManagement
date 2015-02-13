@@ -5,23 +5,22 @@
  */
 package de.fraunhofer.sciencedataamanager.business;
 
-import de.fraunhofer.sciencedataamanager.datamanager.LoggingDataManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SearchDefinitionDataManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SearchDefinitonExecutionRunDataManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SearchExecutionDataManager;
 import de.fraunhofer.sciencedataamanager.domain.SearchDefinition;
 import de.fraunhofer.sciencedataamanager.domain.ApplicationConfiguration;
-import de.fraunhofer.sciencedataamanager.domain.ScientificPaperMetaInformation;
+import de.fraunhofer.sciencedataamanager.domain.LogLevel;
 import de.fraunhofer.sciencedataamanager.domain.ScientificPaperMetaInformationParseException;
 import de.fraunhofer.sciencedataamanager.domain.SearchDefinitionExecutionRun;
 import de.fraunhofer.sciencedataamanager.domain.SearchDefinitonExecution;
 import de.fraunhofer.sciencedataamanager.domain.SystemInstance;
 import de.fraunhofer.sciencedataamanager.domain.SearchExecution;
-import de.fraunhofer.sciencedataamanager.examples.connectors.ElsevierScienceDirectConnectorBuffer;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import de.fraunhofer.sciencedataamanager.interfaces.ICloudPaperConnector;
 import groovy.lang.GroovyClassLoader;
+import java.lang.reflect.Constructor;
 import java.util.Calendar;
 import java.util.LinkedList;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -43,7 +42,8 @@ public class SearchExecutionManager {
     ICloudPaperConnector currentExecutedConnector;
 
     public void execute(int searchDefinitionID) throws Exception {
-
+        this.applicationConfiguration.getLoggingManager().log("Entering methode (public void execute(int searchDefinitionID) throws Exception)", LogLevel.DEBUG);
+         
         LinkedList<SearchDefinitonExecution> searchDefinitonExecutionList = new LinkedList<SearchDefinitonExecution>();
         SearchDefinitionDataManager searchDefinitionDataProvider = new SearchDefinitionDataManager(applicationConfiguration);
         SearchDefinition searchDefinition = searchDefinitionDataProvider.getSearchDefinitionByID(searchDefinitionID);
@@ -65,8 +65,16 @@ public class SearchExecutionManager {
             try {
                 GroovyClassLoader gcl = new GroovyClassLoader();
                 Class parsedGroocyClass = gcl.parseClass(StringEscapeUtils.unescapeJava(systemInstanceLoop.getGroovyCode()));
-
-                Object groovyClassInstance = parsedGroocyClass.newInstance();
+                Class[] constructorParameterConnector = new Class[1];
+                constructorParameterConnector[0] = this.applicationConfiguration.getClass();
+                //Object groovyClassInstance = parsedGroocyClass.newInstance(constructorParameterConnector);
+                Object groovyClassInstance= null;
+                Constructor connectorConstructor = parsedGroocyClass.getDeclaredConstructor(constructorParameterConnector);
+                if (connectorConstructor != null) {
+                    groovyClassInstance= connectorConstructor.newInstance(this.applicationConfiguration);
+                } else {
+                    groovyClassInstance=parsedGroocyClass.newInstance();
+                }
                 currentExecutedConnector = (ICloudPaperConnector) groovyClassInstance;
                 //ElsevierScienceDirectConnectorBuffer currentExecutedConnector = new ElsevierScienceDirectConnectorBuffer(); 
                 searchDefinitonExecution = currentExecutedConnector.getCloudPapers(searchExecution.getSearchDefiniton());
@@ -83,18 +91,16 @@ public class SearchExecutionManager {
                 searchDefinitonExecution.setMessage(ex.toString());
                 searchDefinitonExecution.setFinishedExecutionTimestamp(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
                 searchDefinitionExecutionRun.getSearchDefinitionExecutionList().add(searchDefinitonExecution);
-                LoggingDataManager.logException(ex, applicationConfiguration);
+                this.applicationConfiguration.getLoggingManager().logException(ex);
                 continue;
             }
         }
         searchDefinitionExecutionRun.setFinishedExecutionTimestamp(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
         searchDefinitonExecutionRunDataManager.updateSearchDefinitionExecutionRun(searchDefinitionExecutionRun);
-        
-        for(SearchDefinitonExecution searchDefinitonExecution:searchDefinitionExecutionRun.getSearchDefinitionExecutionList())
-        {
-            for(ScientificPaperMetaInformationParseException scientificPaperMetaInformationParseException:searchDefinitonExecution.getScientificPaperMetaInformationParseException())
-            {
-                LoggingDataManager.logException(scientificPaperMetaInformationParseException.getParseException(), applicationConfiguration);
+
+        for (SearchDefinitonExecution searchDefinitonExecution : searchDefinitionExecutionRun.getSearchDefinitionExecutionList()) {
+            for (ScientificPaperMetaInformationParseException scientificPaperMetaInformationParseException : searchDefinitonExecution.getScientificPaperMetaInformationParseException()) {
+                this.applicationConfiguration.getLoggingManager().logException(scientificPaperMetaInformationParseException.getParseException());
             }
         }
 

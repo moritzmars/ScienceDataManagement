@@ -11,7 +11,7 @@ import de.fraunhofer.sciencedataamanager.domain.SearchExecution;
 import de.fraunhofer.sciencedataamanager.domain.SearchTerm;
 import de.fraunhofer.sciencedataamanager.domain.SystemInstance;
 import de.fraunhofer.sciencedataamanager.datamanager.ApplicationConfigurationDataManagerFactory;
-import de.fraunhofer.sciencedataamanager.datamanager.LoggingDataManager;
+import de.fraunhofer.sciencedataamanager.datamanager.LoggingDatabaseManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SearchDefinitionDataManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SystemInstanceDataManager;
 import java.util.Collection;
@@ -128,7 +128,7 @@ public class SearchDefinitionNew {
 
         } catch (Exception ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
 
         }
 
@@ -141,7 +141,7 @@ public class SearchDefinitionNew {
             systemInstances = systemInstanceDataProvider.getSystemInstances();
         } catch (Exception ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
 
         }
         return systemInstances;
@@ -156,7 +156,7 @@ public class SearchDefinitionNew {
             this.getSystemInstanceList().addAll(this.getSystemInstances());
         } catch (Exception ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
 
         }
     }
@@ -166,7 +166,7 @@ public class SearchDefinitionNew {
             FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
         } catch (Exception ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
 
         }
 

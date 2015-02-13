@@ -12,20 +12,19 @@ import java.sql.Timestamp;
  * @author Moritz Mars
  */
 public class LoggingEntry {
+
     private int ID;
-    private String Message; 
-    private String Category;
-   private Timestamp CreatedDate;
+    private String Message;
+    private LogLevel logLevel;
+
+    private Timestamp CreatedDate;
+
     public int getID() {
         return ID;
     }
 
     public String getMessage() {
         return Message;
-    }
-
-    public String getCategory() {
-        return Category;
     }
 
     public Timestamp getCreatedDate() {
@@ -40,12 +39,16 @@ public class LoggingEntry {
         this.Message = Message;
     }
 
-    public void setCategory(String Category) {
-        this.Category = Category;
-    }
-
     public void setCreatedDate(Timestamp CreatedDate) {
         this.CreatedDate = CreatedDate;
     }
 
+    public LogLevel getLogLevel() {
+        return logLevel;
+    }
+
+    public void setLogLevel(LogLevel logLevel) {
+        this.logLevel = logLevel;
+    }
+    
 }

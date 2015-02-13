@@ -19,7 +19,8 @@ public class ApplicationConfigurationCodeDataManager implements IApplicationConf
     public ApplicationConfiguration getApplicationConfiguration() {
         ApplicationConfiguration applicationConfiguration = new ApplicationConfiguration(); 
         applicationConfiguration.setSqlConnection("jdbc:mysql://MMDESK:3306/sciencedatamanagement?user=scndatamgr&password=55555moritz7");
-            return applicationConfiguration;
+        applicationConfiguration.setLoggingManager(new LoggingDatabaseManager(applicationConfiguration));
+        return applicationConfiguration;
     }
 
     @Override

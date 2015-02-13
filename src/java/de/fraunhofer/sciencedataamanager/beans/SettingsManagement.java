@@ -6,7 +6,7 @@
 package de.fraunhofer.sciencedataamanager.beans;
 
 import de.fraunhofer.sciencedataamanager.datamanager.ApplicationConfigurationPersistanceDataManager;
-import de.fraunhofer.sciencedataamanager.datamanager.LoggingDataManager;
+import de.fraunhofer.sciencedataamanager.datamanager.LoggingDatabaseManager;
 import de.fraunhofer.sciencedataamanager.domain.ApplicationConfiguration;
 import java.util.logging.Level;
 import java.util.logging.Logger;

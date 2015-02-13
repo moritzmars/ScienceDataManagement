@@ -15,7 +15,7 @@ import de.fraunhofer.sciencedataamanager.domain.SystemInstance;
 import de.fraunhofer.sciencedataamanager.business.SearchExecutionManager;
 import de.fraunhofer.sciencedataamanager.datamanager.ApplicationConfigurationDataManagerFactory;
 import de.fraunhofer.sciencedataamanager.datamanager.DataExportInstanceDataManager;
-import de.fraunhofer.sciencedataamanager.datamanager.LoggingDataManager;
+import de.fraunhofer.sciencedataamanager.datamanager.LoggingDatabaseManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SearchDefinitionDataManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SearchDefinitonExecutionDataManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SearchExecutionDataManager;
@@ -120,7 +120,7 @@ public class SearchManagement implements Serializable {
             return searchExecutionManager.getProgressCurrentExecution();
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
         return 0;
@@ -156,7 +156,7 @@ public class SearchManagement implements Serializable {
             searchDefinitonExecution = searchDefinitonExecutionDataProvider.getLastSearchDefinitionExecutionForSearchDefinition(searchDefinition);
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
         return searchDefinitonExecution;
@@ -178,7 +178,7 @@ public class SearchManagement implements Serializable {
             }
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
         return selectedSystemInstances;
@@ -199,7 +199,7 @@ public class SearchManagement implements Serializable {
             systemInstances = systemInstanceDataProvider.getSystemInstances();
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
         return systemInstances;
@@ -213,7 +213,7 @@ public class SearchManagement implements Serializable {
             searchDefinitions = searchDefinitionDataProvider.getSearchDefinitions();
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
         return searchDefinitions;
@@ -228,7 +228,7 @@ public class SearchManagement implements Serializable {
             dataExportInstances = dataExportInstanceDataManager.getDataExportInstances();
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
         return dataExportInstances;
@@ -246,7 +246,7 @@ public class SearchManagement implements Serializable {
             FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -265,7 +265,7 @@ public class SearchManagement implements Serializable {
 
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
         return searchDefinitonExecutionList;
@@ -286,7 +286,7 @@ public class SearchManagement implements Serializable {
 
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
         return searchDefinitonExecutionList;
@@ -311,7 +311,7 @@ public class SearchManagement implements Serializable {
             }
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
         return scientificMetaInformationList;
@@ -322,7 +322,7 @@ public class SearchManagement implements Serializable {
             return searchExecutionManager.getProgressCurrentExecution();
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
         return 0;
@@ -344,7 +344,7 @@ public class SearchManagement implements Serializable {
             this.setButtonRendered(true);
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -376,7 +376,7 @@ public class SearchManagement implements Serializable {
 
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -409,7 +409,7 @@ public class SearchManagement implements Serializable {
 
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
 

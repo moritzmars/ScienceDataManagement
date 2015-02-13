@@ -9,10 +9,8 @@ package de.fraunhofer.sciencedataamanager.domain;
  *
  * @author Moritz Mars
  */
-public class ApplicationConstants {
+public enum LogLevel {
 
-    public static final String PREFERENCE_KEY_SQL_CONNECTION_STRING = "PREFERENCE_KEY_SQL_CONNECTION_STRING";
+    DEBUG, INFO, WARN, ERROR, FATAL
 
 }
-
-

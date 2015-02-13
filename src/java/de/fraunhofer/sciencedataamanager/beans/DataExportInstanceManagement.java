@@ -8,7 +8,7 @@ package de.fraunhofer.sciencedataamanager.beans;
 import de.fraunhofer.sciencedataamanager.domain.ApplicationConfiguration;
 import de.fraunhofer.sciencedataamanager.datamanager.ApplicationConfigurationDataManagerFactory;
 import de.fraunhofer.sciencedataamanager.datamanager.DataExportInstanceDataManager;
-import de.fraunhofer.sciencedataamanager.datamanager.LoggingDataManager;
+import de.fraunhofer.sciencedataamanager.datamanager.LoggingDatabaseManager;
 import de.fraunhofer.sciencedataamanager.domain.DataExportInstance;
 import de.fraunhofer.sciencedataamanager.domain.SystemInstance;
 import java.io.IOException;
@@ -72,7 +72,7 @@ public class DataExportInstanceManagement {
             this.loadedDataExportInstances = getDataExportInstances();
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -85,7 +85,7 @@ public class DataExportInstanceManagement {
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
 
         }
         return dataExportInstances;
@@ -108,7 +108,7 @@ public class DataExportInstanceManagement {
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
 
         }
         return null;
@@ -120,7 +120,7 @@ public class DataExportInstanceManagement {
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
 
         }
     }
@@ -138,7 +138,7 @@ public class DataExportInstanceManagement {
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            LoggingDataManager.logException(ex, applicationConfiguration);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
 
         }
     }
