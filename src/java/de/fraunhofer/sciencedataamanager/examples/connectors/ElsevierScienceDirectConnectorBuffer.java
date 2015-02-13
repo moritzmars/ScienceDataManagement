@@ -20,8 +20,14 @@ import java.util.Date;
 
 public class ElsevierScienceDirectConnectorBuffer implements ICloudPaperConnector {
 
+    private ApplicationConfiguration applicationConfiguration; 
+    public ElsevierScienceDirectConnectorBuffer(ApplicationConfiguration applicationConfiguration)
+    {
+       this.applicationConfiguration = applicationConfiguration; 
+    }    
+
     int progress = 0;
-    int itemTreshhold = 50;
+    int itemTreshhold = 500;
 
     @Override
     public SearchDefinitonExecution getCloudPapers(SearchDefinition searchDefiniton) throws Exception {
@@ -91,10 +97,7 @@ public class ElsevierScienceDirectConnectorBuffer implements ICloudPaperConnecto
 
                         cloudPaperResult.setIdentifier_1(eElement.getElementsByTagName("prism:doi").item(0).getTextContent());
 
-                        ApplicationConfiguration applicationConfiguration = new ApplicationConfiguration();
-                        applicationConfiguration.setSqlConnection("jdbc:mysql://MMDESK:3306/sciencedatamanagement?user=scndatamgr&password=55555moritz7");
-
-                        ScientificPaperMetaInformationDataManager scientificPaperMetaInformationDataManager = new ScientificPaperMetaInformationDataManager(applicationConfiguration);
+                            ScientificPaperMetaInformationDataManager scientificPaperMetaInformationDataManager = new ScientificPaperMetaInformationDataManager(this.applicationConfiguration);
                         ScientificPaperMetaInformation scientificPaperMetaInformationBuffer = scientificPaperMetaInformationDataManager.getScientificMetaInformationByID(cloudPaperResult);
                         if (scientificPaperMetaInformationBuffer != null) {
                             localItemsFound++;
@@ -218,6 +221,7 @@ public class ElsevierScienceDirectConnectorBuffer implements ICloudPaperConnecto
                         progress++;
                     }
                 } catch (Exception ex) {
+                    this.applicationConfiguration.getLoggingManager().logException(ex);
                     ScientificPaperMetaInformationParseException scientificPaperMetaInformationParseException = new ScientificPaperMetaInformationParseException(); 
                     scientificPaperMetaInformationParseException.setParseState("Failed");
                     scientificPaperMetaInformationParseException.setParseException(ex);
@@ -250,3 +254,4 @@ public class ElsevierScienceDirectConnectorBuffer implements ICloudPaperConnecto
     }
 
 }
+

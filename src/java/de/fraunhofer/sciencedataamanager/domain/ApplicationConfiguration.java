@@ -15,7 +15,16 @@ public class ApplicationConfiguration {
  
     private String sqlConnection; 
     private ILoggingManager loggingManager; 
+    private ApplicationLogMonitoringLevel applicationLogMonitoringLevel;
 
+    public ApplicationLogMonitoringLevel getApplicationLogMonitoringLevel() {
+        return applicationLogMonitoringLevel;
+    }
+
+    public void setApplicationLogMonitoringLevel(ApplicationLogMonitoringLevel applicationLogMonitoringLevel) {
+        this.applicationLogMonitoringLevel = applicationLogMonitoringLevel;
+    }
+    
     public ILoggingManager getLoggingManager() {
         return loggingManager;
     }

@@ -12,7 +12,6 @@ package de.fraunhofer.sciencedataamanager.domain;
 public class ApplicationConstants {
 
     public static final String PREFERENCE_KEY_SQL_CONNECTION_STRING = "PREFERENCE_KEY_SQL_CONNECTION_STRING";
+    public static final String PREFERENCE_KEY_SQL_APPLICATION_LOG_MONITORING_LEVEL = "PREFERENCE_KEY_SQL_APPLICATION_LOG_MONITORING_LEVEL";
 
 }
-
-

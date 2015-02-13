@@ -6,6 +6,7 @@
 package de.fraunhofer.sciencedataamanager.datamanager;
 
 import de.fraunhofer.sciencedataamanager.domain.ApplicationConfiguration;
+import de.fraunhofer.sciencedataamanager.domain.ApplicationLogMonitoringLevel;
 import de.fraunhofer.sciencedataamanager.domain.LogLevel;
 import de.fraunhofer.sciencedataamanager.domain.LoggingEntry;
 import de.fraunhofer.sciencedataamanager.interfaces.ILoggingManager;
@@ -27,15 +28,18 @@ import javax.faces.bean.SessionScoped;
 @ManagedBean(name = "loggingDataProvider")
 @SessionScoped
 public class LoggingDatabaseManager implements ILoggingManager {
-    
-    private ApplicationConfiguration applicationConfiguration; 
-    public LoggingDatabaseManager(ApplicationConfiguration applicationConfiguration)
-    {
-       this.applicationConfiguration = applicationConfiguration; 
-       
+
+    private ApplicationConfiguration applicationConfiguration;
+
+    public LoggingDatabaseManager(ApplicationConfiguration applicationConfiguration) {
+        this.applicationConfiguration = applicationConfiguration;
+
     }
-    
+
     public void logException(Exception ex) {
+        if (applicationConfiguration.getApplicationLogMonitoringLevel() == ApplicationLogMonitoringLevel.OFF) {
+            return;
+        }
         LoggingEntry loggingEntry = new LoggingEntry();
         loggingEntry.setLogLevel(LogLevel.FATAL);
         loggingEntry.setMessage(ex.toString());
@@ -43,7 +47,7 @@ public class LoggingDatabaseManager implements ILoggingManager {
         LoggingDatabaseManager loggingDataProvider = new LoggingDatabaseManager(applicationConfiguration);
         loggingDataProvider.insert(loggingEntry);
     }
-    
+
     public void insert(LoggingEntry loggingEntry) {
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -62,19 +66,19 @@ public class LoggingDatabaseManager implements ILoggingManager {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public LinkedList<LoggingEntry> getLoggingEntries() throws Exception {
         LinkedList<LoggingEntry> loggingEntriesList = new LinkedList();
-        
+
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection conn = null;
         conn = DriverManager.getConnection(this.applicationConfiguration.getSqlConnection());
         String query = "SELECT * FROM logging_entries order by ID DESC";
-        
+
         Statement st = conn.createStatement();
         ResultSet rs = st.executeQuery(query);
         while (rs.next()) {
-            
+
             LoggingEntry loggingEntry = new LoggingEntry();
             loggingEntry.setID(rs.getInt("ID"));
             loggingEntry.setMessage(rs.getString("Message"));
@@ -82,22 +86,25 @@ public class LoggingDatabaseManager implements ILoggingManager {
             loggingEntry.setCreatedDate(rs.getTimestamp("CreatedDate"));
             loggingEntriesList.add(loggingEntry);
         }
-        
+
         st.close();
         rs.close();
         conn.close();
         return loggingEntriesList;
-        
+
     }
 
     @Override
     public void log(String message, LogLevel logLevel) {
+        if (applicationConfiguration.getApplicationLogMonitoringLevel() == ApplicationLogMonitoringLevel.OFF) {
+            return;
+        }
         LoggingEntry loggingEntry = new LoggingEntry();
         loggingEntry.setLogLevel(logLevel);
         loggingEntry.setMessage(message);
         loggingEntry.setCreatedDate(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
         LoggingDatabaseManager loggingDataProvider = new LoggingDatabaseManager(applicationConfiguration);
         loggingDataProvider.insert(loggingEntry);
-   }
-    
+    }
+
 }

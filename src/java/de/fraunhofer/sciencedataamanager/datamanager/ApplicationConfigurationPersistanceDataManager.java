@@ -7,6 +7,7 @@ package de.fraunhofer.sciencedataamanager.datamanager;
 
 import de.fraunhofer.sciencedataamanager.domain.ApplicationConstants;
 import de.fraunhofer.sciencedataamanager.domain.ApplicationConfiguration;
+import de.fraunhofer.sciencedataamanager.domain.ApplicationLogMonitoringLevel;
 import de.fraunhofer.sciencedataamanager.interfaces.IApplicationConfigurationDataProvider;
 import java.util.prefs.Preferences;
 
@@ -21,7 +22,9 @@ public class ApplicationConfigurationPersistanceDataManager implements IApplicat
         Preferences prefs = Preferences.userRoot().node("de/fraunhofer/sciencedataamanager/persistence");
         ApplicationConfiguration applicationConfiguration = new ApplicationConfiguration();
         applicationConfiguration.setSqlConnection(prefs.get(ApplicationConstants.PREFERENCE_KEY_SQL_CONNECTION_STRING, ""));
+        applicationConfiguration.setApplicationLogMonitoringLevel(ApplicationLogMonitoringLevel.valueOf(prefs.get(ApplicationConstants.PREFERENCE_KEY_SQL_APPLICATION_LOG_MONITORING_LEVEL, "DEBUG")));
         applicationConfiguration.setLoggingManager(new LoggingDatabaseManager(applicationConfiguration));
+        
         return applicationConfiguration;
     }
 
@@ -29,6 +32,6 @@ public class ApplicationConfigurationPersistanceDataManager implements IApplicat
     public void setApplicationConfiguration(ApplicationConfiguration applicationConfiguration) {
         Preferences prefs = Preferences.userRoot().node("de/fraunhofer/sciencedataamanager/persistence");
         prefs.put(ApplicationConstants.PREFERENCE_KEY_SQL_CONNECTION_STRING, applicationConfiguration.getSqlConnection());
-
+        prefs.put(ApplicationConstants.PREFERENCE_KEY_SQL_APPLICATION_LOG_MONITORING_LEVEL, applicationConfiguration.getApplicationLogMonitoringLevel().toString());
     }
 }
