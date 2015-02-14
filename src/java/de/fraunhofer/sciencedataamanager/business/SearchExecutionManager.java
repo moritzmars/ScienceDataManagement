@@ -16,6 +16,7 @@ import de.fraunhofer.sciencedataamanager.domain.SearchDefinitionExecutionRun;
 import de.fraunhofer.sciencedataamanager.domain.SearchDefinitonExecution;
 import de.fraunhofer.sciencedataamanager.domain.SystemInstance;
 import de.fraunhofer.sciencedataamanager.domain.SearchExecution;
+import de.fraunhofer.sciencedataamanager.examples.connectors.WebOfScienceConnector;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import de.fraunhofer.sciencedataamanager.interfaces.ICloudPaperConnector;
@@ -75,8 +76,9 @@ public class SearchExecutionManager {
                 } else {
                     groovyClassInstance=parsedGroocyClass.newInstance();
                 }
-                currentExecutedConnector = (ICloudPaperConnector) groovyClassInstance;
+                //currentExecutedConnector = (ICloudPaperConnector) groovyClassInstance;
                 //ElsevierScienceDirectConnectorBuffer currentExecutedConnector = new ElsevierScienceDirectConnectorBuffer(); 
+                currentExecutedConnector = new WebOfScienceConnector(this.applicationConfiguration); 
                 searchDefinitonExecution = currentExecutedConnector.getCloudPapers(searchExecution.getSearchDefiniton());
                 searchDefinitonExecution.setSearchState("Success");
                 searchDefinitonExecution.setSearch_Definiton_ID(searchDefinitionID);
@@ -84,7 +86,7 @@ public class SearchExecutionManager {
                 searchDefinitionExecutionRun.getSearchDefinitionExecutionList().add(searchDefinitonExecution);
 
             } catch (Exception ex) {
-                searchDefinitonExecution = new SearchDefinitonExecution();
+                 searchDefinitonExecution = new SearchDefinitonExecution();
                 searchDefinitonExecution.setSearch_Definiton_ID(searchDefinitionID);
                 searchDefinitonExecution.setSystemInstance(systemInstanceLoop);
                 searchDefinitonExecution.setSearchState("Failure");
