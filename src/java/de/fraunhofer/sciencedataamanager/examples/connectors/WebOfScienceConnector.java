@@ -8,6 +8,7 @@ package de.fraunhofer.sciencedataamanager.examples.connectors;
 import de.fraunhofer.sciencedataamanager.connectors.webofscience.*;
 import de.fraunhofer.sciencedataamanager.domain.*;
 import de.fraunhofer.sciencedataamanager.interfaces.ICloudPaperConnector;
+import java.net.URL;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
@@ -45,13 +46,20 @@ public class WebOfScienceConnector implements ICloudPaperConnector {
         }
         query += ")";
         searchDefinitonExecution.setQuery(query);
+
+        URL urlWokAuthenticate = new URL("http://search.webofknowledge.com/esti/wokmws/ws/WOKMWSAuthenticate?wsdl");
+
+        URL urlWokSearchLite = new URL("http://search.webofknowledge.com/esti/wokmws/ws/WokSearchLite?wsdl");
+        URL urlWokSearch = new URL("http://search.webofknowledge.com/esti/wokmws/ws/WokSearch?wsdl");
         
-        WOKMWSAuthenticateService WOKMWSAuthenticateService = new WOKMWSAuthenticateService();
+        searchDefinitonExecution.setRequestUrl(urlWokSearchLite.toString());
+        
+        WOKMWSAuthenticateService WOKMWSAuthenticateService = new WOKMWSAuthenticateService(urlWokAuthenticate);
         WOKMWSAuthenticate WOKMWSAuthenticate = WOKMWSAuthenticateService.getWOKMWSAuthenticatePort();
 
         String sessionIdentifier = WOKMWSAuthenticate.authenticate();
 
-        WokSearchLiteService WokSearchService = new WokSearchLiteService();
+        WokSearchLiteService WokSearchService = new WokSearchLiteService(urlWokSearchLite);
         WokSearchLite wokSearch = WokSearchService.getWokSearchLitePort();
         BindingProvider bp = (BindingProvider) wokSearch;
 
@@ -85,8 +93,9 @@ public class WebOfScienceConnector implements ICloudPaperConnector {
                         for (LabelValuesPair currentLabeValuePair : currentRecord.getSource()) {
                             switch (currentLabeValuePair.getLabel()) {
                                 case "Issue":
-                                    if (!currentLabeValuePair.getValue().isEmpty())
-                                    scientificPaperMetaInformation.setScrIdentifier_1(currentLabeValuePair.getValue().get(0));
+                                    if (!currentLabeValuePair.getValue().isEmpty()) {
+                                        scientificPaperMetaInformation.setScrIdentifier_1(currentLabeValuePair.getValue().get(0));
+                                    }
                                     break;
                                 case "Pages":
                                     if (!currentLabeValuePair.getValue().isEmpty()) {
@@ -99,22 +108,26 @@ public class WebOfScienceConnector implements ICloudPaperConnector {
                                     }
                                     break;
                                 case "Published.BiblioDate":
-                                    if (!currentLabeValuePair.getValue().isEmpty())
-                                    System.out.println(currentLabeValuePair.getValue().get(0));
+                                    if (!currentLabeValuePair.getValue().isEmpty()) {
+                                        System.out.println(currentLabeValuePair.getValue().get(0));
+                                    }
 
                                     //scientificPaperMetaInformation.setScrIdentifier_1(currentLabeValuePair.getValue().get(0));
                                     break;
                                 case "Published.BiblioYear":
-                                    if (!currentLabeValuePair.getValue().isEmpty())
-                                    //scientificPaperMetaInformation.setScrIdentifier_1(currentLabeValuePair.getValue().get(0));
-                                    break;
+                                    if (!currentLabeValuePair.getValue().isEmpty()) //scientificPaperMetaInformation.setScrIdentifier_1(currentLabeValuePair.getValue().get(0));
+                                    {
+                                        break;
+                                    }
                                 case "SourceTitle":
-                                    if (!currentLabeValuePair.getValue().isEmpty())
-                                    scientificPaperMetaInformation.setSrcTitle(currentLabeValuePair.getValue().get(0));
+                                    if (!currentLabeValuePair.getValue().isEmpty()) {
+                                        scientificPaperMetaInformation.setSrcTitle(currentLabeValuePair.getValue().get(0));
+                                    }
                                     break;
                                 case "Volume":
-                                    if (!currentLabeValuePair.getValue().isEmpty())
-                                    scientificPaperMetaInformation.setSrcVolume(Integer.parseInt(currentLabeValuePair.getValue().get(0)));
+                                    if (!currentLabeValuePair.getValue().isEmpty()) {
+                                        scientificPaperMetaInformation.setSrcVolume(Integer.parseInt(currentLabeValuePair.getValue().get(0)));
+                                    }
                                     break;
                             }
                         }
