@@ -76,9 +76,9 @@ public class SearchExecutionManager {
                 } else {
                     groovyClassInstance=parsedGroocyClass.newInstance();
                 }
-                //currentExecutedConnector = (ICloudPaperConnector) groovyClassInstance;
+                currentExecutedConnector = (ICloudPaperConnector) groovyClassInstance;
                 //ElsevierScienceDirectConnectorBuffer currentExecutedConnector = new ElsevierScienceDirectConnectorBuffer(); 
-                currentExecutedConnector = new WebOfScienceConnector(this.applicationConfiguration); 
+                //currentExecutedConnector = new WebOfScienceConnector(this.applicationConfiguration); 
                 searchDefinitonExecution = currentExecutedConnector.getCloudPapers(searchExecution.getSearchDefiniton());
                 searchDefinitonExecution.setSearchState("Success");
                 searchDefinitonExecution.setSearch_Definiton_ID(searchDefinitionID);
