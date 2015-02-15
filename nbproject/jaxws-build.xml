@@ -28,7 +28,7 @@
     </target>
     <target name="wsimport-client-WOKMWSAuthenticate" depends="wsimport-init">
         <mkdir dir="${build.generated.dir}/jax-wsCache/WOKMWSAuthenticate"/>
-        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/WOKMWSAuthenticate" destdir="${build.generated.dir}/jax-wsCache/WOKMWSAuthenticate" wsdl="${basedir}/${conf-dir}xml-resources/web-service-references/WOKMWSAuthenticate/wsdl/search.webofknowledge.com/esti/wokmws/ws/WOKMWSAuthenticate.wsdl" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://search.webofknowledge.com/esti/wokmws/ws/WOKMWSAuthenticate?wsdl" xnocompile="true" xendorsed="true" package="de.fraunhofer.sciencedataamanager.examples.connectors">
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/WOKMWSAuthenticate" destdir="${build.generated.dir}/jax-wsCache/WOKMWSAuthenticate" wsdl="${basedir}/${conf-dir}xml-resources/web-service-references/WOKMWSAuthenticate/wsdl/search.webofknowledge.com/esti/wokmws/ws/WOKMWSAuthenticate.wsdl" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://search.webofknowledge.com/esti/wokmws/ws/WOKMWSAuthenticate?wsdl" xnocompile="true" xendorsed="true" package="de.fraunhofer.sciencedataamanager.connectors.webofscience">
             <depends file="${basedir}/${conf-dir}xml-resources/web-service-references/WOKMWSAuthenticate/wsdl/search.webofknowledge.com/esti/wokmws/ws/WOKMWSAuthenticate.wsdl"/>
             <produces dir="${build.generated.dir}/jax-wsCache/WOKMWSAuthenticate"/>
         </wsimport>
@@ -39,12 +39,12 @@
         </copy>
     </target>
     <target name="wsimport-client-clean-WOKMWSAuthenticate" depends="-init-project">
-        <delete dir="${build.generated.sources.dir}/jax-ws/de/fraunhofer/sciencedataamanager/examples/connectors"/>
+        <delete dir="${build.generated.sources.dir}/jax-ws/de/fraunhofer/sciencedataamanager/connectors/webofscience"/>
         <delete dir="${build.generated.dir}/jax-wsCache/WOKMWSAuthenticate"/>
     </target>
     <target name="wsimport-client-WokSearch" depends="wsimport-init">
         <mkdir dir="${build.generated.dir}/jax-wsCache/WokSearch"/>
-        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/WokSearch" destdir="${build.generated.dir}/jax-wsCache/WokSearch" wsdl="${basedir}/${conf-dir}xml-resources/web-service-references/WokSearch/wsdl/search.webofknowledge.com/esti/wokmws/ws/WokSearch.wsdl" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://search.webofknowledge.com/esti/wokmws/ws/WokSearch?wsdl" xnocompile="true" xendorsed="true" package="de.fraunhofer.sciencedataamanager.examples.connectors">
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/WokSearch" destdir="${build.generated.dir}/jax-wsCache/WokSearch" wsdl="${basedir}/${conf-dir}xml-resources/web-service-references/WokSearch/wsdl/search.webofknowledge.com/esti/wokmws/ws/WokSearch.wsdl" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://search.webofknowledge.com/esti/wokmws/ws/WokSearch?wsdl" xnocompile="true" xendorsed="true" package="de.fraunhofer.sciencedataamanager.connectors.webofscience">
             <depends file="${basedir}/${conf-dir}xml-resources/web-service-references/WokSearch/wsdl/search.webofknowledge.com/esti/wokmws/ws/WokSearch.wsdl"/>
             <produces dir="${build.generated.dir}/jax-wsCache/WokSearch"/>
         </wsimport>
@@ -55,12 +55,12 @@
         </copy>
     </target>
     <target name="wsimport-client-clean-WokSearch" depends="-init-project">
-        <delete dir="${build.generated.sources.dir}/jax-ws/de/fraunhofer/sciencedataamanager/examples/connectors"/>
+        <delete dir="${build.generated.sources.dir}/jax-ws/de/fraunhofer/sciencedataamanager/connectors/webofscience"/>
         <delete dir="${build.generated.dir}/jax-wsCache/WokSearch"/>
     </target>
     <target name="wsimport-client-WokSearchLite" depends="wsimport-init">
         <mkdir dir="${build.generated.dir}/jax-wsCache/WokSearchLite"/>
-        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/WokSearchLite" destdir="${build.generated.dir}/jax-wsCache/WokSearchLite" wsdl="${basedir}/${conf-dir}xml-resources/web-service-references/WokSearchLite/wsdl/search.webofknowledge.com/esti/wokmws/ws/WokSearchLite.wsdl" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://search.webofknowledge.com/esti/wokmws/ws/WokSearchLite?wsdl" xnocompile="true" xendorsed="true" package="de.fraunhofer.sciencedataamanager.examples.connectors">
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/WokSearchLite" destdir="${build.generated.dir}/jax-wsCache/WokSearchLite" wsdl="${basedir}/${conf-dir}xml-resources/web-service-references/WokSearchLite/wsdl/search.webofknowledge.com/esti/wokmws/ws/WokSearchLite.wsdl" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://search.webofknowledge.com/esti/wokmws/ws/WokSearchLite?wsdl" xnocompile="true" xendorsed="true" package="de.fraunhofer.sciencedataamanager.connectors.webofscience">
             <depends file="${basedir}/${conf-dir}xml-resources/web-service-references/WokSearchLite/wsdl/search.webofknowledge.com/esti/wokmws/ws/WokSearchLite.wsdl"/>
             <produces dir="${build.generated.dir}/jax-wsCache/WokSearchLite"/>
         </wsimport>
@@ -71,7 +71,7 @@
         </copy>
     </target>
     <target name="wsimport-client-clean-WokSearchLite" depends="-init-project">
-        <delete dir="${build.generated.sources.dir}/jax-ws/de/fraunhofer/sciencedataamanager/examples/connectors"/>
+        <delete dir="${build.generated.sources.dir}/jax-ws/de/fraunhofer/sciencedataamanager/connectors/webofscience"/>
         <delete dir="${build.generated.dir}/jax-wsCache/WokSearchLite"/>
     </target>
     <target name="wsimport-client-generate" depends="wsimport-client-WOKMWSAuthenticate, wsimport-client-WokSearch, wsimport-client-WokSearchLite"/>
