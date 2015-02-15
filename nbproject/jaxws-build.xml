@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+        *** GENERATED FROM jax-ws.xml - DO NOT EDIT !                             ***
+        *** TO MODIFY wsimport options USE Web Service node -> Edit WS Attributes ***
+        *** TO CHANGE TARGETS GENERATED TO jaxws-build.xml COPY THOSE             ***
+        *** TARGETS TO ../build.xml AND MODIFY THAT FILE INSTEAD                  ***
+
+        --><project xmlns:xalan="http://xml.apache.org/xslt" xmlns:webproject2="http://www.netbeans.org/ns/web-project/2" xmlns:jaxws="http://www.netbeans.org/ns/jax-ws/1">
+    <!--
+                ===================
+                JAX-WS WSGEN SECTION
+                ===================
+            -->
+    <!--
+                ===================
+                JAX-WS WSIMPORT SECTION
+                ===================
+            -->
+    <target name="wsimport-init" depends="init">
+        <fail if="${wsimport.bad.version}" message="WsImport ant task defined in the classpath ${j2ee.platform.wsimport.classpath} has a serious bug. See http://wiki.netbeans.org/MetroIssue for details."/>
+        <mkdir dir="${build.generated.sources.dir}/jax-ws"/>
+        <property name="j2ee.platform.wsimport.classpath" value="${libs.jaxws21.classpath}"/>
+        <taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport">
+            <classpath path="${java.home}/../lib/tools.jar:${j2ee.platform.wsimport.classpath}:${javac.classpath}"/>
+        </taskdef>
+        <condition property="conf-dir" value="${conf.dir}/" else="">
+            <isset property="conf.dir"/>
+        </condition>
+    </target>
+    <target name="wsimport-client-WOKMWSAuthenticate" depends="wsimport-init">
+        <mkdir dir="${build.generated.dir}/jax-wsCache/WOKMWSAuthenticate"/>
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/WOKMWSAuthenticate" destdir="${build.generated.dir}/jax-wsCache/WOKMWSAuthenticate" wsdl="${basedir}/${conf-dir}xml-resources/web-service-references/WOKMWSAuthenticate/wsdl/search.webofknowledge.com/esti/wokmws/ws/WOKMWSAuthenticate.wsdl" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://search.webofknowledge.com/esti/wokmws/ws/WOKMWSAuthenticate?wsdl" xnocompile="true" xendorsed="true" package="de.fraunhofer.sciencedataamanager.examples.connectors">
+            <depends file="${basedir}/${conf-dir}xml-resources/web-service-references/WOKMWSAuthenticate/wsdl/search.webofknowledge.com/esti/wokmws/ws/WOKMWSAuthenticate.wsdl"/>
+            <produces dir="${build.generated.dir}/jax-wsCache/WOKMWSAuthenticate"/>
+        </wsimport>
+        <copy todir="${build.generated.sources.dir}/jax-ws">
+            <fileset dir="${build.generated.dir}/jax-wsCache/WOKMWSAuthenticate">
+                <include name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="wsimport-client-clean-WOKMWSAuthenticate" depends="-init-project">
+        <delete dir="${build.generated.sources.dir}/jax-ws/de/fraunhofer/sciencedataamanager/examples/connectors"/>
+        <delete dir="${build.generated.dir}/jax-wsCache/WOKMWSAuthenticate"/>
+    </target>
+    <target name="wsimport-client-WokSearch" depends="wsimport-init">
+        <mkdir dir="${build.generated.dir}/jax-wsCache/WokSearch"/>
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/WokSearch" destdir="${build.generated.dir}/jax-wsCache/WokSearch" wsdl="${basedir}/${conf-dir}xml-resources/web-service-references/WokSearch/wsdl/search.webofknowledge.com/esti/wokmws/ws/WokSearch.wsdl" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://search.webofknowledge.com/esti/wokmws/ws/WokSearch?wsdl" xnocompile="true" xendorsed="true" package="de.fraunhofer.sciencedataamanager.examples.connectors">
+            <depends file="${basedir}/${conf-dir}xml-resources/web-service-references/WokSearch/wsdl/search.webofknowledge.com/esti/wokmws/ws/WokSearch.wsdl"/>
+            <produces dir="${build.generated.dir}/jax-wsCache/WokSearch"/>
+        </wsimport>
+        <copy todir="${build.generated.sources.dir}/jax-ws">
+            <fileset dir="${build.generated.dir}/jax-wsCache/WokSearch">
+                <include name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="wsimport-client-clean-WokSearch" depends="-init-project">
+        <delete dir="${build.generated.sources.dir}/jax-ws/de/fraunhofer/sciencedataamanager/examples/connectors"/>
+        <delete dir="${build.generated.dir}/jax-wsCache/WokSearch"/>
+    </target>
+    <target name="wsimport-client-WokSearchLite" depends="wsimport-init">
+        <mkdir dir="${build.generated.dir}/jax-wsCache/WokSearchLite"/>
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/WokSearchLite" destdir="${build.generated.dir}/jax-wsCache/WokSearchLite" wsdl="${basedir}/${conf-dir}xml-resources/web-service-references/WokSearchLite/wsdl/search.webofknowledge.com/esti/wokmws/ws/WokSearchLite.wsdl" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://search.webofknowledge.com/esti/wokmws/ws/WokSearchLite?wsdl" xnocompile="true" xendorsed="true" package="de.fraunhofer.sciencedataamanager.examples.connectors">
+            <depends file="${basedir}/${conf-dir}xml-resources/web-service-references/WokSearchLite/wsdl/search.webofknowledge.com/esti/wokmws/ws/WokSearchLite.wsdl"/>
+            <produces dir="${build.generated.dir}/jax-wsCache/WokSearchLite"/>
+        </wsimport>
+        <copy todir="${build.generated.sources.dir}/jax-ws">
+            <fileset dir="${build.generated.dir}/jax-wsCache/WokSearchLite">
+                <include name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="wsimport-client-clean-WokSearchLite" depends="-init-project">
+        <delete dir="${build.generated.sources.dir}/jax-ws/de/fraunhofer/sciencedataamanager/examples/connectors"/>
+        <delete dir="${build.generated.dir}/jax-wsCache/WokSearchLite"/>
+    </target>
+    <target name="wsimport-client-generate" depends="wsimport-client-WOKMWSAuthenticate, wsimport-client-WokSearch, wsimport-client-WokSearchLite"/>
+</project>
