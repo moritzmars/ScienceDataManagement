@@ -20,11 +20,11 @@ import java.util.Date;
 
 public class ElsevierScienceDirectConnectorBuffer implements ICloudPaperConnector {
 
-    private ApplicationConfiguration applicationConfiguration; 
-    public ElsevierScienceDirectConnectorBuffer(ApplicationConfiguration applicationConfiguration)
-    {
-       this.applicationConfiguration = applicationConfiguration; 
-    }    
+    private ApplicationConfiguration applicationConfiguration;
+
+    public ElsevierScienceDirectConnectorBuffer(ApplicationConfiguration applicationConfiguration) {
+        this.applicationConfiguration = applicationConfiguration;
+    }
 
     int progress = 0;
     int itemTreshhold = 500;
@@ -86,8 +86,6 @@ public class ElsevierScienceDirectConnectorBuffer implements ICloudPaperConnecto
                 try {
                     Node nNode = nList.item(temp);
 
-                    System.out.println("\nCurrent Element :" + nNode.getNodeName());
-
                     if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                         Element eElement = (Element) nNode;
                         //for (MappingDefinition mappingDefiniton : mappingDefinitons)
@@ -97,8 +95,9 @@ public class ElsevierScienceDirectConnectorBuffer implements ICloudPaperConnecto
 
                         cloudPaperResult.setIdentifier_1(eElement.getElementsByTagName("prism:doi").item(0).getTextContent());
 
-                            ScientificPaperMetaInformationDataManager scientificPaperMetaInformationDataManager = new ScientificPaperMetaInformationDataManager(this.applicationConfiguration);
-                        ScientificPaperMetaInformation scientificPaperMetaInformationBuffer = scientificPaperMetaInformationDataManager.getScientificMetaInformationByID(cloudPaperResult);
+                        ScientificPaperMetaInformationDataManager scientificPaperMetaInformationDataManager = new ScientificPaperMetaInformationDataManager(this.applicationConfiguration);
+                        ScientificPaperMetaInformation scientificPaperMetaInformationBuffer = scientificPaperMetaInformationDataManager.getScientificMetaInformationByID(eElement.getElementsByTagName("prism:doi").item(0).getTextContent(), "Identifier_1");
+                        scientificPaperMetaInformationBuffer = null;
                         if (scientificPaperMetaInformationBuffer != null) {
                             localItemsFound++;
                             scientificPaperMetaInformation.add(scientificPaperMetaInformationBuffer);
@@ -131,10 +130,11 @@ public class ElsevierScienceDirectConnectorBuffer implements ICloudPaperConnecto
                                     //{
 
                                     Element eElementItemDetailByDOI = (Element) nNodeItemDetailByDOI;
+
                                     Calendar calendar = Calendar.getInstance();
                                     java.sql.Timestamp ourJavaTimestampObject = new java.sql.Timestamp(calendar.getTime().getTime());
 
-                                    ScientificPaperMetaInformationAuthors creator = new ScientificPaperMetaInformationAuthors();
+                                   // ScientificPaperMetaInformationAuthors creator = new ScientificPaperMetaInformationAuthors();
 
                                     if (eElementItemDetailByDOI.getElementsByTagName("prism:coverDate").item(0) != null) {
                                         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -146,13 +146,13 @@ public class ElsevierScienceDirectConnectorBuffer implements ICloudPaperConnecto
                                     cloudPaperResult.setTitle(eElementItemDetailByDOI.getElementsByTagName("dc:title").item(0).getTextContent());
                                     //cloudPaperResult.setCreator(eElementItemDetailByDOI.getElementsByTagName("dc:creator").item(0).getTextContent());
 
-                                    if (eElementItemDetailByDOI.getElementsByTagName("dc:creator").item(0) != null) {
-                                        String[] parts = eElementItemDetailByDOI.getElementsByTagName("dc:creator").item(0).getTextContent().split(",");
-                                        if (parts.length == 2) {
-                                            creator.setGivenName(parts[0]);
-                                            creator.setSurName(parts[1]);
-                                        }
-                                    }
+                                    //if (eElementItemDetailByDOI.getElementsByTagName("dc:creator").item(0) != null) {
+                                    //    String[] parts = eElementItemDetailByDOI.getElementsByTagName("dc:creator").item(0).getTextContent().split(",");
+                                    //    if (parts.length == 2) {
+                                   //         creator.setGivenName(parts[0]);
+                                   //         creator.setSurName(parts[1]);
+                                   //     }
+                                  //  }
 
                                     cloudPaperResult
                                             .setScrPublisherName(eElementItemDetailByDOI.getElementsByTagName("prism:publicationName").item(0).getTextContent());
@@ -201,9 +201,25 @@ public class ElsevierScienceDirectConnectorBuffer implements ICloudPaperConnecto
                                         cloudPaperResult.setScrIdentifier_1(eElementItemDetailByDOI.getElementsByTagName("prism:issueIdentifier").item(0).getTextContent());
                                     }
 
+                                    NodeList nListItemAuthorsByDOI = eElementItemDetailByDOI.getElementsByTagName("author");
+                                    for (int k = 0; k < nListItemAuthorsByDOI.getLength(); ++k) {
+                                        Element authorElement = (Element) nListItemAuthorsByDOI.item(k);
+                                        ScientificPaperMetaInformationAuthors author = new ScientificPaperMetaInformationAuthors();
+                                        if (authorElement.getElementsByTagName("given-name").item(0) != null) {
+
+                                            author.setGivenName(authorElement.getElementsByTagName("given-name").item(0).getTextContent());
+                                        }
+                                        if (authorElement.getElementsByTagName("surname").item(0) != null) {
+
+                                            author.setSurName(authorElement.getElementsByTagName("surname").item(0).getTextContent());
+                                        }
+                                        cloudPaperResult.getAuthors().add(author);
+
+                                    }
+
                                     cloudPaperResult.setLocalizedTime(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
 
-                                    cloudPaperResult.getAuthors().add(creator);
+                                    //cloudPaperResult.getAuthors().add(creator);
                                     //}
                                     scientificPaperMetaInformation.add(cloudPaperResult);
                                     progress++;
@@ -222,7 +238,7 @@ public class ElsevierScienceDirectConnectorBuffer implements ICloudPaperConnecto
                     }
                 } catch (Exception ex) {
                     this.applicationConfiguration.getLoggingManager().logException(ex);
-                    ScientificPaperMetaInformationParseException scientificPaperMetaInformationParseException = new ScientificPaperMetaInformationParseException(); 
+                    ScientificPaperMetaInformationParseException scientificPaperMetaInformationParseException = new ScientificPaperMetaInformationParseException();
                     scientificPaperMetaInformationParseException.setParseState("Failed");
                     scientificPaperMetaInformationParseException.setParseException(ex);
                     scientificPaperMetaInformationParseException.setScientificPaperMetaInformation(cloudPaperResult);
@@ -237,7 +253,9 @@ public class ElsevierScienceDirectConnectorBuffer implements ICloudPaperConnecto
         }
 
         searchDefinitonExecution.setCrawledItems(crawledItems);
+
         searchDefinitonExecution.setNewItems(newItemsFound);
+
         searchDefinitonExecution.setLocalItemsFound(localItemsFound);
 
         searchDefinitonExecution.setScientificPaperMetaInformation(scientificPaperMetaInformation);
@@ -254,4 +272,3 @@ public class ElsevierScienceDirectConnectorBuffer implements ICloudPaperConnecto
     }
 
 }
-

@@ -20,6 +20,8 @@ public class SearchDefinitionExecutionRun {
     private LinkedList<SearchDefinitonExecution> searchDefinitionExecutionList = new LinkedList<SearchDefinitonExecution>();
     private Timestamp StartExecutionTimestamp;
     private Timestamp FinishedExecutionTimestamp;
+    private String searchExecutionState;
+    private String message;
 
     public int getID() {
         return ID;
@@ -27,6 +29,22 @@ public class SearchDefinitionExecutionRun {
 
     public void setID(int ID) {
         this.ID = ID;
+    }
+
+    public String getSearchExecutionState() {
+        return searchExecutionState;
+    }
+
+    public void setSearchExecutionState(String searchExecutionState) {
+        this.searchExecutionState = searchExecutionState;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public String getDescription() {

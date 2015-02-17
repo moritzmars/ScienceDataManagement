@@ -6,21 +6,14 @@
 package de.fraunhofer.sciencedataamanager.datamanager;
 
 import de.fraunhofer.sciencedataamanager.domain.SearchDefinition;
-import de.fraunhofer.sciencedataamanager.domain.SearchExecution;
 import de.fraunhofer.sciencedataamanager.domain.ApplicationConfiguration;
-import de.fraunhofer.sciencedataamanager.domain.ScientificPaperMetaInformation;
 import de.fraunhofer.sciencedataamanager.domain.SearchDefinitionExecutionRun;
 import de.fraunhofer.sciencedataamanager.domain.SearchDefinitonExecution;
-import de.fraunhofer.sciencedataamanager.domain.SearchTerm;
-import de.fraunhofer.sciencedataamanager.domain.SystemInstance;
-import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.LinkedList;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.*;
 
 /**
  *

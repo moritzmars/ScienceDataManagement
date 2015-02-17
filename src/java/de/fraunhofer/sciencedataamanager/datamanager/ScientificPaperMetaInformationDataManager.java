@@ -161,13 +161,13 @@ public class ScientificPaperMetaInformationDataManager {
         conn.close();
     }
 
-    public ScientificPaperMetaInformation getScientificMetaInformationByID(ScientificPaperMetaInformation scientificPaperMetaInformation) throws Exception {
+    public ScientificPaperMetaInformation getScientificMetaInformationByID(String id, String identifierColumnName) throws Exception {
 
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection conn = null;
         conn = DriverManager.getConnection(this.applicationConfiguration.getSqlConnection());
-        String query = "SELECT * FROM scientific_paper_meta_information where Identifier_1='" + scientificPaperMetaInformation.getIdentifier_1() + "'";
-        scientificPaperMetaInformation = null;
+        String query = "SELECT * FROM scientific_paper_meta_information where "+identifierColumnName+"='" + id + "'";
+        ScientificPaperMetaInformation scientificPaperMetaInformation = null; 
         Statement st = conn.createStatement();
         ResultSet rs = st.executeQuery(query);
         while (rs.next()) {
