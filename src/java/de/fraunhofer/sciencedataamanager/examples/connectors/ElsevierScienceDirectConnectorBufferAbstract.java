@@ -18,11 +18,11 @@ import de.fraunhofer.sciencedataamanager.datamanager.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class ElsevierScienceDirectConnectorBuffer implements ICloudPaperConnector {
+public class ElsevierScienceDirectConnectorBufferAbstract implements ICloudPaperConnector {
 
     private ApplicationConfiguration applicationConfiguration;
 
-    public ElsevierScienceDirectConnectorBuffer(ApplicationConfiguration applicationConfiguration) {
+    public ElsevierScienceDirectConnectorBufferAbstract(ApplicationConfiguration applicationConfiguration) {
         this.applicationConfiguration = applicationConfiguration;
     }
 
@@ -93,7 +93,7 @@ public class ElsevierScienceDirectConnectorBuffer implements ICloudPaperConnecto
                         if (eElement.getElementsByTagName("eid").item(0) == null) {
                             continue;
                         }
-                 
+
                         cloudPaperResult.setIdentifier_2(eElement.getElementsByTagName("eid").item(0).getTextContent());
 
                         ScientificPaperMetaInformationDataManager scientificPaperMetaInformationDataManager = new ScientificPaperMetaInformationDataManager(this.applicationConfiguration);
@@ -104,7 +104,8 @@ public class ElsevierScienceDirectConnectorBuffer implements ICloudPaperConnecto
                             scientificPaperMetaInformation.add(scientificPaperMetaInformationBuffer);
                         } else {
                             String currentEID = cloudPaperResult.getIdentifier_2();
-                            String uriItemDetailByDOI = "http://api.elsevier.com/content/abstract/eid/"+currentEID+"?apiKey=db7751387e990e0e08b3bccb1b1c67ed";
+                            String uriItemDetailByDOI = "http://api.elsevier.com/content/abstract/eid/" + currentEID + "?apiKey=db7751387e990e0e08b3bccb1b1c67ed";
+                            cloudPaperResult.setUrl_2(uriItemDetailByDOI);
                             URL urlItemDetailByDOI = new URL(uriItemDetailByDOI);
                             HttpURLConnection connectionItemDetailByDOI = (HttpURLConnection) urlItemDetailByDOI.openConnection();
                             connectionItemDetailByDOI.setRequestMethod("GET");
@@ -119,20 +120,19 @@ public class ElsevierScienceDirectConnectorBuffer implements ICloudPaperConnecto
 
                             docItemDetailByDOI.getDocumentElement().normalize();
 
-                            NodeList nListItemDetailByDOI = docItemDetailByDOI.getElementsByTagName("entry");
+                            NodeList nListItemDetailByDOI = docItemDetailByDOI.getElementsByTagName("coredata");
 
                             for (int tempItemDetailByDOI = 0; tempItemDetailByDOI < nListItemDetailByDOI.getLength(); tempItemDetailByDOI++) {
 
                                 Node nNodeItemDetailByDOI = nListItemDetailByDOI.item(tempItemDetailByDOI);
 
                                 if (nNodeItemDetailByDOI.getNodeType() == Node.ELEMENT_NODE) {
-                               
+
                                     Element eElementItemDetailByDOI = (Element) nNodeItemDetailByDOI;
 
                                     Calendar calendar = Calendar.getInstance();
                                     java.sql.Timestamp ourJavaTimestampObject = new java.sql.Timestamp(calendar.getTime().getTime());
 
-                                    // ScientificPaperMetaInformationAuthors creator = new ScientificPaperMetaInformationAuthors();
                                     if (eElementItemDetailByDOI.getElementsByTagName("prism:coverDate").item(0) != null) {
                                         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                                         Date parsedDate = dateFormat.parse(eElementItemDetailByDOI.getElementsByTagName("prism:coverDate").item(0).getTextContent());
@@ -143,8 +143,8 @@ public class ElsevierScienceDirectConnectorBuffer implements ICloudPaperConnecto
                                         cloudPaperResult.setTitle(eElementItemDetailByDOI.getElementsByTagName("dc:title").item(0).getTextContent());
 
                                     }
-                                    //cloudPaperResult.setCreator(eElementItemDetailByDOI.getElementsByTagName("dc:creator").item(0).getTextContent());
 
+                                    //cloudPaperResult.setCreator(eElementItemDetailByDOI.getElementsByTagName("dc:creator").item(0).getTextContent());
                                     //if (eElementItemDetailByDOI.getElementsByTagName("dc:creator").item(0) != null) {
                                     //    String[] parts = eElementItemDetailByDOI.getElementsByTagName("dc:creator").item(0).getTextContent().split(",");
                                     //    if (parts.length == 2) {
@@ -202,39 +202,41 @@ public class ElsevierScienceDirectConnectorBuffer implements ICloudPaperConnecto
                                         cloudPaperResult.setScrIdentifier_1(eElementItemDetailByDOI.getElementsByTagName("prism:issueIdentifier").item(0).getTextContent());
                                     }
 
-                                    if (eElementItemDetailByDOI.getElementsByTagName("dc:description").item(0) != null) {
-                                        cloudPaperResult.setText_2(eElementItemDetailByDOI.getElementsByTagName("dc:description").item(0).getTextContent());
+                                    if (eElementItemDetailByDOI.getElementsByTagName("ce:para").item(0) != null) {
+                                        cloudPaperResult.setText_2(eElementItemDetailByDOI.getElementsByTagName("ce:para").item(0).getTextContent());
                                     }
                                     if (eElementItemDetailByDOI.getElementsByTagName("authkeywords").item(0) != null) {
                                         cloudPaperResult.setText_3(eElementItemDetailByDOI.getElementsByTagName("authkeywords").item(0).getTextContent());
                                     }
-                                    NodeList nListItemAuthorsByDOI = eElementItemDetailByDOI.getElementsByTagName("author");
-                                    for (int k = 0; k < nListItemAuthorsByDOI.getLength(); ++k) {
-                                        Element authorElement = (Element) nListItemAuthorsByDOI.item(k);
-                                        ScientificPaperMetaInformationAuthors author = new ScientificPaperMetaInformationAuthors();
-                                        if (authorElement.getElementsByTagName("given-name").item(0) != null) {
-
-                                            author.setGivenName(authorElement.getElementsByTagName("given-name").item(0).getTextContent());
-                                        }
-                                        if (authorElement.getElementsByTagName("surname").item(0) != null) {
-
-                                            author.setSurName(authorElement.getElementsByTagName("surname").item(0).getTextContent());
-                                        }
-                                        cloudPaperResult.getAuthors().add(author);
-
+                                    if (eElementItemDetailByDOI.getElementsByTagName("prism:issn").item(0) != null) {
+                                        cloudPaperResult.setSrcIISN(eElementItemDetailByDOI.getElementsByTagName("prism:issn").item(0).getTextContent());
                                     }
 
-                                    cloudPaperResult.setLocalizedTime(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
-
-                                    //cloudPaperResult.getAuthors().add(creator);
-                                    //}
-                                    scientificPaperMetaInformation.add(cloudPaperResult);
-                                    progress++;
-                                    newItemsFound++;
                                     break;
                                 }
+                            }
+                            NodeList nListItemDetailByAuhor = docItemDetailByDOI.getElementsByTagName("authors");
+                            Element innerAuthors = (Element) nListItemDetailByAuhor.item(0);
+                            NodeList nListItemDetailByAuhors = innerAuthors.getElementsByTagName("author");
+                            
+                            for (int k = 0; k < nListItemDetailByAuhors.getLength(); ++k) {
+                                Element authorElement = (Element) nListItemDetailByAuhors.item(k);
+                                ScientificPaperMetaInformationAuthors author = new ScientificPaperMetaInformationAuthors();
+                                if (authorElement.getElementsByTagName("ce:surname").item(0) != null) {
+
+                                    author.setGivenName(authorElement.getElementsByTagName("ce:surname").item(0).getTextContent());
+                                }
+                                if (authorElement.getElementsByTagName("ce:given-name").item(0) != null) {
+
+                                    author.setSurName(authorElement.getElementsByTagName("ce:given-name").item(0).getTextContent());
+                                }
+                                cloudPaperResult.getAuthors().add(author);
 
                             }
+                            cloudPaperResult.setLocalizedTime(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
+                            scientificPaperMetaInformation.add(cloudPaperResult);
+                            progress++;
+                            newItemsFound++;
                             xmlItemDetailByDOI.close();
                             connectionItemDetailByDOI.disconnect();
                         }
@@ -254,7 +256,9 @@ public class ElsevierScienceDirectConnectorBuffer implements ICloudPaperConnecto
                     connection.disconnect();
                 }
             }
+
             xml.close();
+
             connection.disconnect();
 
         }
