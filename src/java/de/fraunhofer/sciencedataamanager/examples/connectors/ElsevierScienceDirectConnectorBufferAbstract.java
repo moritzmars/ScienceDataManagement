@@ -8,15 +8,20 @@ import java.util.LinkedList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
+//import org.w3c.dom.Element;
+//import org.w3c.dom.Node;
+//import org.w3c.dom.NodeList;
 import de.fraunhofer.sciencedataamanager.interfaces.*;
 import de.fraunhofer.sciencedataamanager.domain.*;
 import de.fraunhofer.sciencedataamanager.datamanager.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import org.jdom2.Attribute;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.Namespace;
+import org.jdom2.input.SAXBuilder;
 
 public class ElsevierScienceDirectConnectorBufferAbstract implements ICloudPaperConnector {
 
@@ -35,27 +40,29 @@ public class ElsevierScienceDirectConnectorBufferAbstract implements ICloudPaper
         //List<MappingDefinition> mappingDefinitons = mappingDefinitonManager.getMappingDefinitons(""); 
         SearchDefinitonExecution searchDefinitonExecution = new SearchDefinitonExecution();
         searchDefinitonExecution.setStartExecutionTimestamp(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
-        LinkedList<ScientificPaperMetaInformation> scientificPaperMetaInformation = null;
+        LinkedList<ScientificPaperMetaInformation> scientificPaperMetaInformationList = new LinkedList<ScientificPaperMetaInformation>();
 
         String query = "";
         int crawledItems = 0;
         int localItemsFound = 0;
         int newItemsFound = 0;
 
-        for (SearchTerm searchTerm : searchDefiniton.getSearchTerms()) {
+        for (SearchTerm searchTerm : searchDefiniton.getSearchTerms())
+        {
             query += searchTerm.getTerm();
-            if (searchTerm.getOperation() != null) {
+            if (searchTerm.getOperation() != null)
+            {
                 query = query + "+" + searchTerm.getOperation() + "+";
             }
         }
 
         query = query.replaceAll(" ", "%20");
+        LinkedList<ScientificPaperMetaInformation> scientificPaperMetaInformationUidList = new LinkedList<ScientificPaperMetaInformation>();
 
-        scientificPaperMetaInformation = new LinkedList<ScientificPaperMetaInformation>();
-
-        for (int startPage = 0; startPage < itemTreshhold; startPage = startPage + 25) {
+        for (int startPage = 0; startPage < itemTreshhold; startPage = startPage + 25)
+        {
             System.out.println("start page" + startPage);
-            String uri = "https://api.elsevier.com/content/search/index:scidir?apiKey=db7751387e990e0e08b3bccb1b1c67ed&query=" + query + "&start=" + startPage + "&field=eid";
+            String uri = "https://api.elsevier.com/content/search/index:scidir?apiKey=db7751387e990e0e08b3bccb1b1c67ed&query=" + query + "&start=" + startPage + "&field=identifier";
             URL url = new URL(uri);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
@@ -63,204 +70,245 @@ public class ElsevierScienceDirectConnectorBufferAbstract implements ICloudPaper
             connection.setConnectTimeout(50000);
             InputStream xml = connection.getInputStream();
 
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            SAXBuilder saxBuilder = new SAXBuilder();
+            Document document = (Document) saxBuilder.build(xml);
 
-            org.w3c.dom.Document doc = dBuilder.parse(xml);
+            Element rootElement = document.getRootElement();
 
-            doc.getDocumentElement().normalize();
-
-            NodeList nList2 = doc.getElementsByTagName("opensearch:totalResults");
-            Node nNode2 = nList2.item(0);
-
-            searchDefinitonExecution.setTotalItems(Integer.parseInt(nNode2.getTextContent()));
+            searchDefinitonExecution.setTotalItems(Integer.parseInt(rootElement.getChild("totalResults", Namespace.getNamespace("http://a9.com/-/spec/opensearch/1.1/")).getText()));
             searchDefinitonExecution.setQuery(query);
             searchDefinitonExecution.setRequestUrl(uri);
-            Element eElement2 = (Element) nNode2;
+            List<Element> entryList = rootElement.getChildren("entry", Namespace.getNamespace("http://www.w3.org/2005/Atom"));
+            for (Element currentElemenet : entryList)
+            {
+                ScientificPaperMetaInformation scientificPaperMetaInformation = new ScientificPaperMetaInformation();
+                scientificPaperMetaInformation.setIdentifier_2(currentElemenet.getChild("identifier", Namespace.getNamespace("http://purl.org/dc/elements/1.1/")).getText());
+                scientificPaperMetaInformationUidList.add(scientificPaperMetaInformation);
+            }
+            xml.close();
+            connection.disconnect();
+        }
 
-            NodeList nList = doc.getElementsByTagName("entry");
+        for (ScientificPaperMetaInformation scientificPaperMetaInformation : scientificPaperMetaInformationUidList)
+        {
 
-            for (int temp = 0; temp < nList.getLength(); temp++) {
+            try
+            {
+                ScientificPaperMetaInformationDataManager scientificPaperMetaInformationDataManager = new ScientificPaperMetaInformationDataManager(this.applicationConfiguration);
+                ScientificPaperMetaInformation scientificPaperMetaInformationBuffer = scientificPaperMetaInformationDataManager.getScientificMetaInformationByID(scientificPaperMetaInformation.getIdentifier_2(), "Identifier_2");
+                scientificPaperMetaInformationBuffer = null;
+                if (scientificPaperMetaInformationBuffer != null)
+                {
+                    localItemsFound++;
+                    scientificPaperMetaInformationList.add(scientificPaperMetaInformationBuffer);
+                }
+                else
+                {
+                    String currentEID = scientificPaperMetaInformation.getIdentifier_2();
+                    String uriItemDetailAbstract = "http://api.elsevier.com/content/abstract/scopus_id/" + currentEID + "?apiKey=db7751387e990e0e08b3bccb1b1c67ed";
+                    scientificPaperMetaInformation.setUrl_2(uriItemDetailAbstract);
 
-                ScientificPaperMetaInformation cloudPaperResult = new ScientificPaperMetaInformation();
-                try {
-                    Node nNode = nList.item(temp);
+                    URL urlItemDetailAbstract = new URL(uriItemDetailAbstract);
 
-                    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-                        Element eElement = (Element) nNode;
-                        //for (MappingDefinition mappingDefiniton : mappingDefinitons)
+                    HttpURLConnection connectionItemDetailAbstract = (HttpURLConnection) urlItemDetailAbstract.openConnection();
+                    connectionItemDetailAbstract.setRequestMethod("GET");
+                    connectionItemDetailAbstract.setRequestProperty("Accept", "application/xml");
+                    InputStream xmlItemDetailAbstract = connectionItemDetailAbstract.getInputStream();
+                    SAXBuilder saxBuilder = new SAXBuilder();
+                    Document documentAbstract = (Document) saxBuilder.build(xmlItemDetailAbstract);
 
-                        if (eElement.getElementsByTagName("eid").item(0) == null) {
-                            continue;
+                    Element rootElementAbstract = documentAbstract.getRootElement();
+
+                    Element coreDataElement = this.getChildElement(rootElementAbstract, "coredata", "http://www.elsevier.com/xml/svapi/abstract/dtd");
+                    if (coreDataElement != null)
+                    {
+
+                        Element coverDateElement = this.getChildElement(coreDataElement, "coverDate", "http://prismstandard.org/namespaces/basic/2.0/");
+                        if (coverDateElement != null)
+                        {
+                            Date parsedDate = new SimpleDateFormat("yyyy-MM-dd").parse(coverDateElement.getText());
+                            java.sql.Date date = new java.sql.Date(parsedDate.getTime());
+                            scientificPaperMetaInformation.setSrcPublicationDate(date);
+                        }
+                        Element titleElement = this.getChildElement(coreDataElement, "title", "http://purl.org/dc/elements/1.1/");
+                        if (titleElement != null)
+                        {
+                            scientificPaperMetaInformation.setTitle(titleElement.getText());
+                        }
+                        Element publicationNameElement = this.getChildElement(coreDataElement, "publicationName", "http://prismstandard.org/namespaces/basic/2.0/");
+                        if (publicationNameElement != null)
+                        {
+                            scientificPaperMetaInformation
+                                    .setScrPublisherName(publicationNameElement.getText());
                         }
 
-                        cloudPaperResult.setIdentifier_2(eElement.getElementsByTagName("eid").item(0).getTextContent());
-
-                        ScientificPaperMetaInformationDataManager scientificPaperMetaInformationDataManager = new ScientificPaperMetaInformationDataManager(this.applicationConfiguration);
-                        ScientificPaperMetaInformation scientificPaperMetaInformationBuffer = scientificPaperMetaInformationDataManager.getScientificMetaInformationByID(eElement.getElementsByTagName("eid").item(0).getTextContent(), "Identifier_2");
-                        scientificPaperMetaInformationBuffer = null;
-                        if (scientificPaperMetaInformationBuffer != null) {
-                            localItemsFound++;
-                            scientificPaperMetaInformation.add(scientificPaperMetaInformationBuffer);
-                        } else {
-                            String currentEID = cloudPaperResult.getIdentifier_2();
-                            String uriItemDetailByDOI = "http://api.elsevier.com/content/abstract/eid/" + currentEID + "?apiKey=db7751387e990e0e08b3bccb1b1c67ed";
-                            cloudPaperResult.setUrl_2(uriItemDetailByDOI);
-                            URL urlItemDetailByDOI = new URL(uriItemDetailByDOI);
-                            HttpURLConnection connectionItemDetailByDOI = (HttpURLConnection) urlItemDetailByDOI.openConnection();
-                            connectionItemDetailByDOI.setRequestMethod("GET");
-                            connectionItemDetailByDOI.setRequestProperty("Accept", "application/xml");
-
-                            InputStream xmlItemDetailByDOI = connectionItemDetailByDOI.getInputStream();
-
-                            DocumentBuilderFactory dbFactoryItemDetailByDOI = DocumentBuilderFactory.newInstance();
-                            DocumentBuilder dBuilderItemDetailByDOI = dbFactoryItemDetailByDOI.newDocumentBuilder();
-
-                            org.w3c.dom.Document docItemDetailByDOI = dBuilderItemDetailByDOI.parse(xmlItemDetailByDOI);
-
-                            docItemDetailByDOI.getDocumentElement().normalize();
-
-                            NodeList nListItemDetailByDOI = docItemDetailByDOI.getElementsByTagName("coredata");
-
-                            for (int tempItemDetailByDOI = 0; tempItemDetailByDOI < nListItemDetailByDOI.getLength(); tempItemDetailByDOI++) {
-
-                                Node nNodeItemDetailByDOI = nListItemDetailByDOI.item(tempItemDetailByDOI);
-
-                                if (nNodeItemDetailByDOI.getNodeType() == Node.ELEMENT_NODE) {
-
-                                    Element eElementItemDetailByDOI = (Element) nNodeItemDetailByDOI;
-
-                                    Calendar calendar = Calendar.getInstance();
-                                    java.sql.Timestamp ourJavaTimestampObject = new java.sql.Timestamp(calendar.getTime().getTime());
-
-                                    if (eElementItemDetailByDOI.getElementsByTagName("prism:coverDate").item(0) != null) {
-                                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                                        Date parsedDate = dateFormat.parse(eElementItemDetailByDOI.getElementsByTagName("prism:coverDate").item(0).getTextContent());
-                                        java.sql.Date date = new java.sql.Date(parsedDate.getTime());
-                                        cloudPaperResult.setSrcPublicationDate(date);
-                                    }
-                                    if (eElementItemDetailByDOI.getElementsByTagName("dc:title").item(0) != null) {
-                                        cloudPaperResult.setTitle(eElementItemDetailByDOI.getElementsByTagName("dc:title").item(0).getTextContent());
-
-                                    }
-
-                                    //cloudPaperResult.setCreator(eElementItemDetailByDOI.getElementsByTagName("dc:creator").item(0).getTextContent());
-                                    //if (eElementItemDetailByDOI.getElementsByTagName("dc:creator").item(0) != null) {
-                                    //    String[] parts = eElementItemDetailByDOI.getElementsByTagName("dc:creator").item(0).getTextContent().split(",");
-                                    //    if (parts.length == 2) {
-                                    //         creator.setGivenName(parts[0]);
-                                    //         creator.setSurName(parts[1]);
-                                    //     }
-                                    //  }
-                                    if (eElementItemDetailByDOI.getElementsByTagName("prism:publicationName").item(0) != null) {
-                                        cloudPaperResult
-                                                .setScrPublisherName(eElementItemDetailByDOI.getElementsByTagName("prism:publicationName").item(0).getTextContent());
-
-                                    }
-                                    //cloudPaperResult.setCreateDate(ourJavaTimestampObject);
-                                    //if (eElementItemDetailByDOI.getElementsByTagName("dc:identifier").item(0) != null) {
-                                    //     cloudPaperResult.setIdentifier_1(eElementItemDetailByDOI.getElementsByTagName("dc:identifier").item(0).getTextContent());
-                                    //}
-                                    if (eElementItemDetailByDOI.getElementsByTagName("eid").item(0) != null) {
-                                        cloudPaperResult.setIdentifier_2(eElementItemDetailByDOI.getElementsByTagName("eid").item(0).getTextContent());
-                                    }
-                                    if (eElementItemDetailByDOI.getElementsByTagName("prism:issn").item(0) != null) {
-                                        cloudPaperResult.setIdentifier_3(eElementItemDetailByDOI.getElementsByTagName("prism:issn").item(0).getTextContent());
-                                    }
-                                    if (eElementItemDetailByDOI.getElementsByTagName("pii").item(0) != null) {
-                                        cloudPaperResult.setIdentifier_4(eElementItemDetailByDOI.getElementsByTagName("pii").item(0).getTextContent());
-                                    }
-
-                                    if (eElementItemDetailByDOI.getElementsByTagName("prism:url").item(0) != null) {
-                                        cloudPaperResult.setUrl_1(eElementItemDetailByDOI.getElementsByTagName("prism:url").item(0).getTextContent());
-                                    }
-                                    if (eElementItemDetailByDOI.getElementsByTagName("prism:teaser").item(0) != null) {
-                                        cloudPaperResult.setText_1(eElementItemDetailByDOI.getElementsByTagName("prism:teaser").item(0).getTextContent());
-                                    }
-
-                                    if (eElementItemDetailByDOI.getElementsByTagName("prism:publicationName").item(0) != null) {
-                                        cloudPaperResult.setScrPublisherName(eElementItemDetailByDOI.getElementsByTagName("prism:publicationName").item(0).getTextContent());
-                                    }
-                                    if (eElementItemDetailByDOI.getElementsByTagName("prism:issueName").item(0) != null) {
-                                        cloudPaperResult.setSrcTitle(eElementItemDetailByDOI.getElementsByTagName("prism:issueName").item(0).getTextContent());
-                                    }
-
-                                    //if (eElementItemDetailByDOI.getElementsByTagName("rism:coverDate").item(0) != null) {
-                                    //    cloudPaperResult.setSrcPublicationDate(eElementItemDetailByDOI.getElementsByTagName("prism:coverDisplayDate").item(0).getTextContent());
-                                    //}
-                                    if (eElementItemDetailByDOI.getElementsByTagName("prism:volume").item(0) != null) {
-                                        if (eElementItemDetailByDOI.getElementsByTagName("prism:volume").item(0).getTextContent().matches("\\d+")) {
-                                            cloudPaperResult.setSrcVolume(Integer.parseInt(eElementItemDetailByDOI.getElementsByTagName("prism:volume").item(0).getTextContent()));
-                                        }
-                                    }
-
-                                    if (eElementItemDetailByDOI.getElementsByTagName("prism:startingPage").item(0) != null) {
-                                        cloudPaperResult.setSrcStartPage(eElementItemDetailByDOI.getElementsByTagName("prism:startingPage").item(0).getTextContent());
-                                    }
-
-                                    if (eElementItemDetailByDOI.getElementsByTagName("prism:issueIdentifier").item(0) != null) {
-                                        cloudPaperResult.setScrIdentifier_1(eElementItemDetailByDOI.getElementsByTagName("prism:issueIdentifier").item(0).getTextContent());
-                                    }
-
-                                    if (eElementItemDetailByDOI.getElementsByTagName("ce:para").item(0) != null) {
-                                        cloudPaperResult.setText_2(eElementItemDetailByDOI.getElementsByTagName("ce:para").item(0).getTextContent());
-                                    }
-                                    if (eElementItemDetailByDOI.getElementsByTagName("authkeywords").item(0) != null) {
-                                        cloudPaperResult.setText_3(eElementItemDetailByDOI.getElementsByTagName("authkeywords").item(0).getTextContent());
-                                    }
-                                    if (eElementItemDetailByDOI.getElementsByTagName("prism:issn").item(0) != null) {
-                                        cloudPaperResult.setSrcIISN(eElementItemDetailByDOI.getElementsByTagName("prism:issn").item(0).getTextContent());
-                                    }
-
-                                    break;
-                                }
-                            }
-                            NodeList nListItemDetailByAuhor = docItemDetailByDOI.getElementsByTagName("authors");
-                            Element innerAuthors = (Element) nListItemDetailByAuhor.item(0);
-                            NodeList nListItemDetailByAuhors = innerAuthors.getElementsByTagName("author");
-                            
-                            for (int k = 0; k < nListItemDetailByAuhors.getLength(); ++k) {
-                                Element authorElement = (Element) nListItemDetailByAuhors.item(k);
-                                ScientificPaperMetaInformationAuthors author = new ScientificPaperMetaInformationAuthors();
-                                if (authorElement.getElementsByTagName("ce:surname").item(0) != null) {
-
-                                    author.setGivenName(authorElement.getElementsByTagName("ce:surname").item(0).getTextContent());
-                                }
-                                if (authorElement.getElementsByTagName("ce:given-name").item(0) != null) {
-
-                                    author.setSurName(authorElement.getElementsByTagName("ce:given-name").item(0).getTextContent());
-                                }
-                                cloudPaperResult.getAuthors().add(author);
-
-                            }
-                            cloudPaperResult.setLocalizedTime(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
-                            scientificPaperMetaInformation.add(cloudPaperResult);
-                            progress++;
-                            newItemsFound++;
-                            xmlItemDetailByDOI.close();
-                            connectionItemDetailByDOI.disconnect();
+                        Element urlElement = this.getChildElement(coreDataElement, "url", "http://prismstandard.org/namespaces/basic/2.0/");
+                        if (urlElement != null)
+                        {
+                            scientificPaperMetaInformation
+                                    .setScrPublisherName(urlElement.getText());
                         }
 
-                        //}
-                        crawledItems++;
-                        progress++;
+                        Element volumeElement = this.getChildElement(coreDataElement, "volume", "http://prismstandard.org/namespaces/basic/2.0/");
+                        if (volumeElement != null)
+                        {
+                            scientificPaperMetaInformation
+                                    .setScrPublisherName(volumeElement.getText());
+                        }
+
+                        //scientificPaperMetaInformation.setSrcTitle(coreDataElement.getChild("issueName", Namespace.getNamespace("http://prismstandard.org/namespaces/basic/2.0/")).getText());
+                        Element startingPageElement = this.getChildElement(coreDataElement, "startingPage", "http://prismstandard.org/namespaces/basic/2.0/");
+                        if (startingPageElement != null)
+                        {
+                            scientificPaperMetaInformation
+                                    .setScrPublisherName(startingPageElement.getText());
+                        }
+
+                        Element issueIdentifierElement = this.getChildElement(coreDataElement, "issueIdentifier", "http://prismstandard.org/namespaces/basic/2.0/");
+                        if (issueIdentifierElement != null)
+                        {
+                            scientificPaperMetaInformation
+                                    .setScrPublisherName(issueIdentifierElement.getText());
+                        }
+
+                        Element issnElement = this.getChildElement(coreDataElement, "issn", "http://prismstandard.org/namespaces/basic/2.0/");
+                        if (issnElement != null)
+                        {
+                            scientificPaperMetaInformation
+                                    .setScrPublisherName(issnElement.getText());
+                        }
+
+                        Element descriptionElement = this.getChildElement(coreDataElement, "description", "http://purl.org/dc/elements/1.1/");
+                        if (descriptionElement != null)
+                        {
+                            scientificPaperMetaInformation
+                                    .setScrPublisherName(descriptionElement.getText());
+                        }
                     }
-                } catch (Exception ex) {
-                    this.applicationConfiguration.getLoggingManager().logException(ex);
-                    ScientificPaperMetaInformationParseException scientificPaperMetaInformationParseException = new ScientificPaperMetaInformationParseException();
-                    scientificPaperMetaInformationParseException.setParseState("Failed");
-                    scientificPaperMetaInformationParseException.setParseException(ex);
-                    scientificPaperMetaInformationParseException.setScientificPaperMetaInformation(cloudPaperResult);
-                    searchDefinitonExecution.getScientificPaperMetaInformationParseException().add(scientificPaperMetaInformationParseException);
-                    xml.close();
-                    connection.disconnect();
+
+                    Element authorsElement = this.getChildElement(rootElementAbstract, "authors", "http://www.elsevier.com/xml/svapi/abstract/dtd");
+                    if (authorsElement != null)
+                    {
+
+                        List<Element> authorsElementList = this.getChildElements(authorsElement, "author", "http://www.elsevier.com/xml/svapi/abstract/dtd");
+                        if (authorsElementList != null)
+                        {
+                            for (Element currentAuthor : authorsElementList)
+                            {
+                                ScientificPaperMetaInformationAuthors author = new ScientificPaperMetaInformationAuthors();
+
+                                Element authorSurName = this.getChildElement(currentAuthor, "surname", "http://www.elsevier.com/xml/ani/common");
+                                Element authorGivenName = this.getChildElement(currentAuthor, "given-name", "http://www.elsevier.com/xml/ani/common");
+                                if (authorSurName != null)
+                                {
+                                    author.setSurName(authorSurName.getText());
+                                }
+                                if (authorGivenName != null)
+                                {
+                                    author.setGivenName(authorGivenName.getText());
+                                }
+
+                                scientificPaperMetaInformation.getAuthors().add(author);
+                            }
+                        }
+                    }
+                    List<Element> affiliationList = this.getChildElements(rootElementAbstract, "affiliation", "http://www.elsevier.com/xml/svapi/abstract/dtd");
+                    if (affiliationList != null)
+                    {
+                        for (Element currentAffiliation : affiliationList)
+                        {
+                            Element affilnameElement = this.getChildElement(currentAffiliation, "affilname", "http://www.elsevier.com/xml/svapi/abstract/dtd");
+
+                            ScientificPaperMetaInformationAffiliation scientificPaperMetaInformationAffiliation = new ScientificPaperMetaInformationAffiliation();
+                            Attribute idAttribute = this.getAttribute(currentAffiliation, "id", "");
+                            Attribute hrefAttribute = this.getAttribute(currentAffiliation, "href", "");
+
+                            if (idAttribute != null)
+                            {
+                                scientificPaperMetaInformationAffiliation.setIdentifier_1(idAttribute.getValue());
+                            }
+                            if (hrefAttribute != null)
+                            {
+                                scientificPaperMetaInformationAffiliation.setUrl(hrefAttribute.getValue());
+                            }
+                            if (affilnameElement != null)
+                            {
+                                scientificPaperMetaInformationAffiliation.setName(affilnameElement.getText());
+                            }
+                            scientificPaperMetaInformation.getAffiliation().add(scientificPaperMetaInformationAffiliation);
+                        }
+                    }
+                    xmlItemDetailAbstract.close();
+                    connectionItemDetailAbstract.disconnect();
+
+                    for (ScientificPaperMetaInformationAffiliation scientificPaperMetaInformationAffiliation : scientificPaperMetaInformation.getAffiliation())
+                    {
+
+                        if (scientificPaperMetaInformationAffiliation.getIdentifier_1() != null)
+                        {
+                            String uriItemDetailAffiliate = "http://api.elsevier.com/content/affiliation/affiliation_id/" + scientificPaperMetaInformationAffiliation.getIdentifier_1() + "?apiKey=db7751387e990e0e08b3bccb1b1c67ed";
+
+                            URL urlItemDetailAffiliate = new URL(uriItemDetailAffiliate);
+
+                            HttpURLConnection connectionItemDetailAffiliate = (HttpURLConnection) urlItemDetailAffiliate.openConnection();
+                            connectionItemDetailAffiliate.setRequestMethod("GET");
+                            connectionItemDetailAffiliate.setRequestProperty("Accept", "application/xml");
+                            InputStream xmlItemDetailAffiliate = connectionItemDetailAffiliate.getInputStream();
+
+                            Document documentAffiliate = (Document) saxBuilder.build(xmlItemDetailAffiliate);
+
+                            Element rootElementAffiliate = documentAffiliate.getRootElement();
+
+                            Element coreDataAffiliateElement = this.getChildElement(rootElementAffiliate, "coredata", "");
+                            if (coreDataAffiliateElement != null)
+                            {
+                                Element authorCountElement = this.getChildElement(coreDataAffiliateElement, "author", "");
+                                Element documentCountElement = this.getChildElement(coreDataAffiliateElement, "document-count", "");
+                                Element cityElement = this.getChildElement(rootElementAffiliate, "city", "");
+                                Element countryElement = this.getChildElement(rootElementAffiliate, "country", "");
+
+                                if (authorCountElement != null)
+                                {
+                                    scientificPaperMetaInformationAffiliation.setAuthor_Count(Integer.parseInt(authorCountElement.getText()));
+                                }
+                                if (documentCountElement != null)
+
+                                {
+                                    scientificPaperMetaInformationAffiliation.setDocument_Count(Integer.parseInt(documentCountElement.getText()));
+                                }
+                                if (cityElement != null)
+
+                                {
+                                    scientificPaperMetaInformationAffiliation.setCity(cityElement.getText());
+                                }
+                                if (countryElement != null)
+
+                                {
+                                    scientificPaperMetaInformationAffiliation.setCountry(countryElement.getText());
+                                }
+                            }
+                            xmlItemDetailAffiliate.close();
+                            connectionItemDetailAffiliate.disconnect();
+                        }
+                    }
+
+                    progress++;
+                    newItemsFound++;
+                    scientificPaperMetaInformation.setLocalizedTime(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
+                    scientificPaperMetaInformationList.add(scientificPaperMetaInformation);
                 }
             }
+            catch (Exception ex)
+            {
+                this.applicationConfiguration.getLoggingManager().logException(ex);
+                ScientificPaperMetaInformationParseException scientificPaperMetaInformationParseException = new ScientificPaperMetaInformationParseException();
+                scientificPaperMetaInformationParseException.setParseState("Failed");
+                scientificPaperMetaInformationParseException.setParseException(ex);
+                scientificPaperMetaInformationParseException.setScientificPaperMetaInformation(scientificPaperMetaInformation);
+                searchDefinitonExecution.getScientificPaperMetaInformationParseException().add(scientificPaperMetaInformationParseException);
 
-            xml.close();
-
-            connection.disconnect();
-
+            }
+            crawledItems++;
         }
 
         searchDefinitonExecution.setCrawledItems(crawledItems);
@@ -269,7 +317,7 @@ public class ElsevierScienceDirectConnectorBufferAbstract implements ICloudPaper
 
         searchDefinitonExecution.setLocalItemsFound(localItemsFound);
 
-        searchDefinitonExecution.setScientificPaperMetaInformation(scientificPaperMetaInformation);
+        searchDefinitonExecution.setScientificPaperMetaInformation(scientificPaperMetaInformationList);
 
         searchDefinitonExecution.setFinishedExecutionTimestamp(
                 new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
@@ -280,6 +328,39 @@ public class ElsevierScienceDirectConnectorBufferAbstract implements ICloudPaper
     public int getCurrentProgress() throws Exception {
 
         return (progress / itemTreshhold) * 100;
+    }
+
+    private Element getChildElement(Element element, String childName, String namespace) {
+
+        Element childElement = element.getChild(childName, Namespace.getNamespace(namespace));
+        if (childElement != null)
+        {
+            return childElement;
+        }
+        this.applicationConfiguration.getLoggingManager().log(String.format("Element %s not found!", childName), LogLevel.ERROR);
+        return null;
+    }
+
+    private Attribute getAttribute(Element element, String attributeName, String namespace) {
+
+        Attribute attribute = element.getAttribute(attributeName, Namespace.getNamespace(namespace));
+        if (attribute != null)
+        {
+            return attribute;
+        }
+        this.applicationConfiguration.getLoggingManager().log(String.format("Attribute %s not found!", attributeName), LogLevel.ERROR);
+        return null;
+    }
+
+    private List<Element> getChildElements(Element element, String childName, String namespace) {
+
+        List<Element> childElement = element.getChildren(childName, Namespace.getNamespace(namespace));
+        if (!childElement.isEmpty())
+        {
+            return childElement;
+        }
+        this.applicationConfiguration.getLoggingManager().log(String.format("Child elements %s not found!", childName), LogLevel.ERROR);
+        return null;
     }
 
 }

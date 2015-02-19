@@ -85,6 +85,9 @@ public class ScientificPaperMetaInformationDataManager {
             scientificPaperMetaInformation.setLocalizedTime(rs.getTimestamp("LocalizedTime"));
             ScientificPaperMetaInformationAuthorDataManager scientificPaperMetaInformationAuthorDataManager = new ScientificPaperMetaInformationAuthorDataManager(applicationConfiguration);
             scientificPaperMetaInformation.setAuthors(scientificPaperMetaInformationAuthorDataManager.getAuthorsByScientificMetaInformation(scientificPaperMetaInformation));
+            ScientificPaperMetaInformationAffiliationDataManager scientificPaperMetaInformationAffiliationDataManager = new ScientificPaperMetaInformationAffiliationDataManager(applicationConfiguration);
+            scientificPaperMetaInformation.setAffiliation(scientificPaperMetaInformationAffiliationDataManager.getAffiliationByScientificMetaInformation(scientificPaperMetaInformation));
+
             scientificPaperMetaInformationList.add(scientificPaperMetaInformation);
         }
 
@@ -115,7 +118,7 @@ public class ScientificPaperMetaInformationDataManager {
             preparedStatement.setInt(3, searchDefinitonExecution.getID());
             preparedStatement.setInt(4, searchDefinitonExecution.getSearch_Definition_Execution_Run_ID());
             preparedStatement.setInt(5, searchDefinitonExecution.getSearch_Definiton_ID());
-            
+
             preparedStatement.setString(6, cloudPaperResult.getIdentifier_1());
             preparedStatement.setString(7, cloudPaperResult.getIdentifier_2());
             preparedStatement.setString(8, cloudPaperResult.getIdentifier_3());
@@ -157,6 +160,10 @@ public class ScientificPaperMetaInformationDataManager {
 
             ScientificPaperMetaInformationAuthorDataManager scientificPaperMetaInformationAuthorDataManager = new ScientificPaperMetaInformationAuthorDataManager(applicationConfiguration);
             scientificPaperMetaInformationAuthorDataManager.insertAuthors(cloudPaperResult);
+
+            ScientificPaperMetaInformationAffiliationDataManager scientificPaperMetaInformationAffiliationDataManager = new ScientificPaperMetaInformationAffiliationDataManager(applicationConfiguration);
+            scientificPaperMetaInformationAffiliationDataManager.insertAffiliation(cloudPaperResult);
+
         }
         conn.close();
     }
@@ -166,8 +173,8 @@ public class ScientificPaperMetaInformationDataManager {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection conn = null;
         conn = DriverManager.getConnection(this.applicationConfiguration.getSqlConnection());
-        String query = "SELECT * FROM scientific_paper_meta_information where "+identifierColumnName+"='" + id + "'";
-        ScientificPaperMetaInformation scientificPaperMetaInformation = null; 
+        String query = "SELECT * FROM scientific_paper_meta_information where " + identifierColumnName + "='" + id + "'";
+        ScientificPaperMetaInformation scientificPaperMetaInformation = null;
         Statement st = conn.createStatement();
         ResultSet rs = st.executeQuery(query);
         while (rs.next()) {
@@ -212,6 +219,8 @@ public class ScientificPaperMetaInformationDataManager {
             scientificPaperMetaInformation.setLocalizedTime(rs.getTimestamp("LocalizedTime"));
             ScientificPaperMetaInformationAuthorDataManager scientificPaperMetaInformationAuthorDataManager = new ScientificPaperMetaInformationAuthorDataManager(applicationConfiguration);
             scientificPaperMetaInformation.setAuthors(scientificPaperMetaInformationAuthorDataManager.getAuthorsByScientificMetaInformation(scientificPaperMetaInformation));
+            ScientificPaperMetaInformationAffiliationDataManager scientificPaperMetaInformationAffiliationDataManager = new ScientificPaperMetaInformationAffiliationDataManager(applicationConfiguration);
+            scientificPaperMetaInformation.setAffiliation(scientificPaperMetaInformationAffiliationDataManager.getAffiliationByScientificMetaInformation(scientificPaperMetaInformation));
 
         }
 
@@ -254,7 +263,7 @@ public class ScientificPaperMetaInformationDataManager {
         conn.close();
         return transformedResultSet;
     }
-    
+
     public Map<String, List<Object>> getScientificMetaInformationBySearchDefinitionAsMap(SearchDefinitonExecution searchDefinitonExecution) throws Exception {
         LinkedList<ScientificPaperMetaInformation> scientificPaperMetaInformationList = new LinkedList<ScientificPaperMetaInformation>();
 
@@ -277,7 +286,6 @@ public class ScientificPaperMetaInformationDataManager {
 
     }
 
-    
     private Map<String, List<Object>> resultSetToArrayList(ResultSet rs) throws Exception {
         ResultSetMetaData md = rs.getMetaData();
         int columns = md.getColumnCount();

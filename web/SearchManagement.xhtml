@@ -190,6 +190,12 @@
                                 <h:outputText value="Authors" />
                             </rich:column>
                             <rich:column>
+                                <h:outputText value="Affiliates Names" />
+                            </rich:column>
+                            <rich:column>
+                                <h:outputText value="Affiliates Countries" />
+                            </rich:column>
+                            <rich:column>
                                 <h:outputText value="Saved on local DB" />
                             </rich:column>
                         </rich:columnGroup>
@@ -306,6 +312,26 @@
                                 #{innerVar.givenName} 
                                 <h:outputText value=" "></h:outputText>
                                     #{innerVar.surName}
+                                <br />
+                            </ui:repeat>
+                            <f:facet name="footer">
+                                <div></div>
+                            </f:facet>
+                        </rich:column>
+                        <rich:column>
+                            <ui:repeat var="innerVar" value="#{expense.affiliation}">
+
+                                #{innerVar.name}
+                                <br />
+                            </ui:repeat>
+                            <f:facet name="footer">
+                                <div></div>
+                            </f:facet>
+                        </rich:column>
+                        <rich:column>
+                            <ui:repeat var="innerVar" value="#{expense.affiliation}">
+
+                                #{innerVar.country}
                                 <br />
                             </ui:repeat>
                             <f:facet name="footer">

@@ -72,7 +72,9 @@ public class ScientificPaperMetaInformation {
     private String Text_9;
     private String Text_10;
     private LinkedList<ScientificPaperMetaInformationAuthors> Authors = new LinkedList<ScientificPaperMetaInformationAuthors>();
-    private Timestamp LocalizedTime;
+    private LinkedList<ScientificPaperMetaInformationAffiliation> Affiliation = new LinkedList<ScientificPaperMetaInformationAffiliation>();
+
+  private Timestamp LocalizedTime;
 
     public int getID() {
         return ID;
@@ -86,6 +88,13 @@ public class ScientificPaperMetaInformation {
         return Search_Definiton_Execution_ID;
     }
 
+    public LinkedList<ScientificPaperMetaInformationAffiliation> getAffiliation() {
+        return Affiliation;
+    }
+
+    public void setAffiliation(LinkedList<ScientificPaperMetaInformationAffiliation> Affiliation) {
+        this.Affiliation = Affiliation;
+    }
     public void setSearch_Definiton_Execution_ID(
             int search_Definiton_Execution_ID) {
         Search_Definiton_Execution_ID = search_Definiton_Execution_ID;
