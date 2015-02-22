@@ -85,7 +85,6 @@ public class ElsevierScienceDirectConnectorBufferAbstract implements ICloudPaper
 
         for (ScientificPaperMetaInformation scientificPaperMetaInformation : scientificPaperMetaInformationUidList)
         {
-
             try
             {
                 ScientificPaperMetaInformationDataManager scientificPaperMetaInformationDataManager = new ScientificPaperMetaInformationDataManager(this.applicationConfiguration);
@@ -140,14 +139,14 @@ public class ElsevierScienceDirectConnectorBufferAbstract implements ICloudPaper
                         if (urlElement != null)
                         {
                             scientificPaperMetaInformation
-                                    .setScrPublisherName(urlElement.getText());
+                                    .setUrl_1(urlElement.getText());
                         }
 
                         Element volumeElement = this.getChildElement(coreDataElement, "volume", "http://prismstandard.org/namespaces/basic/2.0/");
                         if (volumeElement != null)
                         {
                             scientificPaperMetaInformation
-                                    .setScrPublisherName(volumeElement.getText());
+                                    .setSrcVolume(Integer.parseInt(volumeElement.getText()));
                         }
 
                         //scientificPaperMetaInformation.setSrcTitle(coreDataElement.getChild("issueName", Namespace.getNamespace("http://prismstandard.org/namespaces/basic/2.0/")).getText());
@@ -155,28 +154,44 @@ public class ElsevierScienceDirectConnectorBufferAbstract implements ICloudPaper
                         if (startingPageElement != null)
                         {
                             scientificPaperMetaInformation
-                                    .setScrPublisherName(startingPageElement.getText());
+                                    .setSrcStartPage(startingPageElement.getText());
+                        }
+
+                        Element endPageElement = this.getChildElement(coreDataElement, "endingPage", "http://prismstandard.org/namespaces/basic/2.0/");
+                        if (endPageElement != null)
+                        {
+                            scientificPaperMetaInformation
+                                    .setSrcEndPage(endPageElement.getText());
                         }
 
                         Element issueIdentifierElement = this.getChildElement(coreDataElement, "issueIdentifier", "http://prismstandard.org/namespaces/basic/2.0/");
                         if (issueIdentifierElement != null)
                         {
                             scientificPaperMetaInformation
-                                    .setScrPublisherName(issueIdentifierElement.getText());
+                                    .setScrIdentifier_1(issueIdentifierElement.getText());
                         }
 
                         Element issnElement = this.getChildElement(coreDataElement, "issn", "http://prismstandard.org/namespaces/basic/2.0/");
                         if (issnElement != null)
                         {
                             scientificPaperMetaInformation
-                                    .setScrPublisherName(issnElement.getText());
+                                    .setSrcIISN(issnElement.getText());
                         }
 
                         Element descriptionElement = this.getChildElement(coreDataElement, "description", "http://purl.org/dc/elements/1.1/");
                         if (descriptionElement != null)
                         {
-                            scientificPaperMetaInformation
-                                    .setScrPublisherName(descriptionElement.getText());
+                            Element abstractElement = this.getChildElement(descriptionElement, "abstract", "http://www.elsevier.com/xml/svapi/abstract/dtd");
+                            if (abstractElement != null)
+                            {
+                                Element abstractTextElement = this.getChildElement(abstractElement, "para", "http://www.elsevier.com/xml/ani/common");
+                                if (abstractTextElement != null)
+                                {
+                                    scientificPaperMetaInformation
+                                            .setText_1(abstractTextElement.getText());
+                                }
+                            }
+
                         }
                     }
 
