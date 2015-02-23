@@ -116,6 +116,12 @@ public class ElsevierScienceDirectConnectorBufferAbstract implements ICloudPaper
                     if (coreDataElement != null)
                     {
 
+                        Element doiElement = this.getChildElement(coreDataElement, "doi", "http://prismstandard.org/namespaces/basic/2.0/");
+                        if (doiElement != null)
+                        {
+                             scientificPaperMetaInformation.setIdentifier_1(doiElement.getText());
+                        }
+                        
                         Element coverDateElement = this.getChildElement(coreDataElement, "coverDate", "http://prismstandard.org/namespaces/basic/2.0/");
                         if (coverDateElement != null)
                         {

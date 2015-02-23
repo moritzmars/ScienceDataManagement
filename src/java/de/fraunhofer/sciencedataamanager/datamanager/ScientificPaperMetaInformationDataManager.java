@@ -43,7 +43,8 @@ public class ScientificPaperMetaInformationDataManager {
 
         Statement st = conn.createStatement();
         ResultSet rs = st.executeQuery(query);
-        while (rs.next()) {
+        while (rs.next())
+        {
 
             ScientificPaperMetaInformation scientificPaperMetaInformation = new ScientificPaperMetaInformation();
 
@@ -80,7 +81,16 @@ public class ScientificPaperMetaInformationDataManager {
             scientificPaperMetaInformation.setSrcEndPage(rs.getString("srcEndPage"));
             scientificPaperMetaInformation.setSrcDate_1(rs.getTimestamp("srcDate_1"));
             scientificPaperMetaInformation.setSrcDate_2(rs.getTimestamp("srcDate_2"));
-            scientificPaperMetaInformation.setText_1(rs.getString("Text_1"));
+
+            String text1 = rs.getString("Text_1");
+            if (text1!=null && text1.length() > 50)
+            {
+                scientificPaperMetaInformation.setText_1(text1.substring(0, 7) + "...");
+            }
+            else
+            {
+                scientificPaperMetaInformation.setText_1(rs.getString("Text_1"));
+            }
             scientificPaperMetaInformation.setText_2(rs.getString("Text_2"));
             scientificPaperMetaInformation.setLocalizedTime(rs.getTimestamp("LocalizedTime"));
             ScientificPaperMetaInformationAuthorDataManager scientificPaperMetaInformationAuthorDataManager = new ScientificPaperMetaInformationAuthorDataManager(applicationConfiguration);
@@ -104,7 +114,8 @@ public class ScientificPaperMetaInformationDataManager {
         Connection conn = null;
         conn = DriverManager.getConnection(this.applicationConfiguration.getSqlConnection());
 
-        for (ScientificPaperMetaInformation cloudPaperResult : searchDefinitonExecution.getScientificPaperMetaInformation()) {
+        for (ScientificPaperMetaInformation cloudPaperResult : searchDefinitonExecution.getScientificPaperMetaInformation())
+        {
             String sqlInsertStatement = "INSERT INTO  scientific_paper_meta_information (Title, Search_Definiton_Execution_Search_Definiton_ID, "
                     + "Search_Definiton_Execution_ID, search_definition_execution_run_ID, search_definition_execution_run_search_definiton_ID, Identifier_1, Identifier_2, Identifier_3, Identifier_4, Identifier_5, "
                     + "Identifier_6, Identifier_7, Identifier_8, Identifier_9, Identifier_10, ScrPublisherName,SrcPublicationDate,"
@@ -177,7 +188,8 @@ public class ScientificPaperMetaInformationDataManager {
         ScientificPaperMetaInformation scientificPaperMetaInformation = null;
         Statement st = conn.createStatement();
         ResultSet rs = st.executeQuery(query);
-        while (rs.next()) {
+        while (rs.next())
+        {
 
             scientificPaperMetaInformation = new ScientificPaperMetaInformation();
 
@@ -290,11 +302,14 @@ public class ScientificPaperMetaInformationDataManager {
         ResultSetMetaData md = rs.getMetaData();
         int columns = md.getColumnCount();
         Map<String, List<Object>> map = new HashMap<>(columns);
-        for (int i = 1; i <= columns; ++i) {
+        for (int i = 1; i <= columns; ++i)
+        {
             map.put(md.getColumnName(i), new ArrayList<>());
         }
-        while (rs.next()) {
-            for (int i = 1; i <= columns; ++i) {
+        while (rs.next())
+        {
+            for (int i = 1; i <= columns; ++i)
+            {
                 map.get(md.getColumnName(i)).add(rs.getObject(i));
             }
         }

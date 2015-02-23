@@ -15,12 +15,10 @@ import de.fraunhofer.sciencedataamanager.domain.SystemInstance;
 import de.fraunhofer.sciencedataamanager.business.SearchExecutionManager;
 import de.fraunhofer.sciencedataamanager.datamanager.ApplicationConfigurationDataManagerFactory;
 import de.fraunhofer.sciencedataamanager.datamanager.DataExportInstanceDataManager;
-import de.fraunhofer.sciencedataamanager.datamanager.LoggingDatabaseManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SearchDefinitionDataManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SearchDefinitonExecutionDataManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SearchExecutionDataManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SystemInstanceDataManager;
-import de.fraunhofer.sciencedataamanager.examples.connectors.ElsevierScienceDirectConnectorBuffer;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
@@ -283,7 +281,7 @@ public class SearchManagement implements Serializable {
 
             SearchDefinitonExecutionDataManager searchDefinitonExecutionDataProvider = new SearchDefinitonExecutionDataManager(applicationConfiguration);
             searchDefinitonExecutionList = searchDefinitonExecutionDataProvider.getSearchDefinitionExecutionForSearchDefinition(searchDefinition);
-
+       
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             this.applicationConfiguration.getLoggingManager().logException(ex);
