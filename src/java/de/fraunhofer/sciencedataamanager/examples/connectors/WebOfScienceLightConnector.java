@@ -30,7 +30,7 @@ public class WebOfScienceLightConnector implements ICloudPaperConnector {
 
     private ApplicationConfiguration applicationConfiguration;
     int progress = 0;
-    int itemTreshhold = 300;
+    int itemTreshhold = 50;
 
     public WebOfScienceLightConnector(ApplicationConfiguration applicationConfiguration) {
         this.applicationConfiguration = applicationConfiguration;
@@ -43,9 +43,11 @@ public class WebOfScienceLightConnector implements ICloudPaperConnector {
         searchDefinitonExecution.setStartExecutionTimestamp(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
 
         String query = "TS=(";
-        for (SearchTerm searchTerm : searchDefiniton.getSearchTerms()) {
+        for (SearchTerm searchTerm : searchDefiniton.getSearchTerms())
+        {
             query += searchTerm.getTerm();
-            if (searchTerm.getOperation() != null) {
+            if (searchTerm.getOperation() != null)
+            {
                 query = query + " " + searchTerm.getOperation() + " ";
             }
         }
@@ -89,58 +91,90 @@ public class WebOfScienceLightConnector implements ICloudPaperConnector {
         SearchResults results = wokSearch.search(queryParameters, retrieveParameters);
 
         searchDefinitonExecution.setTotalItems(results.getRecordsFound());
+        //for (; startPage < itemTreshhold; )
+        int startPage = 1;
+        int count = 100;
+        boolean lastLoop = false; 
+        while (true)
+        {
+            
+            if (startPage >= itemTreshhold)
+            {
+                count = itemTreshhold - (startPage - 100);
+                startPage = itemTreshhold - count;
+                lastLoop = true; 
+            }
 
-        for (int startPage = 1; startPage < itemTreshhold; startPage = startPage + 100) {
-
-            retrieveParameters.setCount(100);
+            if (startPage >= searchDefinitonExecution.getTotalItems())
+            {
+                count = searchDefinitonExecution.getTotalItems() - (startPage - 100);
+                startPage = searchDefinitonExecution.getTotalItems() - count;
+                lastLoop = true; 
+            }
+            retrieveParameters.setCount(count);
             retrieveParameters.setFirstRecord(startPage);
-
             results = wokSearch.retrieve(results.getQueryId(), retrieveParameters);
 
-            for (LiteRecord currentRecord : results.getRecords()) {
+            for (LiteRecord currentRecord : results.getRecords())
+            {
                 ScientificPaperMetaInformationDataManager scientificPaperMetaInformationDataManager = new ScientificPaperMetaInformationDataManager(this.applicationConfiguration);
                 ScientificPaperMetaInformation scientificPaperMetaInformationBuffer = scientificPaperMetaInformationDataManager.getScientificMetaInformationByID(currentRecord.getUid(), "Identifier_2");
-                if (scientificPaperMetaInformationBuffer != null) {
+                if (false)
+                //if (scientificPaperMetaInformationBuffer != null) 
+                {
                     localItemsFound++;
                     searchDefinitonExecution.getScientificPaperMetaInformation().add(scientificPaperMetaInformationBuffer);
-                } else {
+                }
+                else
+                {
 
                     ScientificPaperMetaInformation scientificPaperMetaInformation = new ScientificPaperMetaInformation();
-                    try {
+                    try
+                    {
                         scientificPaperMetaInformation.setIdentifier_2(currentRecord.getUid());
-                        if (!((List<LabelValuesPair>) currentRecord.getTitle()).isEmpty()) {
+                        if (!((List<LabelValuesPair>) currentRecord.getTitle()).isEmpty())
+                        {
                             scientificPaperMetaInformation.setTitle(((List<LabelValuesPair>) currentRecord.getTitle()).get(0).getValue().get(0));
                         }
 
-                        if (!((List<LabelValuesPair>) currentRecord.getSource()).isEmpty()) {
+                        if (!((List<LabelValuesPair>) currentRecord.getSource()).isEmpty())
+                        {
                             int monthNumber = 0;
                             int dayNumber = 1;
                             int yearNumber = 0;
-                            for (LabelValuesPair currentLabeValuePair : currentRecord.getSource()) {
+                            for (LabelValuesPair currentLabeValuePair : currentRecord.getSource())
+                            {
 
-                                switch (currentLabeValuePair.getLabel()) {
+                                switch (currentLabeValuePair.getLabel())
+                                {
                                     case "Issue":
-                                        if (!currentLabeValuePair.getValue().isEmpty()) {
+                                        if (!currentLabeValuePair.getValue().isEmpty())
+                                        {
                                             scientificPaperMetaInformation.setScrIdentifier_1(currentLabeValuePair.getValue().get(0));
                                         }
                                         break;
                                     case "Pages":
-                                        if (!currentLabeValuePair.getValue().isEmpty()) {
+                                        if (!currentLabeValuePair.getValue().isEmpty())
+                                        {
                                             String[] parts = currentLabeValuePair.getValue().get(0).split("-");
 
-                                            if (parts.length == 2) {
+                                            if (parts.length == 2)
+                                            {
                                                 scientificPaperMetaInformation.setSrcStartPage(parts[0]);
                                                 scientificPaperMetaInformation.setSrcEndPage(parts[1]);
                                             }
                                         }
                                         break;
                                     case "Published.BiblioDate":
-                                        if (!currentLabeValuePair.getValue().isEmpty()) {
+                                        if (!currentLabeValuePair.getValue().isEmpty())
+                                        {
                                             String[] parts = currentLabeValuePair.getValue().get(0).split(" ");
 
-                                            if (parts.length >= 1) {
+                                            if (parts.length >= 1)
+                                            {
 
-                                                switch (parts[0]) {
+                                                switch (parts[0])
+                                                {
                                                     case "SPR":
                                                         monthNumber = 3;
                                                         break;
@@ -162,7 +196,8 @@ public class WebOfScienceLightConnector implements ICloudPaperConnector {
                                                 }
 
                                             }
-                                            if (parts.length == 2) {
+                                            if (parts.length == 2)
+                                            {
                                                 dayNumber = Integer.parseInt(parts[1]);
                                             }
 
@@ -177,12 +212,14 @@ public class WebOfScienceLightConnector implements ICloudPaperConnector {
                                             break;
                                         }
                                     case "SourceTitle":
-                                        if (!currentLabeValuePair.getValue().isEmpty()) {
-                                            scientificPaperMetaInformation.setSrcTitle(currentLabeValuePair.getValue().get(0));
+                                        if (!currentLabeValuePair.getValue().isEmpty())
+                                        {
+                                            scientificPaperMetaInformation.setScrPublisherName(currentLabeValuePair.getValue().get(0));
                                         }
                                         break;
                                     case "Volume":
-                                        if (!currentLabeValuePair.getValue().isEmpty()) {
+                                        if (!currentLabeValuePair.getValue().isEmpty())
+                                        {
                                             scientificPaperMetaInformation.setSrcVolume(Integer.parseInt(currentLabeValuePair.getValue().get(0)));
                                         }
                                         break;
@@ -195,26 +232,33 @@ public class WebOfScienceLightConnector implements ICloudPaperConnector {
                             scientificPaperMetaInformation.setSrcPublicationDate(new java.sql.Date(cal.getTime().getTime()));
                         }
 
-                        if (!((List<LabelValuesPair>) currentRecord.getOther()).isEmpty()) {
-                            for (LabelValuesPair currentLabeValuePair : currentRecord.getOther()) {
-                                switch (currentLabeValuePair.getLabel()) {
+                        if (!((List<LabelValuesPair>) currentRecord.getOther()).isEmpty())
+                        {
+                            for (LabelValuesPair currentLabeValuePair : currentRecord.getOther())
+                            {
+                                switch (currentLabeValuePair.getLabel())
+                                {
                                     case "Identifier.Doi":
-                                        if (!currentLabeValuePair.getValue().isEmpty()) {
+                                        if (!currentLabeValuePair.getValue().isEmpty())
+                                        {
                                             scientificPaperMetaInformation.setIdentifier_1(currentLabeValuePair.getValue().get(0));
                                         }
                                         break;
                                     case "Identifier.Ids":
-                                        if (!currentLabeValuePair.getValue().isEmpty()) {
+                                        if (!currentLabeValuePair.getValue().isEmpty())
+                                        {
                                             scientificPaperMetaInformation.setIdentifier_3(currentLabeValuePair.getValue().get(0));
                                         }
                                         break;
                                     case "Identifier.Issn":
-                                        if (!currentLabeValuePair.getValue().isEmpty()) {
+                                        if (!currentLabeValuePair.getValue().isEmpty())
+                                        {
                                             scientificPaperMetaInformation.setSrcIISN(currentLabeValuePair.getValue().get(0));
                                         }
                                         break;
                                     case "Identifer.Ibsn":
-                                        if (!currentLabeValuePair.getValue().isEmpty()) {
+                                        if (!currentLabeValuePair.getValue().isEmpty())
+                                        {
                                             scientificPaperMetaInformation.setSrcISBN(currentLabeValuePair.getValue().get(0));
                                         }
                                         break;
@@ -223,11 +267,14 @@ public class WebOfScienceLightConnector implements ICloudPaperConnector {
                             }
                         }
 
-                        if (!((List<LabelValuesPair>) currentRecord.getAuthors()).isEmpty()) {
+                        if (!((List<LabelValuesPair>) currentRecord.getAuthors()).isEmpty())
+                        {
                             List<String> authors = ((List<LabelValuesPair>) currentRecord.getAuthors()).get(0).getValue();
-                            for (String currentAuthor : authors) {
+                            for (String currentAuthor : authors)
+                            {
                                 String[] parts = currentAuthor.split(",");
-                                if (parts.length == 2) {
+                                if (parts.length == 2)
+                                {
                                     ScientificPaperMetaInformationAuthors scientificPaperMetaInformationAuthors = new ScientificPaperMetaInformationAuthors();
                                     scientificPaperMetaInformationAuthors.setGivenName(parts[0]);
                                     scientificPaperMetaInformationAuthors.setSurName(parts[1]);
@@ -240,7 +287,9 @@ public class WebOfScienceLightConnector implements ICloudPaperConnector {
                         searchDefinitonExecution.getScientificPaperMetaInformation().add(scientificPaperMetaInformation);
                         newItemsFound++;
 
-                    } catch (Exception ex) {
+                    }
+                    catch (Exception ex)
+                    {
                         this.applicationConfiguration.getLoggingManager().logException(ex);
                         ScientificPaperMetaInformationParseException scientificPaperMetaInformationParseException = new ScientificPaperMetaInformationParseException();
                         scientificPaperMetaInformationParseException.setParseState("Failed");
@@ -251,6 +300,11 @@ public class WebOfScienceLightConnector implements ICloudPaperConnector {
                 }
                 crawledItems++;
                 progress++;
+            }
+            startPage = startPage + 100;
+            if (lastLoop)
+            {
+                break;
             }
 
         }

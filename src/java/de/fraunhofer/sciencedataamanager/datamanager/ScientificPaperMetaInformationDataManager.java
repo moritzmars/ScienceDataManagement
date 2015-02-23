@@ -83,9 +83,9 @@ public class ScientificPaperMetaInformationDataManager {
             scientificPaperMetaInformation.setSrcDate_2(rs.getTimestamp("srcDate_2"));
 
             String text1 = rs.getString("Text_1");
-            if (text1!=null && text1.length() > 50)
+            if (text1!=null && text1.length() > 500)
             {
-                scientificPaperMetaInformation.setText_1(text1.substring(0, 7) + "...");
+                scientificPaperMetaInformation.setText_1(text1.substring(0, 100) + "...");
             }
             else
             {
