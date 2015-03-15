@@ -47,7 +47,7 @@ public class DataExportInstanceNew {
 
     /**
      * Sets the data export instance name
-     * @param the data export instance name
+     * @param dataExportInstanceName the data export instance name
      */
     public void setDataExportInstanceName(String dataExportInstanceName) {
         this.dataExportInstanceName = dataExportInstanceName;
@@ -55,7 +55,7 @@ public class DataExportInstanceNew {
 
     /**
      * Sets the data export instance groovy code
-     * @param The data export instance groovy code
+     * @param dataExportInstanceGroovyCode The data export instance groovy code
      */
     public void setDataExportInstanceGroovyCode(String dataExportInstanceGroovyCode) {
         this.dataExportInstanceGroovyCode = dataExportInstanceGroovyCode;

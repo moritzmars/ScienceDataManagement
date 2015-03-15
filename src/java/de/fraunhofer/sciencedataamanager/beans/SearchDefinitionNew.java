@@ -45,7 +45,7 @@ public class SearchDefinitionNew {
 
     /**
      * Returns the selected system instance list. 
-     * @param the selected system instance list. 
+     * @param selectedSystemInstanceList the selected system instance list. 
      */
     public void setSelectedSystemInstanceList(LinkedList<SystemInstance> selectedSystemInstanceList) {
         this.selectedSystemInstanceList = selectedSystemInstanceList;
@@ -61,7 +61,7 @@ public class SearchDefinitionNew {
 
     /**
      * Sets the system instance list. 
-     * @param the system instance list. 
+     * @param systemInstanceList the system instance list. 
      */
     public void setSystemInstanceList(LinkedList<SystemInstance> systemInstanceList) {
         this.systemInstanceList = systemInstanceList;
@@ -83,7 +83,7 @@ public class SearchDefinitionNew {
 
     /**
      * Sets the temp search terms. 
-     * @param the temp search terms. 
+     * @param tempSeachTerms the temp search terms. 
      */
     public void setTempSeachTerms(LinkedList<SearchTerm> tempSeachTerms) {
         this.tempSeachTerms = tempSeachTerms;
@@ -99,7 +99,7 @@ public class SearchDefinitionNew {
 
     /**
      * Sets the search definition name.
-     * @param the search definition name. 
+     * @param searchDefinitionName the search definition name. 
      */
     public void setSearchDefinitionName(String searchDefinitionName) {
         this.searchDefinitionName = searchDefinitionName;
@@ -115,7 +115,7 @@ public class SearchDefinitionNew {
 
     /**
      * Sets the temp search term.
-     * @param the temp search term. 
+     * @param tempSearhTerm the temp search term. 
      */
     public void setTempSearhTerm(String tempSearhTerm) {
         this.tempSearhTerm = tempSearhTerm;
@@ -131,7 +131,7 @@ public class SearchDefinitionNew {
 
     /**
      * Sets the temp operation. 
-     * @param the temp operation. 
+     * @param tempOperation the temp operation. 
      */
     public void setTempOperation(String tempOperation) {
         this.tempOperation = tempOperation;
@@ -147,7 +147,7 @@ public class SearchDefinitionNew {
 
     /**
      * Sets the selected system instances. 
-     * @param the selected system instances. 
+     * @param selectedSystemInstances the selected system instances. 
      */
     public void setSelectedSystemInstances(Collection<String> selectedSystemInstances) {
         this.selectedSystemInstances = selectedSystemInstances;
@@ -214,7 +214,7 @@ public class SearchDefinitionNew {
 
     /**
      * This event is executed after the page is loaded. 
-     * @param Informations about the page load event. 
+     * @param event Informations about the page load event. 
      */
     public void onLoad(ComponentSystemEvent event) {
 

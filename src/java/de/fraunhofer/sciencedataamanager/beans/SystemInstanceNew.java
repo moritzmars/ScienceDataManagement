@@ -47,7 +47,7 @@ public class SystemInstanceNew {
 
     /**
      * Sets the system instance name. 
-     * @param systemInstanceName system instance name. 
+     * @param systemInstanceName  system instance name. 
      */
     public void setSystemInstanceName(String systemInstanceName) {
         this.systemInstanceName = systemInstanceName;

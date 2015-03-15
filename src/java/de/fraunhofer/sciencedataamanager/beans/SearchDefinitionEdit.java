@@ -48,7 +48,7 @@ public class SearchDefinitionEdit {
 
     /**
      * Sets the selected system instance list. 
-     * @param the selected system instance list. 
+     * @param selectedSystemInstanceList the selected system instance list. 
      */
     public void setSelectedSystemInstanceList(LinkedList<SystemInstance> selectedSystemInstanceList) {
         this.selectedSystemInstanceList = selectedSystemInstanceList;
@@ -64,7 +64,7 @@ public class SearchDefinitionEdit {
 
     /**
      * Sets the system instance list. 
-     * @param the system instance list. 
+     * @param systemInstanceList the system instance list. 
      */
     public void setSystemInstanceList(LinkedList<SystemInstance> systemInstanceList) {
         this.systemInstanceList = systemInstanceList;
@@ -72,7 +72,7 @@ public class SearchDefinitionEdit {
 
     /**
      * Sets the current term.
-     * @param the current term.
+     * @param currentTerm the current term.
      */
     public void setCurrentTerm(String currentTerm) {
         this.currentTerm = currentTerm;
@@ -80,7 +80,7 @@ public class SearchDefinitionEdit {
 
     /**
      * Sets the current operation.
-     * @param the current operation
+     * @param currentOperation the current operation
      */
     public void setCurrentOperation(String currentOperation) {
         this.currentOperation = currentOperation;
@@ -106,7 +106,7 @@ public class SearchDefinitionEdit {
 
     /**
      * Sets the search definition name.
-     * @param the search definition name.
+     * @param searchDefinitionName the search definition name.
      */
     public void setSearchDefinitionName(String searchDefinitionName) {
         this.searchDefinitionName = searchDefinitionName;
@@ -122,7 +122,7 @@ public class SearchDefinitionEdit {
 
     /**
      * The method is executed after page load.
-     * @param the information of the page load. 
+     * @param event the information of the page load. 
      */
     public void onLoad(ComponentSystemEvent event) {
 

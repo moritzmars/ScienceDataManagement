@@ -41,7 +41,7 @@ public class SearchAnalyticDefinitionEdit {
 
     /**
      * Sets the search analytic definition name
-     * @param the search analytic definition name
+     * @param searchAnalyticsDefinitionName the search analytic definition name
      */
     public void setSearchAnalyticsDefinitionName(String searchAnalyticsDefinitionName) {
         this.searchAnalyticsDefinitionName = searchAnalyticsDefinitionName;
@@ -57,7 +57,7 @@ public class SearchAnalyticDefinitionEdit {
 
     /**
      * Sets the search analytics definition query. 
-     * @param The search analytics definition query. 
+     * @param searchAnalyticsDefinitionQuery The search analytics definition query. 
      */
     public void setSearchAnalyticsDefinitionQuery(String searchAnalyticsDefinitionQuery) {
         this.searchAnalyticsDefinitionQuery = searchAnalyticsDefinitionQuery;
@@ -65,7 +65,7 @@ public class SearchAnalyticDefinitionEdit {
 
     /**
      * The event is executed after the page is loaded. 
-     * @param Page load event object.
+     * @param event Page load event object.
      */
     public void onLoad(ComponentSystemEvent event) {
 
@@ -111,7 +111,7 @@ public class SearchAnalyticDefinitionEdit {
     }
 
     /**
-     * The methos executed a redirect to the index page. 
+     * The method executed a redirect to the index page. 
      */
     public void redirectBack() {
         try {

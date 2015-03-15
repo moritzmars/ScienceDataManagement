@@ -39,7 +39,7 @@ public class SearchHistoryManagement {
 
     /**
      * This method is called after the page is loaded. 
-     * @param has information about the page load. 
+     * @param event has information about the page load. 
      */
     public void onLoad(ComponentSystemEvent event) {
         try {

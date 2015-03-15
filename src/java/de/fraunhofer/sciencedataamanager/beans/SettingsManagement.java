@@ -45,7 +45,7 @@ public class SettingsManagement implements java.io.Serializable {
 
     /**
      * Sets the sql connection string. 
-     * @param the sql connection string. 
+     * @param sqlConnectionString the sql connection string. 
      */
     public void setSqlConnectionString(String sqlConnectionString) {
         this.sqlConnectionString = sqlConnectionString;
@@ -61,7 +61,7 @@ public class SettingsManagement implements java.io.Serializable {
 
     /**
      * Sets the selected application log monitoring level.
-     * @param the application log monitoring level. 
+     * @param selectedApplicationLogMonitoringLevel the application log monitoring level. 
      */
     public void setSelectedApplicationLogMonitoringLevel(ApplicationLogMonitoringLevel selectedApplicationLogMonitoringLevel) {
         this.selectedApplicationLogMonitoringLevel = selectedApplicationLogMonitoringLevel;
@@ -69,7 +69,7 @@ public class SettingsManagement implements java.io.Serializable {
 
     /**
      * The method is executed after the page is loaded. 
-     * @param object holds information about the page load. 
+     * @param event object holds information about the page load. 
      */
     public void onLoad(ComponentSystemEvent event) {
         try {

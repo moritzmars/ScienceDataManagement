@@ -73,7 +73,7 @@ public class SearchDefinitionManagement {
 
     /**
      * Returns the selected search definition. 
-     * @param the selected search definition. 
+     * @param selectedSearchDefinition the selected search definition. 
      */
     public void setSelectedSearchDefinition(String selectedSearchDefinition) {
         this.selectedSearchDefinition = selectedSearchDefinition;
@@ -89,7 +89,7 @@ public class SearchDefinitionManagement {
 
     /**
      * Sets the selected system instances
-     * @param the selected system instances. 
+     * @param selectedSystemInstances the selected system instances. 
      */
     public void setSelectedSystemInstances(Collection<String> selectedSystemInstances) {
         this.selectedSystemInstances = selectedSystemInstances;
@@ -113,7 +113,7 @@ public class SearchDefinitionManagement {
 
     /**
      * This method is executed after page call. 
-     * @param the object about the onload call. 
+     * @param event the object about the onload call. 
      */
     public void onLoad(ComponentSystemEvent event) {
         try {

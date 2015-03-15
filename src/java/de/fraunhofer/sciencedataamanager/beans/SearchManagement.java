@@ -66,7 +66,7 @@ public class SearchManagement implements Serializable {
      * Returns the loaded data export instances. 
      * @return the loaded data export instances. 
      */
-    public Collection getLoadedDataExportInstarnsnces() {
+    public Collection getLoadedDataExportInstances() {
         return loadedDataExportInstances;
     }
 
@@ -104,7 +104,7 @@ public class SearchManagement implements Serializable {
 
     /**
      * Sets the selected export instance. 
-     * @param the selected export instance. 
+     * @param selectedExportInstance the selected export instance. 
      */
     public void setSelectedExportInstance(String selectedExportInstance) {
         this.selectedExportInstance = selectedExportInstance;
@@ -155,7 +155,7 @@ public class SearchManagement implements Serializable {
 
     /**
      * Sets the search execution manager. 
-     * @param the search execution manager. 
+     * @param searchExecutionManager the search execution manager. 
      */
     public void setSearchExecutionManager(SearchExecutionManager searchExecutionManager) {
         this.searchExecutionManager = searchExecutionManager;
@@ -163,7 +163,7 @@ public class SearchManagement implements Serializable {
 
     /**
      * Sets the current progress.
-     * @param the current progress. 
+     * @param currentProgress the current progress. 
      */
     public void setCurrentProgress(int currentProgress) {
         this.currentProgress = currentProgress;
@@ -194,7 +194,7 @@ public class SearchManagement implements Serializable {
 
     /**
      * Sets the button rendered. 
-     * @param the button rendered. 
+     * @param buttonRendered the button rendered. 
      */
     public void setButtonRendered(boolean buttonRendered) {
         this.buttonRendered = buttonRendered;
@@ -263,7 +263,7 @@ public class SearchManagement implements Serializable {
 
     /**
      * Sets the selected item. 
-     * @param the selected item. 
+     * @param selectedItem the selected item. 
      */
     public void setSelectedItem(String selectedItem) {
         this.selectedItem = selectedItem;

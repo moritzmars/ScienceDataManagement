@@ -49,8 +49,8 @@ public class DataExportInstanceManagement {
     }
 
     /**
-     * Sets the applcation configuration
-     * @param The application configuration to set. 
+     * Sets the application configuration
+     * @param applicationConfiguration application configuration to set. 
      */
     public void setApplicationConfiguration(ApplicationConfiguration applicationConfiguration) {
         this.applicationConfiguration = applicationConfiguration;
@@ -58,7 +58,7 @@ public class DataExportInstanceManagement {
 
     /**
      * Set the selected data export instance id. 
-     * @param The selected data export instance id.
+     * @param selectedItem The selected data export instance id.
      */
     public void setSelectedItem(String selectedItem) {
         this.selectedItem = selectedItem;
@@ -82,7 +82,7 @@ public class DataExportInstanceManagement {
 
     /**
      * Sets the selected data export instance id. 
-     * @param the selected data export instance id. 
+     * @param selectedDataExportInstance the selected data export instance id. 
      */
     public void setSelectedDataExportInstance(DataExportInstance selectedDataExportInstance) {
         this.selectedDataExportInstance = selectedDataExportInstance;

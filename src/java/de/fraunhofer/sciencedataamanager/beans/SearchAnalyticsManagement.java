@@ -87,7 +87,7 @@ public class SearchAnalyticsManagement {
 
     /**
      * Sets the selected export instance 
-     * @param the selected export instance
+     * @param selectedExportInstance the selected export instance
      */
     public void setSelectedExportInstance(String selectedExportInstance) {
         this.selectedExportInstance = selectedExportInstance;
@@ -103,7 +103,7 @@ public class SearchAnalyticsManagement {
 
     /**
      * Sets the selected search definition execution.
-     * @param The selected search definition execution.
+     * @param selectedSearchDefinitionExecution The selected search definition execution.
      */
     public void setSelectedSearchDefinitionExecution(String selectedSearchDefinitionExecution) {
         this.selectedSearchDefinitionExecution = selectedSearchDefinitionExecution;
@@ -111,7 +111,7 @@ public class SearchAnalyticsManagement {
 
     /**
      * Sets the selected search definition. 
-     * @param the selected search definition. 
+     * @param selectedSearchDefinition the selected search definition. 
      */
     public void setSelectedSearchDefinition(String selectedSearchDefinition) {
         this.selectedSearchDefinition = selectedSearchDefinition;
@@ -119,7 +119,7 @@ public class SearchAnalyticsManagement {
 
     /**
      * Sets the selected search analytic.
-     * @param the selected search analytic.
+     * @param selectedSearchAnalytic the selected search analytic.
      */
     public void setSelectedSearchAnalytic(String selectedSearchAnalytic) {
         this.selectedSearchAnalytic = selectedSearchAnalytic;
@@ -233,7 +233,7 @@ public class SearchAnalyticsManagement {
 
     /**
      * The event is executed after page load
-     * @param the page load event object 
+     * @param event the page load event object 
      */
     public void onLoad(ComponentSystemEvent event) {
         try {
@@ -436,7 +436,7 @@ public class SearchAnalyticsManagement {
     }
 
     /**
-     *
+     * Executes the generic export algorithmus. 
      */
     public void export() {
 

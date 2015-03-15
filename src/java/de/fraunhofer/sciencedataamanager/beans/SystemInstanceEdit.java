@@ -48,7 +48,7 @@ public class SystemInstanceEdit {
 
     /**
      * Sets the system instance name.
-     * @param the system instance name. 
+     * @param systemInstanceName the system instance name. 
      */
     public void setSystemInstanceName(String systemInstanceName) {
         this.systemInstanceName = systemInstanceName;
@@ -56,7 +56,7 @@ public class SystemInstanceEdit {
 
     /**
      * Sets the system instance groovy code. 
-     * @param the system instance groovy code. 
+     * @param systemInstanceGroovyCode the system instance groovy code. 
      */
     public void setSystemInstanceGroovyCode(String systemInstanceGroovyCode) {
         this.systemInstanceGroovyCode = systemInstanceGroovyCode;
@@ -64,7 +64,7 @@ public class SystemInstanceEdit {
 
     /**
      * This method is executed after the page is loaded. 
-     * @param informations about the page load. 
+     * @param event informations about the page load. 
      */
     public void onLoad(ComponentSystemEvent event) {
         try {

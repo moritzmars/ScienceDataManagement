@@ -28,7 +28,7 @@ public class IndexManagement {
 
     /**
      * Sets the selected tab. 
-     * @param The selected tab. 
+     * @param tabSelected The selected tab. 
      */
     public void setTabSelected(String tabSelected) {
         this.tabSelected = tabSelected;

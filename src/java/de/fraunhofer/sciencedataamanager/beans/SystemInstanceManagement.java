@@ -44,7 +44,7 @@ public class SystemInstanceManagement {
 
     /**
      * Returns the selected item.
-     * @param the selected item. 
+     * @param selectedItem the selected item. 
      */
     public void setSelectedItem(String selectedItem) {
         this.selectedItem = selectedItem;
@@ -60,7 +60,7 @@ public class SystemInstanceManagement {
 
     /**
      * Sets the selected connector. 
-     * @param the selected connector
+     * @param selectedSystemInstance the selected connector
      */
     public void setSelectedSystemInstance(SystemInstance selectedSystemInstance) {
         this.selectedSystemInstance = selectedSystemInstance;
@@ -76,7 +76,7 @@ public class SystemInstanceManagement {
 
     /**
      * This method is executed after the page is loaded. 
-     * @param objects has information about the page load. 
+     * @param event objects has information about the page load. 
      */
     public void onLoad(ComponentSystemEvent event) {
         try {

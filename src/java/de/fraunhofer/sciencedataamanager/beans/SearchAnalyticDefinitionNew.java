@@ -37,7 +37,7 @@ public class SearchAnalyticDefinitionNew {
 
     /**
      * Sets the search analytic definition query. 
-     * @param the search analytic definition query.
+     * @param searchAnalyticsDefinitionQuery the search analytic definition query.
      */
     public void setSearchAnalyticsDefinitionQuery(String searchAnalyticsDefinitionQuery) {
         this.searchAnalyticsDefinitionQuery = searchAnalyticsDefinitionQuery;
@@ -55,7 +55,7 @@ public class SearchAnalyticDefinitionNew {
 
     /**
      * Sets the search analytic definition name.
-     * @param the search analytic definition name.
+     * @param searchAnalyticsDefinitionName the search analytic definition name.
      */
     public void setSearchAnalyticsDefinitionName(String searchAnalyticsDefinitionName) {
         this.searchAnalyticsDefinitionName = searchAnalyticsDefinitionName;
@@ -84,7 +84,7 @@ public class SearchAnalyticDefinitionNew {
 
     /**
      * The method is called after the page is loaded. 
-     * @param the event of the page loaded. 
+     * @param event the event of the page loaded. 
      */
     public void onLoad(ComponentSystemEvent event) {
 
