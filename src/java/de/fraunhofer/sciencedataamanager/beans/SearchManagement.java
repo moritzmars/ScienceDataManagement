@@ -34,7 +34,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 
 /**
- *
+ * This class provides logic and data for the search mangement site. 
  * @author Moritz Mars
  */
 @ManagedBean(name = "search")
@@ -54,38 +54,74 @@ public class SearchManagement implements Serializable {
     private Collection loadedDataExportInstances;
     private Collection loadedSelectedSystemInstances;
 
+    /**
+     * Returns the load data message. 
+     * @return the load data message. 
+     */
     public String getLoadDataMessage() {
         return loadDataMessage;
     }
 
-    public Collection getLoadedDataExportInstances() {
+    /**
+     * Returns the loaded data export instances. 
+     * @return the loaded data export instances. 
+     */
+    public Collection getLoadedDataExportInstarnsnces() {
         return loadedDataExportInstances;
     }
 
+    /**
+     *Return the selected system instances.
+     * @return the selected system instances. 
+     */
     public Collection getLoadedSelectedSystemInstances() {
         return loadedSelectedSystemInstances;
     }
 
+    /**
+     * Returns the loaded search execution list. 
+     * @return the loaded search execution list. 
+     */
     public Collection getLoadedSearchExecutionList() {
         return loadedSearchExecutionList;
     }
 
+    /**
+     * Returns the loaded system instances. 
+     * @return the loaded system instances. 
+     */
     public Collection<SystemInstance> getLoadedSystemInstances() {
         return loadedSystemInstances;
     }
 
+    /**
+     * Returns the selected export instance. 
+     * @return the selected export instance. 
+     */
     public String getSelectedExportInstance() {
         return selectedExportInstance;
     }
 
+    /**
+     * Sets the selected export instance. 
+     * @param the selected export instance. 
+     */
     public void setSelectedExportInstance(String selectedExportInstance) {
         this.selectedExportInstance = selectedExportInstance;
     }
 
+    /**
+     * Returns the application configuration. 
+     * @return the application configuration. 
+     */
     public ApplicationConfiguration getApplicationConfiguration() {
         return applicationConfiguration;
     }
 
+    /**
+     * Sets the application configuration. 
+     * @param the application configuration. 
+     */
     public void setApplicationConfiguration(ApplicationConfiguration applicationConfiguration) {
         this.applicationConfiguration = applicationConfiguration;
     }
@@ -93,26 +129,50 @@ public class SearchManagement implements Serializable {
     private ApplicationConfiguration applicationConfiguration = ApplicationConfigurationDataManagerFactory.getApplicationConfigurationDataProvider(null).getApplicationConfiguration();
     SearchExecutionManager searchExecutionManager = new SearchExecutionManager(applicationConfiguration);
 
+    /**
+     * Returns the progress bar enabled attribute. 
+     * @return the progress bar enabled attribute. 
+     */
     public boolean isProgressBarEnabled() {
         return progressBarEnabled;
     }
 
+    /**
+     * Sets the progress bar enabled attribute. 
+     * @param the progress bar enabled attribute. 
+     */
     public void setProgressBarEnabled(boolean progressBarEnabled) {
         this.progressBarEnabled = progressBarEnabled;
     }
 
+    /**
+     * Returns the search execution manager. 
+     * @return the search execution manager. 
+     */
     public SearchExecutionManager getSearchExecutionManager() {
         return searchExecutionManager;
     }
 
+    /**
+     * Sets the search execution manager. 
+     * @param the search execution manager. 
+     */
     public void setSearchExecutionManager(SearchExecutionManager searchExecutionManager) {
         this.searchExecutionManager = searchExecutionManager;
     }
 
+    /**
+     * Sets the current progress.
+     * @param the current progress. 
+     */
     public void setCurrentProgress(int currentProgress) {
         this.currentProgress = currentProgress;
     }
 
+    /**
+     * Returns the current progress values. 
+     * @return the current progress value. 
+     */
     public int getCurrentProgressValue() {
         try {
             return searchExecutionManager.getProgressCurrentExecution();
@@ -124,14 +184,25 @@ public class SearchManagement implements Serializable {
         return 0;
     }
 
+    /**
+     * Returns the is button rendered flag. 
+     * @return the is button rendered flar. 
+     */
     public boolean isButtonRendered() {
         return buttonRendered;
     }
 
+    /**
+     * Sets the button rendered. 
+     * @param the button rendered. 
+     */
     public void setButtonRendered(boolean buttonRendered) {
         this.buttonRendered = buttonRendered;
     }
 
+    /**
+     * Loads the system instances, data export instances, selected system instances and all search definition execution. 
+     */
     public void loadData() {
         this.loadedSystemInstances = getSystemInstances();
         this.loadedDataExportInstances = getDataExportInstances();
@@ -139,6 +210,10 @@ public class SearchManagement implements Serializable {
         this.loadedSearchExecutionList = getAllSearchDefinitionExecutinsBySearchID();
     }
 
+    /**
+     *Returns the scientific paper meta informations. 
+     * @return the scientific paper meta information.
+     */
     public SearchDefinitonExecution getScientificPaperMetaInformationBySearchDefinition() {
         SearchDefinitonExecution searchDefinitonExecution = null;
         try {
@@ -160,6 +235,10 @@ public class SearchManagement implements Serializable {
         return searchDefinitonExecution;
     }
 
+    /**
+     * Returns the selected system instances. 
+     * @return the selected system instances. 
+     */
     public Collection getSelectedSystemInstances() {
         Collection<String> selectedSystemInstances = new LinkedList();
         try {
@@ -182,14 +261,26 @@ public class SearchManagement implements Serializable {
         return selectedSystemInstances;
     }
 
+    /**
+     * Sets the selected item. 
+     * @param the selected item. 
+     */
     public void setSelectedItem(String selectedItem) {
         this.selectedItem = selectedItem;
     }
 
+    /**
+     * Returns the selected item. 
+     * @return the selected item. 
+     */
     public String getSelectedItem() {
         return selectedItem;
     }
 
+    /**
+     * Returns the system instances. 
+     * @return the system instances. 
+     */
     public Collection<SystemInstance> getSystemInstances() {
         Collection systemInstances = null;
         try {
@@ -203,6 +294,10 @@ public class SearchManagement implements Serializable {
         return systemInstances;
     }
 
+    /**
+     * Return the search definitions. 
+     * @return the search definitions. 
+     */
     public Collection getSearchDefinitions() {
         Collection searchDefinitions = null;
         SearchDefinitionDataManager searchDefinitionDataProvider = new SearchDefinitionDataManager(applicationConfiguration);
@@ -217,6 +312,10 @@ public class SearchManagement implements Serializable {
         return searchDefinitions;
     }
 
+    /**
+     * Returns the data export instances. 
+     * @return the data export instances. 
+     */
     public Collection getDataExportInstances() {
         Collection dataExportInstances = null;
 
@@ -232,6 +331,9 @@ public class SearchManagement implements Serializable {
         return dataExportInstances;
     }
 
+    /**
+     * Executes the search algorithmus. 
+     */
     public void execute() {
         try {
             if (selectedItem == null || "".equals(selectedItem)) {
@@ -248,6 +350,11 @@ public class SearchManagement implements Serializable {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    /**
+     * Returns the last search definition execution. 
+     * @return the last search definition execution. 
+     */
     public Collection<SearchDefinitonExecution> getLastSearchDefinitionExecutinsBySearchID() {
         LinkedList<SearchDefinitonExecution> searchDefinitonExecutionList = new LinkedList<SearchDefinitonExecution>();
         try {
@@ -269,6 +376,10 @@ public class SearchManagement implements Serializable {
         return searchDefinitonExecutionList;
     }
 
+    /**
+     * Returns all search definition execution by search ID.
+     * @return all search definition execution 
+     */
     public Collection<SearchDefinitonExecution> getAllSearchDefinitionExecutinsBySearchID() {
         LinkedList<SearchDefinitonExecution> searchDefinitonExecutionList = new LinkedList<SearchDefinitonExecution>();
         try {
@@ -290,6 +401,10 @@ public class SearchManagement implements Serializable {
         return searchDefinitonExecutionList;
     }
 
+    /**
+     * Returns all scientific meta informations.
+     * @return scientific meta informations. 
+     */
     public Collection<ScientificPaperMetaInformation> getAllScientificMetaInformationBySearchID() {
         LinkedList<SearchDefinitonExecution> searchDefinitonExecutionList = new LinkedList<SearchDefinitonExecution>();
         LinkedList<ScientificPaperMetaInformation> scientificMetaInformationList = new LinkedList<ScientificPaperMetaInformation>();
@@ -315,6 +430,10 @@ public class SearchManagement implements Serializable {
         return scientificMetaInformationList;
     }
 
+    /**
+     * Returns the current progress value. 
+     * @return the current progress value. 
+     */
     public int getCurrentProgress() {
         try {
             return searchExecutionManager.getProgressCurrentExecution();
@@ -326,11 +445,18 @@ public class SearchManagement implements Serializable {
         return 0;
     }
 
+    /**
+     * Loads the selected system instances and all search definitions. 
+     */
     public void loadTable() {
         this.loadedSelectedSystemInstances = getSelectedSystemInstances();
         this.loadedSearchExecutionList = getAllSearchDefinitionExecutinsBySearchID();
     }
 
+    /**
+     * The method is executed after the page is loaded. 
+     * @param Informations about the page load event. 
+     */
     public void onLoad(ComponentSystemEvent event) {
         try {
             if (FacesContext.getCurrentInstance().isPostback()) {
@@ -347,6 +473,9 @@ public class SearchManagement implements Serializable {
         }
     }
 
+    /**
+     * Export the data to excel.
+     */
     public void exportToExcel() {
 
         try {
@@ -380,6 +509,9 @@ public class SearchManagement implements Serializable {
 
     }
 
+    /**
+     * Executes the generic export algorithmus. 
+     */
     public void export() {
 
         try {
@@ -391,7 +523,7 @@ public class SearchManagement implements Serializable {
                 return;
             }
 
-            String excelExportDefaultFilename = "Excel_Export_" + new SimpleDateFormat("yyyyMMddhhmm").format(new Date()) + ".xls";
+            String excelExportDefaultFilename = "Export_" + new SimpleDateFormat("yyyyMMddhhmm").format(new Date()) + ".xls";
 
             SearchDefinition searchDefinition = new SearchDefinition();
             searchDefinition.setID(Integer.parseInt(selectedItem));

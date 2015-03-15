@@ -11,7 +11,6 @@ import de.fraunhofer.sciencedataamanager.domain.SearchExecution;
 import de.fraunhofer.sciencedataamanager.domain.SearchTerm;
 import de.fraunhofer.sciencedataamanager.domain.SystemInstance;
 import de.fraunhofer.sciencedataamanager.datamanager.ApplicationConfigurationDataManagerFactory;
-import de.fraunhofer.sciencedataamanager.datamanager.LoggingDatabaseManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SearchDefinitionDataManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SystemInstanceDataManager;
 import java.util.Collection;
@@ -24,7 +23,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 
 /**
- *
+ * The class provides logic and data for the search definition new web site. 
  * @author Moritz Mars
  */
 @ManagedBean(name = "searchDefinitionNew")
@@ -36,18 +35,34 @@ public class SearchDefinitionNew {
     private String tempSearhTerm;
     private String tempOperation;
 
+    /**
+     * Returns the selected system instance list. 
+     * @return the selected system instance list. 
+     */
     public LinkedList<SystemInstance> getSelectedSystemInstanceList() {
         return selectedSystemInstanceList;
     }
 
+    /**
+     * Returns the selected system instance list. 
+     * @param the selected system instance list. 
+     */
     public void setSelectedSystemInstanceList(LinkedList<SystemInstance> selectedSystemInstanceList) {
         this.selectedSystemInstanceList = selectedSystemInstanceList;
     }
 
+    /**
+     * Returns the system instance list. 
+     * @return the system instance list. 
+     */
     public LinkedList<SystemInstance> getSystemInstanceList() {
         return systemInstanceList;
     }
 
+    /**
+     * Sets the system instance list. 
+     * @param the system instance list. 
+     */
     public void setSystemInstanceList(LinkedList<SystemInstance> systemInstanceList) {
         this.systemInstanceList = systemInstanceList;
     }
@@ -58,46 +73,89 @@ public class SearchDefinitionNew {
     private Collection<String> selectedSystemInstances = new LinkedList();
     private ApplicationConfiguration applicationConfiguration = ApplicationConfigurationDataManagerFactory.getApplicationConfigurationDataProvider(null).getApplicationConfiguration();
 
+    /**
+     * Returns the temp search terms. 
+     * @return the temp search terms.
+     */
     public Collection getTempSeachTerms() {
         return tempSeachTerms;
     }
 
+    /**
+     * Sets the temp search terms. 
+     * @param the temp search terms. 
+     */
     public void setTempSeachTerms(LinkedList<SearchTerm> tempSeachTerms) {
         this.tempSeachTerms = tempSeachTerms;
     }
 
+    /**
+     * Returns the search definition name. 
+     * @return the search definition name. 
+     */
     public String getSearchDefinitionName() {
         return searchDefinitionName;
     }
 
+    /**
+     * Sets the search definition name.
+     * @param the search definition name. 
+     */
     public void setSearchDefinitionName(String searchDefinitionName) {
         this.searchDefinitionName = searchDefinitionName;
     }
 
+    /**
+     * Returns the temp search term. 
+     * @return the temp search term. 
+     */
     public String getTempSearhTerm() {
         return tempSearhTerm;
     }
 
+    /**
+     * Sets the temp search term.
+     * @param the temp search term. 
+     */
     public void setTempSearhTerm(String tempSearhTerm) {
         this.tempSearhTerm = tempSearhTerm;
     }
 
+    /**
+     * Returns the temp operation. 
+     * @return the temp operation. 
+     */
     public String getTempOperation() {
         return tempOperation;
     }
 
+    /**
+     * Sets the temp operation. 
+     * @param the temp operation. 
+     */
     public void setTempOperation(String tempOperation) {
         this.tempOperation = tempOperation;
     }
 
+    /**
+     * Returns the selected system instances. 
+     * @return the selected system instances.  
+     */
     public Collection<String> getSelectedSystemInstances() {
         return selectedSystemInstances;
     }
 
+    /**
+     * Sets the selected system instances. 
+     * @param the selected system instances. 
+     */
     public void setSelectedSystemInstances(Collection<String> selectedSystemInstances) {
         this.selectedSystemInstances = selectedSystemInstances;
     }
 
+    /**
+     * This method adds a temp search term.
+     */
     public void addTempSearchTerm() {
         SearchTerm searchTerm = new SearchTerm();
         searchTerm.setOperation(tempOperation);
@@ -105,6 +163,9 @@ public class SearchDefinitionNew {
         tempSeachTerms.add(searchTerm);
     }
 
+    /**
+     * This method save the search definition. 
+     */
     public void saveSearchDefinition() {
         try {
             SearchExecution searchExecution = new SearchExecution();
@@ -134,6 +195,10 @@ public class SearchDefinitionNew {
 
     }
 
+    /**
+     * Returns the system instances. 
+     * @return the system instances. 
+     */
     public Collection getSystemInstances() {
         Collection systemInstances = null;
         try {
@@ -147,6 +212,10 @@ public class SearchDefinitionNew {
         return systemInstances;
     }
 
+    /**
+     * This event is executed after the page is loaded. 
+     * @param Informations about the page load event. 
+     */
     public void onLoad(ComponentSystemEvent event) {
 
         try {
@@ -161,6 +230,9 @@ public class SearchDefinitionNew {
         }
     }
 
+    /**
+     * This method performs a redirect to the index page. 
+     */
     public void redirectBack() {
         try {
             FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");

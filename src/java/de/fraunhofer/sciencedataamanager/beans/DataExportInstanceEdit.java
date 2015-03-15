@@ -8,7 +8,6 @@ package de.fraunhofer.sciencedataamanager.beans;
 import de.fraunhofer.sciencedataamanager.domain.ApplicationConfiguration;
 import de.fraunhofer.sciencedataamanager.datamanager.ApplicationConfigurationDataManagerFactory;
 import de.fraunhofer.sciencedataamanager.datamanager.DataExportInstanceDataManager;
-import de.fraunhofer.sciencedataamanager.datamanager.LoggingDatabaseManager;
 import de.fraunhofer.sciencedataamanager.domain.DataExportInstance;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,7 +18,7 @@ import javax.faces.event.ComponentSystemEvent;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
- *
+ * The class is the bean for the JSF Page Data Export Instance Edit
  * @author Moritz Mars
  */
 @ManagedBean(name = "dataExportInstanceEdit")
@@ -31,22 +30,42 @@ public class DataExportInstanceEdit {
     private int dataExportInstanceID;
     private ApplicationConfiguration applicationConfiguration = ApplicationConfigurationDataManagerFactory.getApplicationConfigurationDataProvider(null).getApplicationConfiguration();
 
+    /**
+     * Return the data export instance name.
+     * @return data export instance name.
+     */
     public String getDataExportInstanceName() {
         return dataExportInstanceName;
     }
 
+    /**
+     * Return the Groovy Code of the Data Export Instance
+     * @return Groovy Code of the Data Export Instance
+     */
     public String getDataExportInstanceGroovyCode() {
         return dataExportInstanceGroovyCode;
     }
 
+    /**
+     * Sets the Data Export Instance Name
+     * @param The Data Export Instance Name
+     */
     public void setDataExportInstanceName(String dataExportInstanceName) {
         this.dataExportInstanceName = dataExportInstanceName;
     }
 
+    /**
+     * Sets the Data Export Instance Groovy Code
+     * @param The Data Export Instance Goorvy Code
+     */
     public void setDataExportInstanceGroovyCode(String dataExportInstanceGroovyCode) {
         this.dataExportInstanceGroovyCode = dataExportInstanceGroovyCode;
     }
 
+    /**
+     * The method is executed during first execution of the page and loads the initial data from database. 
+     * @param event from the JSF Framework
+    */
     public void onLoad(ComponentSystemEvent event) {
         try {
             dataExportInstanceID = Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("DataExportInstanceID"));
@@ -62,6 +81,9 @@ public class DataExportInstanceEdit {
         }
     }
 
+    /**
+     * Updates the Data Export Instance with the current values from the JSF page. 
+     */
     public void updateDataExportInstance() {
         try {
             DataExportInstance dataExportInstance = new DataExportInstance();
@@ -80,6 +102,9 @@ public class DataExportInstanceEdit {
 
     }
 
+    /**
+     * Executes a redirect to the Index.html page. 
+     */
     public void redirectBack() {
         try {
             FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");

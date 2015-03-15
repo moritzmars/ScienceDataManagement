@@ -8,10 +8,8 @@ package de.fraunhofer.sciencedataamanager.beans;
 import de.fraunhofer.sciencedataamanager.domain.ApplicationConfiguration;
 import de.fraunhofer.sciencedataamanager.domain.SystemInstance;
 import de.fraunhofer.sciencedataamanager.datamanager.ApplicationConfigurationDataManagerFactory;
-import de.fraunhofer.sciencedataamanager.datamanager.LoggingDatabaseManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SystemInstanceDataManager;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,7 +21,7 @@ import javax.faces.event.ComponentSystemEvent;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
- *
+ * This class provides logic and data for the system instance management. 
  * @author Moritz Mars
  */
 @ManagedBean(name = "systemInstanceManagement")
@@ -36,26 +34,50 @@ public class SystemInstanceManagement {
 
     private LinkedList<SystemInstance> loadedSystemInstances;
 
+    /**
+     * Returns the loaded system instances. 
+     * @return
+     */
     public LinkedList<SystemInstance> getLoadedSystemInstances() {
         return loadedSystemInstances;
     }
 
+    /**
+     * Returns the selected item.
+     * @param the selected item. 
+     */
     public void setSelectedItem(String selectedItem) {
         this.selectedItem = selectedItem;
     }
 
+    /**
+     * Returns the selected item. 
+     * @return the selected item. 
+     */
     public String getSelectedItem() {
         return selectedItem;
     }
 
+    /**
+     * Sets the selected connector. 
+     * @param the selected connector
+     */
     public void setSelectedSystemInstance(SystemInstance selectedSystemInstance) {
         this.selectedSystemInstance = selectedSystemInstance;
     }
 
+    /**
+     * Returns the selected system instance. 
+     * @return the selected system instance. 
+     */
     public SystemInstance getSelectedSystemInstance() {
         return selectedSystemInstance;
     }
 
+    /**
+     * This method is executed after the page is loaded. 
+     * @param objects has information about the page load. 
+     */
     public void onLoad(ComponentSystemEvent event) {
         try {
             if (FacesContext.getCurrentInstance().isPostback()) {
@@ -69,6 +91,10 @@ public class SystemInstanceManagement {
         }
     }
 
+    /**
+     * Returns the system instances. 
+     * @return the system instances. 
+     */
     public LinkedList<SystemInstance> getSystemInstances() {
         LinkedList<SystemInstance> systemInstances = null;
         try {
@@ -83,6 +109,10 @@ public class SystemInstanceManagement {
         return systemInstances;
     }
 
+    /**
+     * Returns the system instance. 
+     * @return the system instance. 
+     */
     public SystemInstance getSystemInstanceByID() {
         try {
             if (selectedItem == null || "".equals(selectedItem)) {
@@ -106,6 +136,9 @@ public class SystemInstanceManagement {
         return null;
     }
 
+    /**
+     * Execute a redirect to the edit page. 
+     */
     public void redirectToEditPage() {
         try {
             FacesContext.getCurrentInstance().getExternalContext().redirect("SystemInstanceEdit.xhtml?SystemInstanceID=" + selectedItem);
@@ -117,6 +150,10 @@ public class SystemInstanceManagement {
         }
     }
 
+    /**
+     * Deletes the connector. 
+     * @throws IOException during database access. 
+     */
     public void deleteSystemInstanceByID() throws IOException {
         try {
             if (selectedItem == null || "".equals(selectedItem)) {

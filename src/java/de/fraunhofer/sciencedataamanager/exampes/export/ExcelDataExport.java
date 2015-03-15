@@ -24,7 +24,13 @@ import org.apache.poi.ss.usermodel.Workbook;
  * @author Moritz Mars
  */
 public class ExcelDataExport implements IExportScientificPaperMetaInformation {
-
+    
+    /**
+     * 
+     * @param dataToExport The objects gets all the values, which should exported.  
+     * @param outputStream 
+     * @throws Exception 
+     */
     @Override
     public void export(Map<String, List<Object>> dataToExport, OutputStream outputStream) throws Exception {
         Workbook currentWorkBook = new HSSFWorkbook();

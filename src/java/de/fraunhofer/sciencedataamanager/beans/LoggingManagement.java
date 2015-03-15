@@ -20,7 +20,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 
 /**
- *
+ * This class provides a overview about current log entries. 
  * @author Moritz Mars
  */
 @ManagedBean(name = "logging")
@@ -30,10 +30,18 @@ public class LoggingManagement {
     private ApplicationConfiguration applicationConfiguration = ApplicationConfigurationDataManagerFactory.getApplicationConfigurationDataProvider(null).getApplicationConfiguration();
     private LinkedList<LoggingEntry> loadedLoggingEntries;
 
+    /**
+     * Returns the Logging Entries
+     * @return loaded Linked List with LoggingEntries.
+     */
     public LinkedList<LoggingEntry> getLoadedLoggingEntries() {
         return loadedLoggingEntries;
     }
 
+    /**
+     * The method is executed during first execution of the page and loads the initial data from database. 
+     * @param event from the JSF Framework
+     */
     public void onLoad(ComponentSystemEvent event) {
         try {
             if (FacesContext.getCurrentInstance().isPostback()) {
@@ -47,6 +55,11 @@ public class LoggingManagement {
         }
     }
 
+    /**
+     * Return the Logging Entries
+     * @return Linked List with Logging Entries
+     * @throws Exception
+     */
     public LinkedList<LoggingEntry> getLoggingEntries() throws Exception {
         LoggingDatabaseManager loggingDataProvider = new LoggingDatabaseManager(applicationConfiguration);
         return loggingDataProvider.getLoggingEntries();

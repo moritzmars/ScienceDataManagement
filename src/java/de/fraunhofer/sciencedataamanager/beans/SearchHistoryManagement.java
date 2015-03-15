@@ -8,7 +8,6 @@ package de.fraunhofer.sciencedataamanager.beans;
 import de.fraunhofer.sciencedataamanager.domain.ApplicationConfiguration;
 import de.fraunhofer.sciencedataamanager.domain.SearchDefinitonExecution;
 import de.fraunhofer.sciencedataamanager.datamanager.ApplicationConfigurationDataManagerFactory;
-import de.fraunhofer.sciencedataamanager.datamanager.LoggingDatabaseManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SearchDefinitonExecutionDataManager;
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -30,10 +29,18 @@ public class SearchHistoryManagement {
     private ApplicationConfiguration applicationConfiguration = ApplicationConfigurationDataManagerFactory.getApplicationConfigurationDataProvider(null).getApplicationConfiguration();
     private LinkedList<SearchDefinitonExecution> loadedSearchDefinitionExecutions;
 
+    /**
+     * This method provides logic and data for the search history web site. 
+     * @return
+     */
     public LinkedList<SearchDefinitonExecution> getLoadedSearchDefinitionExecutions() {
         return loadedSearchDefinitionExecutions;
     }
 
+    /**
+     * This method is called after the page is loaded. 
+     * @param has information about the page load. 
+     */
     public void onLoad(ComponentSystemEvent event) {
         try {
             if (FacesContext.getCurrentInstance().isPostback()) {
@@ -47,6 +54,11 @@ public class SearchHistoryManagement {
         }
     }
 
+    /**
+     *Returns all search definition executions. 
+     * @return the search definitions execution. 
+     * @throws Exception during load from database. 
+     */
     public LinkedList<SearchDefinitonExecution> getAllSearchDefinitionExecutions() throws Exception {
         SearchDefinitonExecutionDataManager searchDefinitonExecutionDataProvider = new SearchDefinitonExecutionDataManager(applicationConfiguration);
         return searchDefinitonExecutionDataProvider.getAllSearchDefinitionExecution();

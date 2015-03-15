@@ -8,11 +8,7 @@ package de.fraunhofer.sciencedataamanager.beans;
 import de.fraunhofer.sciencedataamanager.domain.ApplicationConfiguration;
 import de.fraunhofer.sciencedataamanager.datamanager.ApplicationConfigurationDataManagerFactory;
 import de.fraunhofer.sciencedataamanager.datamanager.DataExportInstanceDataManager;
-import de.fraunhofer.sciencedataamanager.datamanager.LoggingDatabaseManager;
 import de.fraunhofer.sciencedataamanager.domain.DataExportInstance;
-import de.fraunhofer.sciencedataamanager.domain.SystemInstance;
-import java.io.IOException;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,7 +20,7 @@ import javax.faces.event.ComponentSystemEvent;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
- *
+ * The class is provides bean functions to the JSF data export instance management. 
  * @author Moritz Mars
  */
 @ManagedBean(name = "dataExportInstanceManagement")
@@ -36,34 +32,66 @@ public class DataExportInstanceManagement {
     private String selectedItem;
     private ApplicationConfiguration applicationConfiguration = ApplicationConfigurationDataManagerFactory.getApplicationConfigurationDataProvider(null).getApplicationConfiguration();
 
+    /**
+     * Return the loaded data export instances. 
+     * @return the loaded data export instance. 
+     */
     public LinkedList<DataExportInstance> getLoadedDataExportInstances() {
         return loadedDataExportInstances;
     }
 
+    /**
+     * Return the application configuration.
+     * @return The application configuration. 
+     */
     public ApplicationConfiguration getApplicationConfiguration() {
         return applicationConfiguration;
     }
 
+    /**
+     * Sets the applcation configuration
+     * @param The application configuration to set. 
+     */
     public void setApplicationConfiguration(ApplicationConfiguration applicationConfiguration) {
         this.applicationConfiguration = applicationConfiguration;
     }
 
+    /**
+     * Set the selected data export instance id. 
+     * @param The selected data export instance id.
+     */
     public void setSelectedItem(String selectedItem) {
         this.selectedItem = selectedItem;
     }
 
+    /**
+     * Return the selected data export instance id. 
+     * @return the selected data export instance id.
+     */
     public String getSelectedItem() {
         return selectedItem;
     }
 
+    /**
+     * The selected data export instance.
+     * @return the selected data export instance. 
+     */
     public DataExportInstance getSelectedDataExportInstance() {
         return selectedDataExportInstance;
     }
 
+    /**
+     * Sets the selected data export instance id. 
+     * @param the selected data export instance id. 
+     */
     public void setSelectedDataExportInstance(DataExportInstance selectedDataExportInstance) {
         this.selectedDataExportInstance = selectedDataExportInstance;
     }
 
+    /**
+     * The method is executed during first execution of the page and loads the initial data from database. 
+     * @param event from the JSF Framework
+     */
     public void onLoad(ComponentSystemEvent event) {
         try {
             if (FacesContext.getCurrentInstance().isPostback()) {
@@ -77,6 +105,10 @@ public class DataExportInstanceManagement {
         }
     }
 
+    /**
+     * Returns the data export instances from database. 
+     * @return the data export instances from database. 
+     */
     public LinkedList<DataExportInstance> getDataExportInstances() {
         LinkedList<DataExportInstance> dataExportInstances = null;
         try {
@@ -91,6 +123,10 @@ public class DataExportInstanceManagement {
         return dataExportInstances;
     }
 
+    /**
+     * Returns the data export instance. 
+     * @return the data export instance. 
+     */
     public DataExportInstance getDataExportInstanceByID() {
         DataExportInstance dataExportInstance = null;
         try {
@@ -114,6 +150,9 @@ public class DataExportInstanceManagement {
         return null;
     }
 
+    /**
+     * Executes a redirect to the edit page of the data export instance. 
+     */
     public void redirectToEditPage() {
         try {
             FacesContext.getCurrentInstance().getExternalContext().redirect("DataExportInstanceEdit.xhtml?DataExportInstanceID=" + selectedItem);
@@ -125,7 +164,10 @@ public class DataExportInstanceManagement {
         }
     }
 
-    public void deleteDataExportInstanceByID() throws IOException {
+    /**
+     * Deletes the selected data export instance .
+     */
+    public void deleteDataExportInstanceByID()  {
         try {
             if (selectedItem == null || "".equals(selectedItem)) {
                 return;

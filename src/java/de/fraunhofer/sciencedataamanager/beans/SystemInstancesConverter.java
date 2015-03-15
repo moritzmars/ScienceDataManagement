@@ -7,7 +7,6 @@ package de.fraunhofer.sciencedataamanager.beans;
 import de.fraunhofer.sciencedataamanager.domain.ApplicationConfiguration;
 import de.fraunhofer.sciencedataamanager.domain.SystemInstance;
 import de.fraunhofer.sciencedataamanager.datamanager.ApplicationConfigurationDataManagerFactory;
-import de.fraunhofer.sciencedataamanager.datamanager.LoggingDatabaseManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SystemInstanceDataManager;
 import java.util.Collection;
 import java.util.logging.Level;
@@ -18,13 +17,20 @@ import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
 /**
- *
+ * This class converts the connector data. 
  * @author Moritz Mars
  */
 @FacesConverter("SystemInstanceConverter")
 public class SystemInstancesConverter implements Converter {
     private ApplicationConfiguration applicationConfiguration = ApplicationConfigurationDataManagerFactory.getApplicationConfigurationDataProvider(null).getApplicationConfiguration(); 
 
+    /**
+     * The method returns the connector as a object, 
+     * @param fc
+     * @param uic
+     * @param string the id of the object. 
+     * @return
+     */
     @Override
     public Object getAsObject(FacesContext fc, UIComponent uic, String string) {
         try {
@@ -43,6 +49,13 @@ public class SystemInstancesConverter implements Converter {
     
     }
 
+    /**
+     * Converts the object to a string. 
+     * @param fc
+     * @param uic
+     * @param o
+     * @return the string representation of the object. 
+     */
     @Override
     public String getAsString(FacesContext fc, UIComponent uic, Object o) {
        if (o == null) return null;

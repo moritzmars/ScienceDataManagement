@@ -6,20 +6,9 @@
 package de.fraunhofer.sciencedataamanager.beans;
 
 import de.fraunhofer.sciencedataamanager.domain.ApplicationConfiguration;
-import de.fraunhofer.sciencedataamanager.domain.SearchDefinition;
-import de.fraunhofer.sciencedataamanager.domain.SearchExecution;
-import de.fraunhofer.sciencedataamanager.domain.SearchTerm;
-import de.fraunhofer.sciencedataamanager.domain.SystemInstance;
 import de.fraunhofer.sciencedataamanager.datamanager.ApplicationConfigurationDataManagerFactory;
-import de.fraunhofer.sciencedataamanager.datamanager.LoggingDatabaseManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SearchAnalyticDefinitionDataManager;
-import de.fraunhofer.sciencedataamanager.datamanager.SearchDefinitionDataManager;
-import de.fraunhofer.sciencedataamanager.datamanager.SearchExecutionDataManager;
-import de.fraunhofer.sciencedataamanager.datamanager.SearchTermDataManager;
-import de.fraunhofer.sciencedataamanager.datamanager.SystemInstanceDataManager;
 import de.fraunhofer.sciencedataamanager.domain.SearchAnalyticDefinition;
-import java.util.Collection;
-import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
@@ -28,7 +17,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 
 /**
- *
+ * Provides a the bean for search analytic definition web site. 
  * @author Moritz Mars
  */
 @ManagedBean(name = "searchAnalyticDefinitionEdit")
@@ -42,22 +31,42 @@ public class SearchAnalyticDefinitionEdit {
 
     private ApplicationConfiguration applicationConfiguration = ApplicationConfigurationDataManagerFactory.getApplicationConfigurationDataProvider(null).getApplicationConfiguration();
 
+    /**
+     * Returns the search analytic definition name. 
+     * @return the search analytic definition name. 
+     */
     public String getSearchAnalyticsDefinitionName() {
         return searchAnalyticsDefinitionName;
     }
 
+    /**
+     * Sets the search analytic definition name
+     * @param the search analytic definition name
+     */
     public void setSearchAnalyticsDefinitionName(String searchAnalyticsDefinitionName) {
         this.searchAnalyticsDefinitionName = searchAnalyticsDefinitionName;
     }
 
+    /**
+     * Returns the search analytic definition query.
+     * @return the search analytic definition query. 
+     */
     public String getSearchAnalyticsDefinitionQuery() {
         return searchAnalyticsDefinitionQuery;
     }
 
+    /**
+     * Sets the search analytics definition query. 
+     * @param The search analytics definition query. 
+     */
     public void setSearchAnalyticsDefinitionQuery(String searchAnalyticsDefinitionQuery) {
         this.searchAnalyticsDefinitionQuery = searchAnalyticsDefinitionQuery;
     }
 
+    /**
+     * The event is executed after the page is loaded. 
+     * @param Page load event object.
+     */
     public void onLoad(ComponentSystemEvent event) {
 
         try {
@@ -77,6 +86,9 @@ public class SearchAnalyticDefinitionEdit {
         }
     }
 
+    /**
+     * The method updates the search definition. 
+     */
     public void updateSearchDefinition() {
         try {
 
@@ -98,6 +110,9 @@ public class SearchAnalyticDefinitionEdit {
 
     }
 
+    /**
+     * The methos executed a redirect to the index page. 
+     */
     public void redirectBack() {
         try {
             FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");

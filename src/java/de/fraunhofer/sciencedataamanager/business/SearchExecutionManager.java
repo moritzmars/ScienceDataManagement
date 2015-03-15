@@ -16,7 +16,6 @@ import de.fraunhofer.sciencedataamanager.domain.SearchDefinitionExecutionRun;
 import de.fraunhofer.sciencedataamanager.domain.SearchDefinitonExecution;
 import de.fraunhofer.sciencedataamanager.domain.SystemInstance;
 import de.fraunhofer.sciencedataamanager.domain.SearchExecution;
-import de.fraunhofer.sciencedataamanager.examples.connectors.ElsevierScienceDirectConnectorBufferAbstract;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import de.fraunhofer.sciencedataamanager.interfaces.ICloudPaperConnector;
@@ -52,7 +51,7 @@ public class SearchExecutionManager {
         SearchExecutionDataManager searchExecutionDataProvider = new SearchExecutionDataManager(applicationConfiguration);
         SearchExecution searchExecution = searchExecutionDataProvider.getSystemInstanceBySearchDefinition(searchDefinition);
 
-        SearchDefinitionExecutionRun searchDefinitionExecutionRun = new SearchDefinitionExecutionRun();
+        SearchDefinitionExecutionRun  searchDefinitionExecutionRun = new SearchDefinitionExecutionRun();
         searchDefinitionExecutionRun.setDescription(searchDefinition.getName() + " - " + Calendar.getInstance().getTime().toString());
         searchDefinitionExecutionRun.setStartExecutionTimestamp(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
         searchDefinitionExecutionRun.setSearchExecution(searchExecution);
@@ -61,11 +60,11 @@ public class SearchExecutionManager {
         SearchDefinitonExecutionRunDataManager searchDefinitonExecutionRunDataManager = new SearchDefinitonExecutionRunDataManager(applicationConfiguration);
         searchDefinitionExecutionRun = searchDefinitonExecutionRunDataManager.insertSearchDefinitionExecutionRunLastID(searchDefinitionExecutionRun);
 
-        for (SystemInstance systemInstanceLoop : searchExecution.getSystemInstances()) {
+        for (SystemInstance connectorLoop : searchExecution.getSystemInstances()) {
             SearchDefinitonExecution searchDefinitonExecution = null;
             try {
                 GroovyClassLoader gcl = new GroovyClassLoader();
-                Class parsedGroocyClass = gcl.parseClass(StringEscapeUtils.unescapeJava(systemInstanceLoop.getGroovyCode()));
+                Class parsedGroocyClass = gcl.parseClass(StringEscapeUtils.unescapeJava(connectorLoop.getGroovyCode()));
                 Class[] constructorParameterConnector = new Class[1];
                 constructorParameterConnector[0] = this.applicationConfiguration.getClass();
                 //Object groovyClassInstance = parsedGroocyClass.newInstance(constructorParameterConnector);
@@ -82,13 +81,13 @@ public class SearchExecutionManager {
                 searchDefinitonExecution = currentExecutedConnector.getCloudPapers(searchExecution.getSearchDefiniton());
                 searchDefinitonExecution.setSearchState("Success");
                 searchDefinitonExecution.setSearch_Definiton_ID(searchDefinitionID);
-                searchDefinitonExecution.setSystemInstance(systemInstanceLoop);
+                searchDefinitonExecution.setSystemInstance(connectorLoop);
                 searchDefinitionExecutionRun.getSearchDefinitionExecutionList().add(searchDefinitonExecution);
 
             } catch (Exception ex) {
                  searchDefinitonExecution = new SearchDefinitonExecution();
                 searchDefinitonExecution.setSearch_Definiton_ID(searchDefinitionID);
-                searchDefinitonExecution.setSystemInstance(systemInstanceLoop);
+                searchDefinitonExecution.setSystemInstance(connectorLoop);
                 searchDefinitonExecution.setSearchState("Failure");
                 searchDefinitonExecution.setMessage(ex.toString());
                 searchDefinitonExecution.setFinishedExecutionTimestamp(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));

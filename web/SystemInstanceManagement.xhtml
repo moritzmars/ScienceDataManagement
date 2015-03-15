@@ -17,18 +17,18 @@
             <rich:panel header="">
                 <h:panelGrid id="grid" columns="1">
                     <h:panelGroup>
-                        <h:commandButton value="Create New System Instance" action="SystemInstanceNew"/>
+                        <h:commandButton value="Create New Connector" action="SystemInstanceNew"/>
                     </h:panelGroup>
 
                     <h:panelGroup>
-                        <h:outputText value="System instance:"  />
+                        <h:outputText value="Connector:"  />
                         <br></br>
                         <rich:select value="#{systemInstanceManagement.selectedItem}" style="width:300px;">
                             <a4j:ajax render="groovyCodePreview" execute="@this" event="selectitem"/>
                             <f:selectItems value="#{systemInstanceManagement.loadedSystemInstances}" var="systemInstance" itemValue="#{systemInstance.ID}" itemLabel="#{systemInstance.name}"/>
                         </rich:select>
-                        <h:commandButton value="Edit System Instance" action="#{systemInstanceManagement.redirectToEditPage()}"/>
-                        <h:commandButton value="Delete System Instance" action="#{systemInstanceManagement.deleteSystemInstanceByID()}"/>
+                        <h:commandButton value="Edit Connector" action="#{systemInstanceManagement.redirectToEditPage()}"/>
+                        <h:commandButton value="Delete Connector" action="#{systemInstanceManagement.deleteSystemInstanceByID()}"/>
 
                     </h:panelGroup>
                     <h:panelGroup>

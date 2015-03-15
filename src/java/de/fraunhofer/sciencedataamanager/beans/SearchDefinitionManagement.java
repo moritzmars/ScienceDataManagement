@@ -9,7 +9,6 @@ import de.fraunhofer.sciencedataamanager.domain.ApplicationConfiguration;
 import de.fraunhofer.sciencedataamanager.domain.SearchDefinition;
 import de.fraunhofer.sciencedataamanager.domain.SearchDefinitonExecution;
 import de.fraunhofer.sciencedataamanager.datamanager.ApplicationConfigurationDataManagerFactory;
-import de.fraunhofer.sciencedataamanager.datamanager.LoggingDatabaseManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SearchDefinitionDataManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SearchDefinitonExecutionDataManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SystemInstanceDataManager;
@@ -24,7 +23,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 
 /**
- *
+ * This class provides logic and data for the search definition web site. 
  * @author Moritz Mars
  */
 @ManagedBean(name = "searchDefinitionManagement")
@@ -40,43 +39,82 @@ public class SearchDefinitionManagement {
 
     private ApplicationConfiguration applicationConfiguration = ApplicationConfigurationDataManagerFactory.getApplicationConfigurationDataProvider(null).getApplicationConfiguration();
 
+    /**
+     * Returns the loaded system instances.
+     * @return the loaded system instances.
+     */
     public Collection getLoadedSystemInstances() {
         return loadedSystemInstances;
     }
 
+    /**
+     * Returns the loaded search definitions.
+     * @return the loaded search definitions. 
+     */
     public Collection getLoadedSearchDefinitions() {
         return loadedSearchDefinitions;
     }
 
+    /**
+     * Returns the application configuration.
+     * @return the application configuration. 
+     */
     public ApplicationConfiguration getApplicationConfiguration() {
         return applicationConfiguration;
     }
 
+    /**
+     * Returns the loaded search terms. 
+     * @return the loaded search terms. 
+     */
     public Collection getLoadedSearchTerms() {
         return loadedSearchTerms;
     }
 
+    /**
+     * Returns the selected search definition. 
+     * @param the selected search definition. 
+     */
     public void setSelectedSearchDefinition(String selectedSearchDefinition) {
         this.selectedSearchDefinition = selectedSearchDefinition;
     }
 
+    /**
+     * Returns the selected search definition.
+     * @return the selected search definition. 
+     */
     public String getSelectedSearchDefinition() {
         return selectedSearchDefinition;
     }
 
+    /**
+     * Sets the selected system instances
+     * @param the selected system instances. 
+     */
     public void setSelectedSystemInstances(Collection<String> selectedSystemInstances) {
         this.selectedSystemInstances = selectedSystemInstances;
     }
 
+    /**
+     * Returns the selected system instances. 
+     * @return the selected system instances. 
+     */
     public Collection<String> getSelectedSystemInstances() {
         return selectedSystemInstances;
     }
 
+    /**
+     * Loads the tables with the data. 
+     */
     public void loadTable() {
         this.loadedSearchTerms = getSearchTermsBySearchDefinition();
         this.loadedSelectedSearchDefinitionExecutionList = getSearchExecutionDefinitionListBySearchDefinition();
     }
 
+    /**
+     * This method is executed after page call. 
+     * @param the object about the onload call. 
+     */
     public void onLoad(ComponentSystemEvent event) {
         try {
             if (FacesContext.getCurrentInstance().isPostback()) {
@@ -92,10 +130,18 @@ public class SearchDefinitionManagement {
         }
     }
 
+    /**
+     * Returns the selected search definition execution list.
+     * @return the selected search definition execution list. 
+     */
     public LinkedList<SearchDefinitonExecution> getLoadedSelectedSearchDefinitionExecutionList() {
         return loadedSelectedSearchDefinitionExecutionList;
     }
 
+    /**
+     * Returns the execution definition list. 
+     * @return the execution definition list.
+     */
     public LinkedList<SearchDefinitonExecution> getSearchExecutionDefinitionListBySearchDefinition() {
         if (selectedSearchDefinition == null || "".equals(selectedSearchDefinition)) {
             return null;
@@ -117,6 +163,10 @@ public class SearchDefinitionManagement {
         return searchExecutionList;
     }
 
+    /**
+     * Returns the search terms by search definition. 
+     * @return the search terms by search definition.
+     */
     public Collection getSearchTermsBySearchDefinition() {
         if (selectedSearchDefinition == null || "".equals(selectedSearchDefinition)) {
             return null;
@@ -136,6 +186,10 @@ public class SearchDefinitionManagement {
         return searchTerms;
     }
 
+    /**
+     * Returns the system instances. 
+     * @return the system instances. 
+     */
     public Collection getSystemInstances() {
 
         Collection systemInstances = null;
@@ -151,6 +205,10 @@ public class SearchDefinitionManagement {
         return systemInstances;
     }
 
+    /**
+     * Returns the search definitions. 
+     * @return the search definitions. 
+     */
     public Collection getSearchDefinitions() {
         Collection searchDefinitions = null;
         try {
@@ -165,6 +223,9 @@ public class SearchDefinitionManagement {
         return searchDefinitions;
     }
 
+    /**
+     * Redirects to the edit page. 
+     */
     public void redirectToEditPage() {
         try {
             FacesContext.getCurrentInstance().getExternalContext().redirect("SearchDefinitionEdit.xhtml?SelectedSearchDefinition=" + selectedSearchDefinition);
@@ -176,6 +237,9 @@ public class SearchDefinitionManagement {
         }
     }
 
+    /**
+     * Deletes the search definition by id. 
+     */
     public void deleteSearchDefinitionByID() {
         if (selectedSearchDefinition == null || "".equals(selectedSearchDefinition)) {
             return;

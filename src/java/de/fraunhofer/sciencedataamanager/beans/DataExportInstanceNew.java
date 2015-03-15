@@ -8,7 +8,6 @@ package de.fraunhofer.sciencedataamanager.beans;
 import de.fraunhofer.sciencedataamanager.domain.ApplicationConfiguration;
 import de.fraunhofer.sciencedataamanager.domain.DataExportInstance;
 import de.fraunhofer.sciencedataamanager.datamanager.ApplicationConfigurationDataManagerFactory;
-import de.fraunhofer.sciencedataamanager.datamanager.LoggingDatabaseManager;
 import de.fraunhofer.sciencedataamanager.datamanager.DataExportInstanceDataManager;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -19,7 +18,7 @@ import javax.faces.context.FacesContext;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
- *
+ * The class provides bean functions to the JSF new data export instance.
  * @author Moritz Mars
  */
 @ManagedBean(name = "dataExportInstanceNew")
@@ -30,22 +29,42 @@ public class DataExportInstanceNew {
     private String dataExportInstanceGroovyCode;
   private ApplicationConfiguration applicationConfiguration = ApplicationConfigurationDataManagerFactory.getApplicationConfigurationDataProvider(null).getApplicationConfiguration(); 
 
+    /**
+     * Returns the export instnace name
+     * @return export instance name
+     */
     public String getDataExportInstanceName() {
         return dataExportInstanceName;
     }
 
+    /**
+     * Return the data export instance groovy code
+     * @return groovy code of the data export instnace
+     */
     public String getDataExportInstanceGroovyCode() {
         return dataExportInstanceGroovyCode;
     }
 
+    /**
+     * Sets the data export instance name
+     * @param the data export instance name
+     */
     public void setDataExportInstanceName(String dataExportInstanceName) {
         this.dataExportInstanceName = dataExportInstanceName;
     }
 
+    /**
+     * Sets the data export instance groovy code
+     * @param The data export instance groovy code
+     */
     public void setDataExportInstanceGroovyCode(String dataExportInstanceGroovyCode) {
         this.dataExportInstanceGroovyCode = dataExportInstanceGroovyCode;
     }
 
+    /**
+     * Creates a new data export instance
+     * @throws IOException General execpeiton
+     */
     public void createNewDataExportInstance() throws IOException {
         try {
             DataExportInstance dataExportInstance = new DataExportInstance();
@@ -62,7 +81,10 @@ public class DataExportInstanceNew {
         }
     }
     
-       public void redirectBack() {
+    /**
+     * Executes a redirect to the Index.html
+     */
+    public void redirectBack() {
         try {
             FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
         } catch (Exception ex) {

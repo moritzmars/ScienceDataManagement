@@ -8,7 +8,6 @@ package de.fraunhofer.sciencedataamanager.beans;
 import de.fraunhofer.sciencedataamanager.domain.ApplicationConfiguration;
 import de.fraunhofer.sciencedataamanager.domain.SystemInstance;
 import de.fraunhofer.sciencedataamanager.datamanager.ApplicationConfigurationDataManagerFactory;
-import de.fraunhofer.sciencedataamanager.datamanager.LoggingDatabaseManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SystemInstanceDataManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,7 +18,7 @@ import javax.faces.event.ComponentSystemEvent;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
- *
+ * The class provides logic and data for the system instance edit page. 
  * @author Moritz Mars
  */
 @ManagedBean(name = "systemInstanceEdit")
@@ -31,22 +30,42 @@ public class SystemInstanceEdit {
     private int systemInstanceID;
     private ApplicationConfiguration applicationConfiguration = ApplicationConfigurationDataManagerFactory.getApplicationConfigurationDataProvider(null).getApplicationConfiguration();
 
+    /**
+     * Returns the system instance name. 
+     * @return the system instance name. 
+     */
     public String getSystemInstanceName() {
         return systemInstanceName;
     }
 
+    /**
+     * Returns the system instance groovy code. 
+     * @return the system instance groocy code. 
+     */
     public String getSystemInstanceGroovyCode() {
         return systemInstanceGroovyCode;
     }
 
+    /**
+     * Sets the system instance name.
+     * @param the system instance name. 
+     */
     public void setSystemInstanceName(String systemInstanceName) {
         this.systemInstanceName = systemInstanceName;
     }
 
+    /**
+     * Sets the system instance groovy code. 
+     * @param the system instance groovy code. 
+     */
     public void setSystemInstanceGroovyCode(String systemInstanceGroovyCode) {
         this.systemInstanceGroovyCode = systemInstanceGroovyCode;
     }
 
+    /**
+     * This method is executed after the page is loaded. 
+     * @param informations about the page load. 
+     */
     public void onLoad(ComponentSystemEvent event) {
         try {
             systemInstanceID = Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("SystemInstanceID"));
@@ -62,6 +81,9 @@ public class SystemInstanceEdit {
         }
     }
 
+    /**
+     * This method update the system instance. 
+     */
     public void updateSystemInstance() {
         try {
             SystemInstance systemInstance = new SystemInstance();
@@ -80,6 +102,9 @@ public class SystemInstanceEdit {
 
     }
 
+    /**
+     * This method executes a redirect to the index page. 
+     */
     public void redirectBack() {
         try {
             FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");

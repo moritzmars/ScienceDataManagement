@@ -11,7 +11,6 @@ import de.fraunhofer.sciencedataamanager.domain.SearchExecution;
 import de.fraunhofer.sciencedataamanager.domain.SearchTerm;
 import de.fraunhofer.sciencedataamanager.domain.SystemInstance;
 import de.fraunhofer.sciencedataamanager.datamanager.ApplicationConfigurationDataManagerFactory;
-import de.fraunhofer.sciencedataamanager.datamanager.LoggingDatabaseManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SearchDefinitionDataManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SearchExecutionDataManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SearchTermDataManager;
@@ -26,7 +25,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 
 /**
- *
+ * Provides logic and data for the search definition edit page. 
  * @author Moritz Mars
  */
 @ManagedBean(name = "searchDefinitionEdit")
@@ -39,47 +38,92 @@ public class SearchDefinitionEdit {
     private LinkedList<SystemInstance> systemInstanceList; 
        private ApplicationConfiguration applicationConfiguration = ApplicationConfigurationDataManagerFactory.getApplicationConfigurationDataProvider(null).getApplicationConfiguration(); 
  
-   public LinkedList<SystemInstance> getSelectedSystemInstanceList() {
+    /**
+     * Returns the selected system instance list. 
+     * @return the selected system instance list. 
+     */
+    public LinkedList<SystemInstance> getSelectedSystemInstanceList() {
         return selectedSystemInstanceList;
     }
 
+    /**
+     * Sets the selected system instance list. 
+     * @param the selected system instance list. 
+     */
     public void setSelectedSystemInstanceList(LinkedList<SystemInstance> selectedSystemInstanceList) {
         this.selectedSystemInstanceList = selectedSystemInstanceList;
     }
 
+    /**
+     * Returns the system instance list. 
+     * @return the system instance list. 
+     */
     public LinkedList<SystemInstance> getSystemInstanceList() {
         return systemInstanceList;
     }
 
+    /**
+     * Sets the system instance list. 
+     * @param the system instance list. 
+     */
     public void setSystemInstanceList(LinkedList<SystemInstance> systemInstanceList) {
         this.systemInstanceList = systemInstanceList;
     }
+
+    /**
+     * Sets the current term.
+     * @param the current term.
+     */
     public void setCurrentTerm(String currentTerm) {
         this.currentTerm = currentTerm;
     }
 
+    /**
+     * Sets the current operation.
+     * @param the current operation
+     */
     public void setCurrentOperation(String currentOperation) {
         this.currentOperation = currentOperation;
     }
     private String currentTerm;
 
+    /**
+     * Returns the current term.
+     * @return the current term.
+     */
     public String getCurrentTerm() {
         return currentTerm;
     }
 
+    /**
+     * Returns the current operation.
+     * @return the current operation.
+     */
     public String getCurrentOperation() {
         return currentOperation;
     }
     private String currentOperation;
 
+    /**
+     * Sets the search definition name.
+     * @param the search definition name.
+     */
     public void setSearchDefinitionName(String searchDefinitionName) {
         this.searchDefinitionName = searchDefinitionName;
     }
 
+    /**
+     * Returns the search definition name.
+     * @return the search definition name.
+     */
     public String getSearchDefinitionName() {
         return searchDefinitionName;
     }
 
+    /**
+     * The method is executed after page load.
+     * @param the information of the page load. 
+     */
     public void onLoad(ComponentSystemEvent event) {
 
         try {
@@ -101,6 +145,9 @@ public class SearchDefinitionEdit {
         }
     }
 
+    /**
+     * The methods updates the search definition.
+     */
     public void updateSearchDefinition() {
         try {
 
@@ -128,7 +175,11 @@ public class SearchDefinitionEdit {
 
     }
     
-      public SearchExecution getSearchExecutionBySearchDefinition() {
+    /**
+     * Returns the search execution.
+     * @return the search execution.
+     */
+    public SearchExecution getSearchExecutionBySearchDefinition() {
       
           SearchExecution searchExecution = null;
        SearchDefinition searchDefinition = new SearchDefinition(); 
@@ -145,6 +196,10 @@ public class SearchDefinitionEdit {
         return searchExecution;
     }
     
+    /**
+     * Returns the search terms.
+     * @return the search terms.
+     */
     public Collection getSearchTermsBySearchExecutionDefinition() {
         Collection searchTerms = null;
 
@@ -159,6 +214,9 @@ public class SearchDefinitionEdit {
         return searchTerms;
     }
 
+    /**
+     * The method adds a new search term.
+     */
     public void addSearchTerm() {
         try {
 
@@ -183,6 +241,10 @@ public class SearchDefinitionEdit {
 
     }
 
+    /**
+     * The method deletes a search term. 
+     * @param the search term to delete.
+     */
     public void deleteSearchTerm(SearchTerm searchTerm) {
         try {
             SearchTermDataManager searchTermDataProvider = new SearchTermDataManager(applicationConfiguration);
@@ -194,7 +256,11 @@ public class SearchDefinitionEdit {
         }
     }
     
-        public Collection<SystemInstance> getSystemInstances() {
+    /**
+     * Returns the system instances.
+     * @return the system instances.
+     */
+    public Collection<SystemInstance> getSystemInstances() {
         Collection systemInstances = null;
         try {
             SystemInstanceDataManager systemInstanceDataProvider = new SystemInstanceDataManager(applicationConfiguration);
@@ -207,7 +273,10 @@ public class SearchDefinitionEdit {
         return systemInstances;
     }
         
-            public void redirectBack() {
+    /**
+     * Executes a redirect to the index page.
+     */
+    public void redirectBack() {
         try {
             FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
         } catch (Exception ex) {
