@@ -17,6 +17,7 @@ import groovy.lang.GroovyClassLoader;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -55,10 +56,15 @@ public class DataExportExecutionManager {
 
         SearchDefinitonExecutionDataManager searchDefinitonExecutionDataManager = new SearchDefinitonExecutionDataManager(applicationConfiguration);
         LinkedList<SearchDefinitonExecution> searchDefinitonExecutionList = searchDefinitonExecutionDataManager.getSearchDefinitionExecutionForSearchDefinition(searchDefintion);
-
-        ScientificPaperMetaInformationDataManager scientificPaperMetaInformationDataManager = new ScientificPaperMetaInformationDataManager(applicationConfiguration);
-        Map<String, List<Object>> dataToExport = scientificPaperMetaInformationDataManager.getScientificMetaInformationBySearchDefinitionAsMap(searchDefinitonExecutionList.get(0));
-
+        Map<String, Map<String, List<Object>>> allConnectorsToExport = new HashMap<String, Map<String, List<Object>>>();
+        int i = 0;
+        for (SearchDefinitonExecution currentSearchDefinitonExecution : searchDefinitonExecutionList)
+        {
+            ScientificPaperMetaInformationDataManager scientificPaperMetaInformationDataManager = new ScientificPaperMetaInformationDataManager(applicationConfiguration);
+            Map<String, List<Object>> dataToExport = scientificPaperMetaInformationDataManager.getScientificMetaInformationBySearchDefinitionAsMap(currentSearchDefinitonExecution);
+            allConnectorsToExport.put(currentSearchDefinitonExecution.getSystemInstance().getName(), dataToExport);
+            i++;
+        }
         DataExportInstanceDataManager dataExportInstanceDataManager = new DataExportInstanceDataManager(applicationConfiguration);
         DataExportInstance dataExportInstance = dataExportInstanceDataManager.getDataExportInstanceByID(dataExportInstanceID);
 
@@ -72,7 +78,7 @@ public class DataExportExecutionManager {
         Object groovyClassInstance = parsedGroocyClass.newInstance();
         ExcelDataExport currentDataExportInstance = new ExcelDataExport();
         //IExportScientificPaperMetaInformation currentDataExportInstance = (IExportScientificPaperMetaInformation) groovyClassInstance;
-        currentDataExportInstance.export(dataToExport, externalContext.getResponseOutputStream());
+        currentDataExportInstance.export(allConnectorsToExport, externalContext.getResponseOutputStream());
     }
 
 }

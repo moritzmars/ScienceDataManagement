@@ -504,9 +504,13 @@ public class SearchAnalyticsManagement {
      * Executes the generic export algorithmus.
      */
     public void export() {
-      try
+        try
         {
             if (selectedExportInstance == null || "".equals(selectedExportInstance))
+            {
+                return;
+            }
+            if (selectedSearchAnalytic == null || "".equals(selectedSearchAnalytic))
             {
                 return;
             }
@@ -526,9 +530,13 @@ public class SearchAnalyticsManagement {
             Class parsedGroocyClass = gcl.parseClass(StringEscapeUtils.unescapeJava(dataExportInstance.getGroovyCode()));
 
             Object groovyClassInstance = parsedGroocyClass.newInstance();
-
+            SearchAnalyticDefinitionDataManager searchAnalyticDefinitionDataManager = new  SearchAnalyticDefinitionDataManager(applicationConfiguration); 
+             
+            Map<String, Map<String, List<Object>>> allConnectorsToExport = new HashMap<String, Map<String, List<Object>>>();
+            allConnectorsToExport.put(searchAnalyticDefinitionDataManager.getSearchAnalyticDefinitionByID(Integer.parseInt(this.selectedSearchAnalytic)).getName(), this.loadedSearchAnalyticsResultMap);
+           
             IExportScientificPaperMetaInformation currentDataExportInstance = (IExportScientificPaperMetaInformation) groovyClassInstance;
-            currentDataExportInstance.export(this.loadedSearchAnalyticsResultMap, externalContext.getResponseOutputStream());
+            currentDataExportInstance.export(allConnectorsToExport, externalContext.getResponseOutputStream());
 
             facesContext.responseComplete();
 

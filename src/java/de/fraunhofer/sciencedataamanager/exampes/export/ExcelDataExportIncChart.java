@@ -23,7 +23,7 @@ import org.apache.poi.ss.usermodel.Workbook;
  *
  * @author Moritz Mars
  */
-public class ExcelDataExport implements IExportScientificPaperMetaInformation {
+public class ExcelDataExportIncChart implements IExportScientificPaperMetaInformation {
 
     /**
      *
@@ -36,10 +36,11 @@ public class ExcelDataExport implements IExportScientificPaperMetaInformation {
     public void export(Map<String, Map<String, List<Object>>> allConnectorsToExport, OutputStream outputStream) throws Exception {
         Workbook currentWorkBook = new HSSFWorkbook();
         int currenSheetCount = 0;
-        
+
         for (String currentKey : allConnectorsToExport.keySet())
         {
             Map<String, List<Object>> dataToExport = allConnectorsToExport.get(currentKey);
+
             List<String> columns = new ArrayList<String>(dataToExport.keySet());
             List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
             int size = dataToExport.values().iterator().next().size();

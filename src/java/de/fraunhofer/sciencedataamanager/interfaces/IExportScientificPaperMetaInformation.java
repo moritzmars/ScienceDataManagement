@@ -16,6 +16,6 @@ import java.util.Map;
  * @author Moritz Mars
  */
 public interface IExportScientificPaperMetaInformation {
-    public void export(Map<String, List<Object>> dataToExport, OutputStream outputStream) throws Exception;
+    public void export(Map<String, Map<String, List<Object>>> allConnectorsToExport, OutputStream outputStream) throws Exception;
 
 }
