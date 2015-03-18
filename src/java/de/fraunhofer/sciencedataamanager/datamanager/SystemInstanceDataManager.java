@@ -25,10 +25,21 @@ import javax.faces.bean.SessionScoped;
 @SessionScoped
 public class SystemInstanceDataManager {
        private ApplicationConfiguration applicationConfiguration; 
+
+    /**
+     *
+     * @param applicationConfiguration
+     */
     public SystemInstanceDataManager(ApplicationConfiguration applicationConfiguration)
     {
        this.applicationConfiguration = applicationConfiguration; 
     }
+
+    /**
+     *
+     * @param systemInstance
+     * @throws Exception
+     */
     public void updateSystemInstance(SystemInstance systemInstance) throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection conn = null;
@@ -45,6 +56,12 @@ public class SystemInstanceDataManager {
         conn.close();
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     * @throws Exception
+     */
     public SystemInstance getSystemInstanceByID(int id) throws Exception {
         SystemInstance systemInstance = null;
 
@@ -71,6 +88,11 @@ public class SystemInstanceDataManager {
         return systemInstance;
     }
 
+    /**
+     *
+     * @return
+     * @throws Exception
+     */
     public LinkedList<SystemInstance> getSystemInstances() throws Exception {
         LinkedList<SystemInstance> systemInstanceList = new LinkedList<SystemInstance>();
 
@@ -97,6 +119,11 @@ public class SystemInstanceDataManager {
         return systemInstanceList;
     }
 
+    /**
+     *
+     * @param systemInstance
+     * @throws Exception
+     */
     public void insert(SystemInstance systemInstance) throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection conn = null;
@@ -112,6 +139,11 @@ public class SystemInstanceDataManager {
         conn.close();
     }
 
+    /**
+     *
+     * @param id
+     * @throws Exception
+     */
     public void delete(int id) throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection conn = null;

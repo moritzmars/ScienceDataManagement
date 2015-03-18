@@ -39,7 +39,9 @@ import javax.faces.event.ComponentSystemEvent;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
- * This class provides logic and data for the search analytic management web side. 
+ * This class provides logic and data for the search analytic management web
+ * side.
+ *
  * @author Moritz Mars
  */
 @ManagedBean(name = "searchAnalyticsManagement")
@@ -62,16 +64,18 @@ public class SearchAnalyticsManagement {
     private ApplicationConfiguration applicationConfiguration = ApplicationConfigurationDataManagerFactory.getApplicationConfigurationDataProvider(null).getApplicationConfiguration();
 
     /**
-     * Returns the loaded search definition execution run list. 
-     * @return the loaded search definition execution run list. 
+     * Returns the loaded search definition execution run list.
+     *
+     * @return the loaded search definition execution run list.
      */
     public LinkedList<SearchDefinitionExecutionRun> getLoadedSearchDefinitionExecutionRunList() {
         return loadedSearchDefinitionExecutionRunList;
     }
 
     /**
-     * Return the loaded data export instances. 
-     * @return the loaded data export instances. 
+     * Return the loaded data export instances.
+     *
+     * @return the loaded data export instances.
      */
     public Collection getLoadedDataExportInstances() {
         return loadedDataExportInstances;
@@ -79,14 +83,16 @@ public class SearchAnalyticsManagement {
 
     /**
      * Returns the selected export instance,
-     * @return the selected export instance. 
+     *
+     * @return the selected export instance.
      */
     public String getSelectedExportInstance() {
         return selectedExportInstance;
     }
 
     /**
-     * Sets the selected export instance 
+     * Sets the selected export instance
+     *
      * @param selectedExportInstance the selected export instance
      */
     public void setSelectedExportInstance(String selectedExportInstance) {
@@ -94,8 +100,9 @@ public class SearchAnalyticsManagement {
     }
 
     /**
-     * Returns the selected search definition execution. 
-     * @return the selected search definition execution. 
+     * Returns the selected search definition execution.
+     *
+     * @return the selected search definition execution.
      */
     public String getSelectedSearchDefinitionExecution() {
         return selectedSearchDefinitionExecution;
@@ -103,15 +110,18 @@ public class SearchAnalyticsManagement {
 
     /**
      * Sets the selected search definition execution.
-     * @param selectedSearchDefinitionExecution The selected search definition execution.
+     *
+     * @param selectedSearchDefinitionExecution The selected search definition
+     * execution.
      */
     public void setSelectedSearchDefinitionExecution(String selectedSearchDefinitionExecution) {
         this.selectedSearchDefinitionExecution = selectedSearchDefinitionExecution;
     }
 
     /**
-     * Sets the selected search definition. 
-     * @param selectedSearchDefinition the selected search definition. 
+     * Sets the selected search definition.
+     *
+     * @param selectedSearchDefinition the selected search definition.
      */
     public void setSelectedSearchDefinition(String selectedSearchDefinition) {
         this.selectedSearchDefinition = selectedSearchDefinition;
@@ -119,6 +129,7 @@ public class SearchAnalyticsManagement {
 
     /**
      * Sets the selected search analytic.
+     *
      * @param selectedSearchAnalytic the selected search analytic.
      */
     public void setSelectedSearchAnalytic(String selectedSearchAnalytic) {
@@ -132,7 +143,8 @@ public class SearchAnalyticsManagement {
 
     /**
      * Returns the loaded search analytic result rows.
-     * @return the loaded search analytic result rows. 
+     *
+     * @return the loaded search analytic result rows.
      */
     public List<Map<String, Object>> getLoadedSearchAnalyticsResultRows() {
         return loadedSearchAnalyticsResultRows;
@@ -140,6 +152,7 @@ public class SearchAnalyticsManagement {
 
     /**
      * Returns the loaded search analytic result map.
+     *
      * @return the loaded search analytic result map.
      */
     public Map<String, List<Object>> getLoadedSearchAnalyticsResultMap() {
@@ -148,23 +161,26 @@ public class SearchAnalyticsManagement {
 
     /**
      * Returns the selected search analytic.
-     * @return the selected search analytic. 
+     *
+     * @return the selected search analytic.
      */
     public String getSelectedSearchAnalytic() {
         return selectedSearchAnalytic;
     }
 
     /**
-     * Return the loaded search analytic definition list. 
-     * @return the loaded search analytic definition list. 
+     * Return the loaded search analytic definition list.
+     *
+     * @return the loaded search analytic definition list.
      */
     public LinkedList<SearchAnalyticDefinition> getLoadedSearchAnalyticDefinitionList() {
         return loadedSearchAnalyticDefinitionList;
     }
 
     /**
-     * Retunrs the loaded search definition list. 
-     * @return the loaded search definition list. 
+     * Retunrs the loaded search definition list.
+     *
+     * @return the loaded search definition list.
      */
     public LinkedList<SearchDefinition> getLoadedSearchDefinitionList() {
         return loadedSearchDefinitionList;
@@ -172,15 +188,17 @@ public class SearchAnalyticsManagement {
 
     /**
      * Returns the application configuration.
-     * @return the application configuration. 
+     *
+     * @return the application configuration.
      */
     public ApplicationConfiguration getApplicationConfiguration() {
         return applicationConfiguration;
     }
 
     /**
-     * Returns the selected search definition. 
-     * @return the selected search definition. 
+     * Returns the selected search definition.
+     *
+     * @return the selected search definition.
      */
     public String getSelectedSearchDefinition() {
         return selectedSearchDefinition;
@@ -194,13 +212,15 @@ public class SearchAnalyticsManagement {
     }
 
     /**
-     * Load the data tables. 
+     * Load the data tables.
      */
     public void loadTable() {
-        if (selectedSearchAnalytic == null || "".equals(selectedSearchAnalytic)) {
+        if (selectedSearchAnalytic == null || "".equals(selectedSearchAnalytic))
+        {
             return;
         }
-        if (selectedSearchDefinitionExecution == null || "".equals(selectedSearchDefinitionExecution)) {
+        if (selectedSearchDefinitionExecution == null || "".equals(selectedSearchDefinitionExecution))
+        {
             return;
         }
 
@@ -210,10 +230,12 @@ public class SearchAnalyticsManagement {
         List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
         int size = loadedSearchAnalyticsResultMap.values().iterator().next().size();
 
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++)
+        {
             Map<String, Object> row = new HashMap<String, Object>();
 
-            for (String column : columns) {
+            for (String column : columns)
+            {
                 row.put(column, loadedSearchAnalyticsResultMap.get(column).get(i));
             }
 
@@ -233,18 +255,23 @@ public class SearchAnalyticsManagement {
 
     /**
      * The event is executed after page load
-     * @param event the page load event object 
+     *
+     * @param event the page load event object
      */
     public void onLoad(ComponentSystemEvent event) {
-        try {
-            if (FacesContext.getCurrentInstance().isPostback()) {
+        try
+        {
+            if (FacesContext.getCurrentInstance().isPostback())
+            {
                 return;
             }
             this.loadedSearchDefinitionList = getSearchDefinitions();
             this.loadedSearchAnalyticDefinitionList = getSearchAnalyticDefintion();
             this.loadedDataExportInstances = getDataExportInstances();
 
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
@@ -253,7 +280,8 @@ public class SearchAnalyticsManagement {
 
     /**
      * Returns the loaded search definition execution list.
-     * @return the loaded search definition list. 
+     *
+     * @return the loaded search definition list.
      */
     public LinkedList<SearchDefinitonExecution> getLoadedSearchDefinitionExecutionList() {
         return loadedSearchDefinitionExecutionList;
@@ -261,16 +289,20 @@ public class SearchAnalyticsManagement {
 
     /**
      * Returns the data export instances.
+     *
      * @return the data export instances.
      */
     public Collection getDataExportInstances() {
         Collection dataExportInstances = null;
 
         DataExportInstanceDataManager dataExportInstanceDataManager = new DataExportInstanceDataManager(applicationConfiguration);
-        try {
+        try
+        {
 
             dataExportInstances = dataExportInstanceDataManager.getDataExportInstances();
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
@@ -280,21 +312,26 @@ public class SearchAnalyticsManagement {
 
     /**
      * Returns the search execution list.
-     * @return the search execution list. 
+     *
+     * @return the search execution list.
      */
     public LinkedList<SearchDefinitonExecution> getSearchExecutionDefinitionListBySearchDefinition() {
-        if (selectedSearchDefinition == null || "".equals(selectedSearchDefinition)) {
+        if (selectedSearchDefinition == null || "".equals(selectedSearchDefinition))
+        {
             return null;
         }
         int searchDefinitionID = Integer.parseInt(selectedSearchDefinition);
         LinkedList<SearchDefinitonExecution> searchExecutionList = null;
-        try {
+        try
+        {
             SearchDefinition searchDefinition = new SearchDefinition();
             searchDefinition.setID(searchDefinitionID);
             SearchDefinitonExecutionDataManager searchDefinitonExecutionDataProvider = new SearchDefinitonExecutionDataManager(applicationConfiguration);
             searchExecutionList = searchDefinitonExecutionDataProvider.getAllSearchDefinitionExecutionForSearchDefinition(searchDefinition);
 
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
             this.applicationConfiguration.getLoggingManager().logException(ex);
@@ -305,21 +342,26 @@ public class SearchAnalyticsManagement {
 
     /**
      * Returns the search execution definition run list.
+     *
      * @return the search execution definition run list.
      */
     public LinkedList<SearchDefinitionExecutionRun> getSearchExecutionDefinitionRunListBySearchDefinition() {
-        if (selectedSearchDefinition == null || "".equals(selectedSearchDefinition)) {
+        if (selectedSearchDefinition == null || "".equals(selectedSearchDefinition))
+        {
             return null;
         }
         int searchDefinitionID = Integer.parseInt(selectedSearchDefinition);
         LinkedList<SearchDefinitionExecutionRun> searchExecutionRunList = null;
-        try {
+        try
+        {
             SearchDefinition searchDefinition = new SearchDefinition();
             searchDefinition.setID(searchDefinitionID);
             SearchDefinitonExecutionRunDataManager searchDefinitonExecutionRunDataManager = new SearchDefinitonExecutionRunDataManager(applicationConfiguration);
             searchExecutionRunList = searchDefinitonExecutionRunDataManager.getAllSearchDefinitionExecutionRunForSearchDefinition(searchDefinition);
 
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
             this.applicationConfiguration.getLoggingManager().logException(ex);
@@ -329,15 +371,19 @@ public class SearchAnalyticsManagement {
     }
 
     /**
-     * Returns the search definitions. 
-     * @return the search definitions. 
+     * Returns the search definitions.
+     *
+     * @return the search definitions.
      */
     public LinkedList<SearchDefinition> getSearchDefinitions() {
         LinkedList<SearchDefinition> searchDefinitions = null;
-        try {
+        try
+        {
             SearchDefinitionDataManager searchDefinitionDataProvider = new SearchDefinitionDataManager(applicationConfiguration);
             searchDefinitions = searchDefinitionDataProvider.getSearchDefinitions();
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
             this.applicationConfiguration.getLoggingManager().logException(ex);
@@ -348,14 +394,18 @@ public class SearchAnalyticsManagement {
 
     /**
      * Returns the search analytic definition.
+     *
      * @return the search analytic definition.
      */
     public LinkedList<SearchAnalyticDefinition> getSearchAnalyticDefintion() {
         LinkedList<SearchAnalyticDefinition> searchAnalyticDefinitionList = null;
-        try {
+        try
+        {
             SearchAnalyticDefinitionDataManager searchAnalyticDefinitionDataManager = new SearchAnalyticDefinitionDataManager(applicationConfiguration);
             searchAnalyticDefinitionList = searchAnalyticDefinitionDataManager.getAnalyticDefinitions();
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
             this.applicationConfiguration.getLoggingManager().logException(ex);
@@ -366,24 +416,30 @@ public class SearchAnalyticsManagement {
 
     /**
      * Returns the scientific meta information by search analytic definition.
-     * @return the scientific meta information. 
+     *
+     * @return the scientific meta information.
      */
     public Map<String, List<Object>> getScientificMetaInformationBySearchAnalyticDefinition() {
         Map<String, List<Object>> resultSetMap = null;
 
-        try {
-            if (selectedSearchAnalytic == null || "".equals(selectedSearchAnalytic)) {
+        try
+        {
+            if (selectedSearchAnalytic == null || "".equals(selectedSearchAnalytic))
+            {
                 return resultSetMap;
             }
-            if (selectedSearchDefinitionExecution == null || "".equals(selectedSearchDefinitionExecution)) {
+            if (selectedSearchDefinitionExecution == null || "".equals(selectedSearchDefinitionExecution))
+            {
                 return resultSetMap;
             }
 
             int selectedSearchAnalyticID = Integer.parseInt(selectedSearchAnalytic);
             int selectedSearchDefinitionExecutionID = Integer.parseInt(selectedSearchDefinitionExecution);
 
-            for (SearchAnalyticDefinition searchAnalyticDefinition : loadedSearchAnalyticDefinitionList) {
-                if (searchAnalyticDefinition.getID() == selectedSearchAnalyticID) {
+            for (SearchAnalyticDefinition searchAnalyticDefinition : loadedSearchAnalyticDefinitionList)
+            {
+                if (searchAnalyticDefinition.getID() == selectedSearchAnalyticID)
+                {
                     String queryBuffer = searchAnalyticDefinition.getQuery();
                     searchAnalyticDefinition.setQuery(String.format(searchAnalyticDefinition.getQuery(), selectedSearchDefinitionExecutionID));
                     ScientificPaperMetaInformationDataManager scientificPaperMetaInformationDataManager = new ScientificPaperMetaInformationDataManager(applicationConfiguration);
@@ -391,7 +447,9 @@ public class SearchAnalyticsManagement {
                     searchAnalyticDefinition.setQuery(queryBuffer);
                 }
             }
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
             this.applicationConfiguration.getLoggingManager().logException(ex);
@@ -401,12 +459,15 @@ public class SearchAnalyticsManagement {
     }
 
     /**
-     * Executes a redirect to edit page. 
+     * Executes a redirect to edit page.
      */
     public void redirectToEditPage() {
-        try {
+        try
+        {
             FacesContext.getCurrentInstance().getExternalContext().redirect("SearchAnalyticDefinitionEdit.xhtml?SelectedSearchAnalyticDefinition=" + selectedSearchAnalytic);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
             this.applicationConfiguration.getLoggingManager().logException(ex);
@@ -415,18 +476,22 @@ public class SearchAnalyticsManagement {
     }
 
     /**
-     * Deletes a search analytic by id. 
+     * Deletes a search analytic by id.
      */
     public void deleteSearchAnalyticByID() {
-        if (selectedSearchAnalytic == null || "".equals(selectedSearchAnalytic)) {
+        if (selectedSearchAnalytic == null || "".equals(selectedSearchAnalytic))
+        {
             return;
         }
         int id = Integer.parseInt(selectedSearchAnalytic);
 
-        try {
+        try
+        {
             SearchAnalyticDefinitionDataManager searchAnalyticDefinitionDataManager = new SearchAnalyticDefinitionDataManager(applicationConfiguration);
             searchAnalyticDefinitionDataManager.delete(id);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
             this.applicationConfiguration.getLoggingManager().logException(ex);
@@ -436,26 +501,26 @@ public class SearchAnalyticsManagement {
     }
 
     /**
-     * Executes the generic export algorithmus. 
+     * Executes the generic export algorithmus.
      */
     public void export() {
-
-        try {
-
-            if (selectedExportInstance == null || "".equals(selectedExportInstance)) {
+      try
+        {
+            if (selectedExportInstance == null || "".equals(selectedExportInstance))
+            {
                 return;
             }
 
             int selectedExportInstanceID = Integer.parseInt(selectedExportInstance);
-            String excelExportDefaultFilename = "Excel_Export_" + new SimpleDateFormat("yyyyMMddhhmm").format(new Date()) + ".xls";
+            DataExportInstanceDataManager dataExportInstanceDataManager = new DataExportInstanceDataManager(applicationConfiguration);
+            DataExportInstance dataExportInstance = dataExportInstanceDataManager.getDataExportInstanceByID(selectedExportInstanceID);
 
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ExternalContext externalContext = facesContext.getExternalContext();
-            externalContext.setResponseContentType("application/vnd.ms-excel");
-            externalContext.setResponseHeader("Content-Disposition", "attachment; filename=\"" + excelExportDefaultFilename + "\"");
 
-            DataExportInstanceDataManager dataExportInstanceDataManager = new DataExportInstanceDataManager(applicationConfiguration);
-            DataExportInstance dataExportInstance = dataExportInstanceDataManager.getDataExportInstanceByID(selectedExportInstanceID);
+            String excelExportDefaultFilename = dataExportInstance.getExportFilePrefix() + new SimpleDateFormat("yyyyMMddhhmm").format(new Date()) + dataExportInstance.getExportFilePostfix();
+            externalContext.setResponseContentType(dataExportInstance.getResponseContentType());
+            externalContext.setResponseHeader("Content-Disposition", "attachment; filename=\"" + excelExportDefaultFilename + "\"");
 
             GroovyClassLoader gcl = new GroovyClassLoader();
             Class parsedGroocyClass = gcl.parseClass(StringEscapeUtils.unescapeJava(dataExportInstance.getGroovyCode()));
@@ -467,7 +532,9 @@ public class SearchAnalyticsManagement {
 
             facesContext.responseComplete();
 
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);

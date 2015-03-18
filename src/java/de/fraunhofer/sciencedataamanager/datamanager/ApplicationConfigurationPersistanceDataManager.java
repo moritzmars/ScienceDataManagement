@@ -12,11 +12,15 @@ import de.fraunhofer.sciencedataamanager.interfaces.IApplicationConfigurationDat
 import java.util.prefs.Preferences;
 
 /**
- *
+ *The class is an application configuration data provider which is based on the apache persistance layer. 
  * @author Moritz Mars
  */
 public class ApplicationConfigurationPersistanceDataManager implements IApplicationConfigurationDataProvider {
 
+    /**
+     * Returns the application configuration. 
+     * @return the application configuration. 
+     */
     @Override
     public ApplicationConfiguration getApplicationConfiguration() {
         Preferences prefs = Preferences.userRoot().node("de/fraunhofer/sciencedataamanager/persistence");
@@ -28,6 +32,10 @@ public class ApplicationConfigurationPersistanceDataManager implements IApplicat
         return applicationConfiguration;
     }
 
+    /**
+     * Sets the application configuration
+     * @param applicationConfiguration the application configuration. 
+     */
     @Override
     public void setApplicationConfiguration(ApplicationConfiguration applicationConfiguration) {
         Preferences prefs = Preferences.userRoot().node("de/fraunhofer/sciencedataamanager/persistence");

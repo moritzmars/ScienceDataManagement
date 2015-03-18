@@ -26,7 +26,7 @@ import java.util.LinkedList;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
- *
+ * This class implements the search definition execution algorithmus. 
  * @author Moritz Mars
  */
 @ManagedBean(name = "searchExecutionManager")
@@ -35,12 +35,21 @@ public class SearchExecutionManager {
 
     private ApplicationConfiguration applicationConfiguration;
 
+    /**
+     * The application configuration constructor. 
+     * @param applicationConfiguration the current confguration. 
+     */
     public SearchExecutionManager(ApplicationConfiguration applicationConfiguration) {
         this.applicationConfiguration = applicationConfiguration;
     }
 
     ICloudPaperConnector currentExecutedConnector;
 
+    /**
+     * Executes the search definition.
+     * @param searchDefinitionID the search definition to be executed. 
+     * @throws Exception
+     */
     public void execute(int searchDefinitionID) throws Exception {
         this.applicationConfiguration.getLoggingManager().log("Entering methode (public void execute(int searchDefinitionID) throws Exception)", LogLevel.DEBUG);
          
@@ -107,6 +116,11 @@ public class SearchExecutionManager {
 
     }
 
+    /**
+     * Returns the current progress. 
+     * @return the current progress. 
+     * @throws Exception
+     */
     public int getProgressCurrentExecution() throws Exception {
         if (currentExecutedConnector == null) {
             return 0;

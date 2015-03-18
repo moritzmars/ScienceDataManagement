@@ -23,10 +23,19 @@ public class ScientificPaperMetaInformationAffiliationDataManager {
 
     private ApplicationConfiguration applicationConfiguration;
 
+    /**
+     *
+     * @param applicationConfiguration
+     */
     public ScientificPaperMetaInformationAffiliationDataManager(ApplicationConfiguration applicationConfiguration) {
         this.applicationConfiguration = applicationConfiguration;
     }
 
+    /**
+     *
+     * @param scientificPaperMetaInformation
+     * @throws Exception
+     */
     public void insertAffiliation(ScientificPaperMetaInformation scientificPaperMetaInformation) throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection conn = null;
@@ -53,6 +62,12 @@ public class ScientificPaperMetaInformationAffiliationDataManager {
         conn.close();
     }
 
+    /**
+     *
+     * @param scientificPaperMetaInformation
+     * @return
+     * @throws Exception
+     */
     public LinkedList<ScientificPaperMetaInformationAffiliation> getAffiliationByScientificMetaInformation(ScientificPaperMetaInformation scientificPaperMetaInformation) throws Exception {
 
         Class.forName("com.mysql.jdbc.Driver").newInstance();

@@ -21,10 +21,22 @@ import java.util.LinkedList;
  */
 public class SearchTermDataManager {
          private ApplicationConfiguration applicationConfiguration; 
+
+    /**
+     *
+     * @param applicationConfiguration
+     */
     public SearchTermDataManager(ApplicationConfiguration applicationConfiguration)
     {
        this.applicationConfiguration = applicationConfiguration; 
     }
+
+    /**
+     *
+     * @param searchDefinition
+     * @return
+     * @throws Exception
+     */
     public LinkedList<SearchTerm> getSearchTermsBySearchDefinition(SearchDefinition searchDefinition) throws Exception {
         LinkedList<SearchTerm> searchTerms = new LinkedList<SearchTerm>();
 
@@ -51,6 +63,11 @@ public class SearchTermDataManager {
         return searchTerms;
     }
 
+    /**
+     *
+     * @param searchDefinition
+     * @throws Exception
+     */
     public void insertSearchTerms(SearchDefinition searchDefinition) throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection conn = null;
@@ -73,6 +90,11 @@ public class SearchTermDataManager {
 
     }
 
+    /**
+     *
+     * @param searchTerm
+     * @throws Exception
+     */
     public void deleteSearchTerm(SearchTerm searchTerm) throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection conn = null;

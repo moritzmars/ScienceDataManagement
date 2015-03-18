@@ -16,6 +16,9 @@ public class DataExportInstance {
     private int ID;
     private String Name;
     private String GroovyCode;
+    private String ExportFilePrefix;
+    private String ExportFilePostfix;
+    private String ResponseContentType;
     private String CreateBy;
     private String ChangedBy;
     private Timestamp CreateDate;
@@ -75,5 +78,30 @@ public class DataExportInstance {
 
     public void setChangedDate(Timestamp ChangedDate) {
         this.ChangedDate = ChangedDate;
+    }
+    
+    
+    public String getExportFilePrefix() {
+        return ExportFilePrefix;
+    }
+
+    public void setExportFilePrefix(String ExportFilePrefix) {
+        this.ExportFilePrefix = ExportFilePrefix;
+    }
+
+    public String getExportFilePostfix() {
+        return ExportFilePostfix;
+    }
+
+    public void setExportFilePostfix(String ExportFilePostfix) {
+        this.ExportFilePostfix = ExportFilePostfix;
+    }
+
+    public String getResponseContentType() {
+        return ResponseContentType;
+    }
+
+    public void setResponseContentType(String ResponseContentType) {
+        this.ResponseContentType = ResponseContentType;
     }
 }

@@ -26,10 +26,19 @@ public class SearchAnalyticDefinitionDataManager {
 
     private ApplicationConfiguration applicationConfiguration;
 
+    /**
+     *
+     * @param applicationConfiguration
+     */
     public SearchAnalyticDefinitionDataManager(ApplicationConfiguration applicationConfiguration) {
         this.applicationConfiguration = applicationConfiguration;
     }
 
+    /**
+     *
+     * @return
+     * @throws Exception
+     */
     public LinkedList<SearchAnalyticDefinition> getAnalyticDefinitions() throws Exception {
         LinkedList<SearchAnalyticDefinition> searchAnalyticDefinitionList = new LinkedList();
 
@@ -57,6 +66,11 @@ public class SearchAnalyticDefinitionDataManager {
 
     }
 
+    /**
+     *
+     * @param searchAnalyticDefinition
+     * @throws Exception
+     */
     public void addSearchAnalyticDefinition(SearchAnalyticDefinition searchAnalyticDefinition) throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection conn = null;
@@ -76,6 +90,12 @@ public class SearchAnalyticDefinitionDataManager {
 
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     * @throws Exception
+     */
     public SearchAnalyticDefinition getSearchAnalyticDefinitionByID(int id) throws Exception {
         SearchAnalyticDefinition searchAnalyticDefinition = new SearchAnalyticDefinition();
 
@@ -100,6 +120,11 @@ public class SearchAnalyticDefinitionDataManager {
 
     }
 
+    /**
+     *
+     * @param searchAnalyticDefinition
+     * @throws Exception
+     */
     public void updateSearchAnalyticDefinition(SearchAnalyticDefinition searchAnalyticDefinition) throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection conn = null;
@@ -115,7 +140,13 @@ public class SearchAnalyticDefinitionDataManager {
         preparedStatement.close();
         conn.close();
     }
-        public void delete(int id) throws Exception {
+
+    /**
+     *
+     * @param id
+     * @throws Exception
+     */
+    public void delete(int id) throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection conn = null;
         conn = DriverManager.getConnection(this.applicationConfiguration.getSqlConnection());

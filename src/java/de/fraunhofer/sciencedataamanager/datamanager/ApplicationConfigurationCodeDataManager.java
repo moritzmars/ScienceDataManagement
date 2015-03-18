@@ -9,12 +9,15 @@ import de.fraunhofer.sciencedataamanager.domain.ApplicationConfiguration;
 import de.fraunhofer.sciencedataamanager.interfaces.IApplicationConfigurationDataProvider;
 
 /**
- *
+ * THe class provides the application configuration by data from code. 
  * @author Moritz Mars
  */
 public class ApplicationConfigurationCodeDataManager implements IApplicationConfigurationDataProvider {
 
-
+    /**
+     * The loaded application configuration. 
+     * @return
+     */
     @Override
     public ApplicationConfiguration getApplicationConfiguration() {
         ApplicationConfiguration applicationConfiguration = new ApplicationConfiguration(); 
@@ -23,6 +26,10 @@ public class ApplicationConfigurationCodeDataManager implements IApplicationConf
         return applicationConfiguration;
     }
 
+    /**
+     * Sets the application configuration. 
+     * @param applicationConfiguration the application configuration to set. 
+     */
     @Override
     public void setApplicationConfiguration(ApplicationConfiguration applicationConfiguration) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

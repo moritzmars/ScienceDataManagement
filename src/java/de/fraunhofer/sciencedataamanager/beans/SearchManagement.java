@@ -523,19 +523,13 @@ public class SearchManagement implements Serializable {
                 return;
             }
 
-            String excelExportDefaultFilename = "Export_" + new SimpleDateFormat("yyyyMMddhhmm").format(new Date()) + ".xls";
-
+          
             SearchDefinition searchDefinition = new SearchDefinition();
             searchDefinition.setID(Integer.parseInt(selectedItem));
-
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ExternalContext externalContext = facesContext.getExternalContext();
-            externalContext.setResponseContentType("application/vnd.ms-excel");
-            externalContext.setResponseHeader("Content-Disposition", "attachment; filename=\"" + excelExportDefaultFilename + "\"");
-
+        
             DataExportExecutionManager dataExportExecutionManager = new DataExportExecutionManager(applicationConfiguration);
-            dataExportExecutionManager.export(searchDefinition, Integer.parseInt(selectedExportInstance), externalContext.getResponseOutputStream());
-            facesContext.responseComplete();
+            dataExportExecutionManager.export(searchDefinition, Integer.parseInt(selectedExportInstance), FacesContext.getCurrentInstance().getExternalContext());
+            FacesContext.getCurrentInstance().responseComplete();
 
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));

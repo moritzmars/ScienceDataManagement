@@ -29,10 +29,20 @@ public class ScientificPaperMetaInformationDataManager {
 
     private ApplicationConfiguration applicationConfiguration;
 
+    /**
+     *
+     * @param applicationConfiguration
+     */
     public ScientificPaperMetaInformationDataManager(ApplicationConfiguration applicationConfiguration) {
         this.applicationConfiguration = applicationConfiguration;
     }
 
+    /**
+     *
+     * @param searchDefinitonExecution
+     * @return
+     * @throws Exception
+     */
     public LinkedList<ScientificPaperMetaInformation> getScientificMetaInformationBySearchDefinition(SearchDefinitonExecution searchDefinitonExecution) throws Exception {
         LinkedList<ScientificPaperMetaInformation> scientificPaperMetaInformationList = new LinkedList<ScientificPaperMetaInformation>();
 
@@ -109,6 +119,11 @@ public class ScientificPaperMetaInformationDataManager {
 
     }
 
+    /**
+     *
+     * @param searchDefinitonExecution
+     * @throws Exception
+     */
     public void insertScientificPaperMetaInformation(SearchDefinitonExecution searchDefinitonExecution) throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection conn = null;
@@ -179,6 +194,13 @@ public class ScientificPaperMetaInformationDataManager {
         conn.close();
     }
 
+    /**
+     *
+     * @param id
+     * @param identifierColumnName
+     * @return
+     * @throws Exception
+     */
     public ScientificPaperMetaInformation getScientificMetaInformationByID(String id, String identifierColumnName) throws Exception {
 
         Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -244,6 +266,12 @@ public class ScientificPaperMetaInformationDataManager {
 
     }
 
+    /**
+     *
+     * @param scientificPaperMetaInformation
+     * @return
+     * @throws Exception
+     */
     public int getLastScientificPaperMetaInformationBySearchDefinitionID(ScientificPaperMetaInformation scientificPaperMetaInformation) throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection conn = null;
@@ -263,6 +291,13 @@ public class ScientificPaperMetaInformationDataManager {
         return lastSearchDefinitionID;
     }
 
+    /**
+     *
+     * @param searchAnalyticDefinition
+     * @param searchDefinition
+     * @return
+     * @throws Exception
+     */
     public Map<String, List<Object>> getScientificPaperMetaInformationResultSetBySearchAnalyticDefinition(SearchAnalyticDefinition searchAnalyticDefinition, SearchDefinition searchDefinition) throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection conn = null;
@@ -276,6 +311,12 @@ public class ScientificPaperMetaInformationDataManager {
         return transformedResultSet;
     }
 
+    /**
+     *
+     * @param searchDefinitonExecution
+     * @return
+     * @throws Exception
+     */
     public Map<String, List<Object>> getScientificMetaInformationBySearchDefinitionAsMap(SearchDefinitonExecution searchDefinitonExecution) throws Exception {
         LinkedList<ScientificPaperMetaInformation> scientificPaperMetaInformationList = new LinkedList<ScientificPaperMetaInformation>();
 

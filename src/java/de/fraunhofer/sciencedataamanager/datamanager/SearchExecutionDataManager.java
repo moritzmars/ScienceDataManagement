@@ -22,10 +22,22 @@ import java.util.LinkedList;
  */
 public class SearchExecutionDataManager {
            private ApplicationConfiguration applicationConfiguration; 
+
+    /**
+     *
+     * @param applicationConfiguration
+     */
     public SearchExecutionDataManager(ApplicationConfiguration applicationConfiguration)
     {
        this.applicationConfiguration = applicationConfiguration; 
     }
+
+    /**
+     *
+     * @param searchDefinition
+     * @return
+     * @throws Exception
+     */
     public SearchExecution getSystemInstanceBySearchDefinition(SearchDefinition searchDefinition) throws Exception {
         Collection systemInstanceList = new LinkedList();
         SearchExecution searchExecution = new SearchExecution();
@@ -50,6 +62,11 @@ public class SearchExecutionDataManager {
         return searchExecution;
     }
 
+    /**
+     *
+     * @param searchExecution
+     * @throws Exception
+     */
     public void saveSearchExecution(SearchExecution searchExecution) throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection conn = null;
@@ -70,6 +87,11 @@ public class SearchExecutionDataManager {
         conn.close();
     }
 
+    /**
+     *
+     * @param searchExecution
+     * @throws Exception
+     */
     public void deleteSystemInstancesBySearchExecution(SearchExecution searchExecution) throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection conn2 = null;

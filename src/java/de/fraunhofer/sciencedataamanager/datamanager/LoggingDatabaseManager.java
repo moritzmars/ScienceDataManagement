@@ -31,11 +31,19 @@ public class LoggingDatabaseManager implements ILoggingManager {
 
     private ApplicationConfiguration applicationConfiguration;
 
+    /**
+     *
+     * @param applicationConfiguration
+     */
     public LoggingDatabaseManager(ApplicationConfiguration applicationConfiguration) {
         this.applicationConfiguration = applicationConfiguration;
 
     }
 
+    /**
+     *
+     * @param ex
+     */
     public void logException(Exception ex) {
         if (applicationConfiguration.getApplicationLogMonitoringLevel() == ApplicationLogMonitoringLevel.OFF) {
             return;
@@ -48,6 +56,10 @@ public class LoggingDatabaseManager implements ILoggingManager {
         loggingDataProvider.insert(loggingEntry);
     }
 
+    /**
+     *
+     * @param loggingEntry
+     */
     public void insert(LoggingEntry loggingEntry) {
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -67,6 +79,11 @@ public class LoggingDatabaseManager implements ILoggingManager {
         }
     }
 
+    /**
+     *
+     * @return
+     * @throws Exception
+     */
     public LinkedList<LoggingEntry> getLoggingEntries() throws Exception {
         LinkedList<LoggingEntry> loggingEntriesList = new LinkedList();
 
@@ -94,6 +111,11 @@ public class LoggingDatabaseManager implements ILoggingManager {
 
     }
 
+    /**
+     *
+     * @param message
+     * @param logLevel
+     */
     @Override
     public void log(String message, LogLevel logLevel) {
         if (applicationConfiguration.getApplicationLogMonitoringLevel() == ApplicationLogMonitoringLevel.OFF) {

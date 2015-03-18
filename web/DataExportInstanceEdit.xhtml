@@ -27,7 +27,17 @@
                 <h:panelGrid>
                     <h:outputLabel value="Data Export Instance Name: " style="font-weight:bold" />
                     <h:inputText value="#{dataExportInstanceEdit.dataExportInstanceName}" />
-                    <h:outputLabel value="Connecotr Code:  " style="font-weight:bold" />
+                    <h:outputLabel value="Export Filename Prefix: " style="font-weight:bold" />
+                    <h:inputText value="#{dataExportInstanceEdit.dataExportFilePrefix}" />
+
+                    <h:outputLabel value="Export Filename Postfix: " style="font-weight:bold" />
+                    <h:inputText value="#{dataExportInstanceEdit.dataExportFilePostfix}" />
+
+                    <h:outputLabel value="Response Content Type: " style="font-weight:bold" />
+                    <h:inputText value="#{dataExportInstanceEdit.responseContentType}" />
+
+
+                    <h:outputLabel value="Connector Code:  " style="font-weight:bold" />
                     <h:inputTextarea id="search" value="#{dataExportInstanceEdit.dataExportInstanceGroovyCode}" style="width:100%;" cols="1000" rows="75"/>
 
                 </h:panelGrid>

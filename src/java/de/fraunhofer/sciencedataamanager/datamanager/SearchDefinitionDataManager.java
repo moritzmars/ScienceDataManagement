@@ -27,10 +27,21 @@ import javax.faces.bean.SessionScoped;
 @SessionScoped
 public class SearchDefinitionDataManager {
             private ApplicationConfiguration applicationConfiguration; 
+
+    /**
+     *
+     * @param applicationConfiguration
+     */
     public SearchDefinitionDataManager(ApplicationConfiguration applicationConfiguration)
     {
        this.applicationConfiguration = applicationConfiguration; 
     }
+
+    /**
+     *
+     * @return
+     * @throws Exception
+     */
     public LinkedList<SearchDefinition> getSearchDefinitions() throws Exception {
         LinkedList<SearchDefinition> searchDefinitionList = new LinkedList();
 
@@ -58,6 +69,12 @@ public class SearchDefinitionDataManager {
 
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     * @throws Exception
+     */
     public SearchDefinition getSearchDefinitionByID(int id) throws Exception {
         SearchDefinition searchDefinition = new SearchDefinition();
 
@@ -85,6 +102,11 @@ public class SearchDefinitionDataManager {
 
     }
 
+    /**
+     *
+     * @param searchDefinition
+     * @throws Exception
+     */
     public void updateSearchDefinition(SearchDefinition searchDefinition) throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection conn = null;
@@ -100,6 +122,11 @@ public class SearchDefinitionDataManager {
         conn.close();
     }
 
+    /**
+     *
+     * @param searchExecution
+     * @throws Exception
+     */
     public void addSearchDefinition(SearchExecution searchExecution) throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection conn = null;
@@ -131,7 +158,12 @@ public class SearchDefinitionDataManager {
         
     }
     
-        public void delete(int id) throws Exception {
+    /**
+     *
+     * @param id
+     * @throws Exception
+     */
+    public void delete(int id) throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection conn = null;
         conn = DriverManager.getConnection(this.applicationConfiguration.getSqlConnection());

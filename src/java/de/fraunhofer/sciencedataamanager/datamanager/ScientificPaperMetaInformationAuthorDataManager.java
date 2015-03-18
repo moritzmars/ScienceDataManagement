@@ -22,10 +22,19 @@ public class ScientificPaperMetaInformationAuthorDataManager {
 
     private ApplicationConfiguration applicationConfiguration;
 
+    /**
+     *
+     * @param applicationConfiguration
+     */
     public ScientificPaperMetaInformationAuthorDataManager(ApplicationConfiguration applicationConfiguration) {
         this.applicationConfiguration = applicationConfiguration;
     }
 
+    /**
+     *
+     * @param scientificPaperMetaInformation
+     * @throws Exception
+     */
     public void insertAuthors(ScientificPaperMetaInformation scientificPaperMetaInformation) throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection conn = null;
@@ -47,7 +56,13 @@ public class ScientificPaperMetaInformationAuthorDataManager {
         conn.close();
     }
     
-      public LinkedList<ScientificPaperMetaInformationAuthors> getAuthorsByScientificMetaInformation(ScientificPaperMetaInformation scientificPaperMetaInformation) throws Exception {
+    /**
+     *
+     * @param scientificPaperMetaInformation
+     * @return
+     * @throws Exception
+     */
+    public LinkedList<ScientificPaperMetaInformationAuthors> getAuthorsByScientificMetaInformation(ScientificPaperMetaInformation scientificPaperMetaInformation) throws Exception {
 
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection conn = null;

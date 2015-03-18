@@ -23,10 +23,20 @@ public class SearchDefinitonExecutionRunDataManager {
 
     private ApplicationConfiguration applicationConfiguration;
 
+    /**
+     *
+     * @param applicationConfiguration
+     */
     public SearchDefinitonExecutionRunDataManager(ApplicationConfiguration applicationConfiguration) {
         this.applicationConfiguration = applicationConfiguration;
     }
 
+    /**
+     *
+     * @param searchDefinitionExecutionRun
+     * @return
+     * @throws Exception
+     */
     public SearchDefinitionExecutionRun insertSearchDefinitionExecutionRunLastID(SearchDefinitionExecutionRun searchDefinitionExecutionRun) throws Exception {
 
         Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -50,6 +60,11 @@ public class SearchDefinitonExecutionRunDataManager {
 
     }
 
+    /**
+     *
+     * @param searchDefinitionExecutionRun
+     * @throws Exception
+     */
     public void insertSearchDefinitionExecutionRun(SearchDefinitionExecutionRun searchDefinitionExecutionRun) throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection conn = null;
@@ -70,6 +85,11 @@ public class SearchDefinitonExecutionRunDataManager {
 
     }
 
+    /**
+     *
+     * @param searchDefinitionExecutionRun
+     * @throws Exception
+     */
     public void updateSearchDefinitionExecutionRun(SearchDefinitionExecutionRun searchDefinitionExecutionRun) throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection conn = null;
@@ -95,6 +115,12 @@ public class SearchDefinitonExecutionRunDataManager {
         }
     }
 
+    /**
+     *
+     * @param searchDefinition
+     * @return
+     * @throws Exception
+     */
     public LinkedList<SearchDefinitionExecutionRun> getAllSearchDefinitionExecutionRunForSearchDefinition(SearchDefinition searchDefinition) throws Exception {
         LinkedList<SearchDefinitionExecutionRun> searchDefinitionExecutionRunList = new LinkedList<SearchDefinitionExecutionRun>();
 

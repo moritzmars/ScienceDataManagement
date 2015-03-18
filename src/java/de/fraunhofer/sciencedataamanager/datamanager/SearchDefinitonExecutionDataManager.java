@@ -28,10 +28,21 @@ public class SearchDefinitonExecutionDataManager {
 
     private ApplicationConfiguration applicationConfiguration;
 
+    /**
+     *
+     * @param applicationConfiguration
+     */
     public SearchDefinitonExecutionDataManager(ApplicationConfiguration applicationConfiguration) {
         this.applicationConfiguration = applicationConfiguration;
     }
 
+    /**
+     *
+     * @param searchDefinition
+     * @param systemInstance
+     * @return
+     * @throws Exception
+     */
     public int getLastSearchDefinitonExecutionIDForSystemInstance(SearchDefinition searchDefinition, SystemInstance systemInstance) throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection conn = null;
@@ -51,6 +62,12 @@ public class SearchDefinitonExecutionDataManager {
         return lastSearchDefinitionID;
     }
 
+    /**
+     *
+     * @param searchDefinition
+     * @return
+     * @throws Exception
+     */
     public SearchDefinitonExecution getLastSearchDefinitionExecutionForSearchDefinition(SearchDefinition searchDefinition) throws Exception {
         SearchDefinitonExecution searchDefinitionExecution = new SearchDefinitonExecution();
 
@@ -101,6 +118,11 @@ public class SearchDefinitonExecutionDataManager {
 
     }
 
+    /**
+     *
+     * @param searchDefinitonExecution
+     * @throws Exception
+     */
     public void saveCloudPapers(SearchDefinitonExecution searchDefinitonExecution) throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection conn = null;
@@ -141,6 +163,12 @@ public class SearchDefinitonExecutionDataManager {
 
     }
 
+    /**
+     *
+     * @param searchDefinition
+     * @return
+     * @throws Exception
+     */
     public LinkedList<SearchDefinitonExecution> getSearchDefinitionExecutionForSearchDefinition(SearchDefinition searchDefinition) throws Exception {
         LinkedList<SearchDefinitonExecution> searchDefinitionExecutionList = new LinkedList<SearchDefinitonExecution>();
 
@@ -195,6 +223,12 @@ public class SearchDefinitonExecutionDataManager {
 
     }
 
+    /**
+     *
+     * @param searchDefinition
+     * @return
+     * @throws Exception
+     */
     public LinkedList<SearchDefinitonExecution> getSearchDefinitionExecutionForSearchDefinitionWithoutScientificMetaData(SearchDefinition searchDefinition) throws Exception {
         LinkedList<SearchDefinitonExecution> searchDefinitionExecutionList = new LinkedList<SearchDefinitonExecution>();
 
@@ -242,6 +276,12 @@ public class SearchDefinitonExecutionDataManager {
 
     }
 
+    /**
+     *
+     * @param searchDefinition
+     * @return
+     * @throws Exception
+     */
     public LinkedList<SearchDefinitonExecution> getAllSearchDefinitionExecutionForSearchDefinition(SearchDefinition searchDefinition) throws Exception {
         LinkedList<SearchDefinitonExecution> searchDefinitionExecutionList = new LinkedList<SearchDefinitonExecution>();
 
@@ -285,6 +325,11 @@ public class SearchDefinitonExecutionDataManager {
 
     }
 
+    /**
+     *
+     * @return
+     * @throws Exception
+     */
     public LinkedList<SearchDefinitonExecution> getAllSearchDefinitionExecution() throws Exception {
         LinkedList<SearchDefinitonExecution> searchDefinitionExecutionList = new LinkedList<SearchDefinitonExecution>();
 
@@ -326,6 +371,12 @@ public class SearchDefinitonExecutionDataManager {
 
     }
 
+    /**
+     *
+     * @param searchDefinitonExecutionList
+     * @param outputStream
+     * @throws Exception
+     */
     public void exportToExcel(LinkedList<SearchDefinitonExecution> searchDefinitonExecutionList, OutputStream outputStream) throws Exception {
 
         Workbook currentWorkBook = new HSSFWorkbook();
