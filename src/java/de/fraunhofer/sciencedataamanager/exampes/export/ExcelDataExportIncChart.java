@@ -11,13 +11,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.CellRangeAddress;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+
+import org.apache.poi.ss.usermodel.charts.*;
+import org.apache.poi.xssf.usermodel.*;
+import org.apache.poi.xssf.usermodel.charts.*;
 
 /**
  *
@@ -34,7 +35,7 @@ public class ExcelDataExportIncChart implements IExportScientificPaperMetaInform
      */
     @Override
     public void export(Map<String, Map<String, List<Object>>> allConnectorsToExport, OutputStream outputStream) throws Exception {
-        Workbook currentWorkBook = new HSSFWorkbook();
+        XSSFWorkbook currentWorkBook = new XSSFWorkbook();
         int currenSheetCount = 0;
 
         for (String currentKey : allConnectorsToExport.keySet())
@@ -58,13 +59,13 @@ public class ExcelDataExportIncChart implements IExportScientificPaperMetaInform
             }
 
             //for (SearchDefinitonExecution searchDefinitonExecution : searchDefinitonExecutionList) {
-            Sheet currentSheet = currentWorkBook.createSheet();
+            XSSFSheet currentSheet = currentWorkBook.createSheet();
             currentSheet.setFitToPage(true);
             currentSheet.setHorizontallyCenter(true);
             currentSheet.createFreezePane(0, 1);
             currentWorkBook.setSheetName(currenSheetCount, currentKey);
 
-            Row headerRow = currentSheet.createRow(0);
+            XSSFRow headerRow = currentSheet.createRow(0);
             headerRow.setHeightInPoints(12.75f);
             int headerColumnIndex = 0;
             for (String currentColumn : columns)
@@ -72,8 +73,8 @@ public class ExcelDataExportIncChart implements IExportScientificPaperMetaInform
                 headerRow.createCell(headerColumnIndex).setCellValue(currentColumn);
                 headerColumnIndex++;
             }
-            CellStyle style = currentWorkBook.createCellStyle();
-            Font headerFont = currentWorkBook.createFont();
+            XSSFCellStyle style = currentWorkBook.createCellStyle();
+            XSSFFont headerFont = currentWorkBook.createFont();
             headerFont.setBoldweight(Font.BOLDWEIGHT_BOLD);
 
             style.setBorderRight(CellStyle.BORDER_THIN);
@@ -92,7 +93,7 @@ public class ExcelDataExportIncChart implements IExportScientificPaperMetaInform
 
             headerRow.setRowStyle(style);
 
-            Row currentRow = null;
+           XSSFRow currentRow = null;
             int rowNum = 1;
             int currentColum = 0;
 
@@ -111,8 +112,46 @@ public class ExcelDataExportIncChart implements IExportScientificPaperMetaInform
                 currentColum = 0;
                 rowNum++;
             }
+
+            /* At the end of this step, we have a worksheet with test data, that we want to write into a chart */
+            /* Create a drawing canvas on the worksheet */
+           
+            XSSFDrawing xlsx_drawing = currentSheet.createDrawingPatriarch();
+            /* Define anchor points in the worksheet to position the chart */
+            XSSFClientAnchor anchor = xlsx_drawing.createAnchor(0, 0, 0, 0, 0, 5, 10, 15);
+            /* Create the chart object based on the anchor point */
+            XSSFChart my_line_chart = xlsx_drawing.createChart(anchor);
+            /* Define legends for the line chart and set the position of the legend */
+            XSSFChartLegend legend = my_line_chart.getOrCreateLegend();
+            legend.setPosition(LegendPosition.BOTTOM);
+            /* Create data for the chart */
+            LineChartData data = my_line_chart.getChartDataFactory().createLineChartData();
+            /* Define chart AXIS */
+            ChartAxis bottomAxis = my_line_chart.getChartAxisFactory().createCategoryAxis(AxisPosition.BOTTOM);
+            ValueAxis leftAxis = my_line_chart.getChartAxisFactory().createValueAxis(AxisPosition.LEFT);
+            leftAxis.setCrosses(AxisCrosses.AUTO_ZERO);
+            /* Define Data sources for the chart */
+            /* Set the right cell range that contain values for the chart */
+            /* Pass the worksheet and cell range address as inputs */
+            /* Cell Range Address is defined as First row, last row, first column, last column */
+            ChartDataSource<Number> xs = DataSources.fromNumericCellRange(currentSheet, new CellRangeAddress(0, 0, 0, 4));
+            ChartDataSource<Number> ys1 = DataSources.fromNumericCellRange(currentSheet, new CellRangeAddress(1, 1, 0, 4));
+            ChartDataSource<Number> ys2 = DataSources.fromNumericCellRange(currentSheet, new CellRangeAddress(2, 2, 0, 4));
+            ChartDataSource<Number> ys3 = DataSources.fromNumericCellRange(currentSheet, new CellRangeAddress(3, 3, 0, 4));
+            /* Add chart data sources as data to the chart */
+            
+            data.addSeries(xs, ys1);
+            data.addSeries(xs, ys2);
+            data.addSeries(xs, ys3);
+            /* Plot the chart with the inputs from data and chart axis */
+            my_line_chart.plot(data, new ChartAxis[]
+            {
+                bottomAxis, leftAxis
+            });
+
             currenSheetCount++;
         }
+
         currentWorkBook.write(outputStream);
 
         outputStream.close();

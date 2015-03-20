@@ -76,7 +76,10 @@ public class ElsevierScienceDirectConnectorBufferAbstract implements ICloudPaper
             for (Element currentElemenet : entryList)
             {
                 ScientificPaperMetaInformation scientificPaperMetaInformation = new ScientificPaperMetaInformation();
-                scientificPaperMetaInformation.setIdentifier_2(currentElemenet.getChild("identifier", Namespace.getNamespace("http://purl.org/dc/elements/1.1/")).getText());
+                Element identifierElement = currentElemenet.getChild("identifier", Namespace.getNamespace("http://purl.org/dc/elements/1.1/"));
+                if(identifierElement==null)
+                    continue;
+                scientificPaperMetaInformation.setIdentifier_2(identifierElement.getText());
                 scientificPaperMetaInformationUidList.add(scientificPaperMetaInformation);
             }
             xml.close();

@@ -3,21 +3,14 @@ package de.fraunhofer.sciencedataamanager.connectors;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
 import java.text.SimpleDateFormat;
-
-import javax.xml.bind.JAXBContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
 import de.fraunhofer.sciencedataamanager.interfaces.*;
 import de.fraunhofer.sciencedataamanager.domain.*;
 import java.util.Date;
