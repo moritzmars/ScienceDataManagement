@@ -18,14 +18,23 @@
         </f:view>
 
         <h:form>
-               <h:messages styleClass="errorMessage" globalOnly="true" />
+            <h:messages styleClass="errorMessage" globalOnly="true" />
             <rich:panel header="New search definition">
                 <h:panelGrid>
-                    <rich:panel style="width:560px;">
+                    <rich:panel style="width:560px;" >
                         <h:outputLabel value="Name: " style="font-weight:bold" />
                         <h:inputText value="#{searchDefinitionNew.searchDefinitionName}" />
-                    </rich:panel>
+                        <br></br>  
+                        <h:outputLabel value="Item Treshold: " style="font-weight:bold" />
+                        <h:inputText value="#{searchDefinitionNew.searchDefinitionItemTreshhold}" />
+                        <br></br> 
+                        <h:outputLabel value="Search query mode: " style="font-weight:bold" />
 
+                        <h:selectOneRadio value="#{searchDefinitionNew.searchDefinitionQueryMode}">
+                            <f:selectItem itemLabel="Expert" itemValue="Expert" />
+                            <f:selectItem itemLabel="Standard" itemValue="Standard" />
+                        </h:selectOneRadio>
+                    </rich:panel>
                     <rich:panel style="width:560px;">
                         <f:facet name="header">
                             <h:outputText value="System Instances"></h:outputText>
@@ -38,7 +47,19 @@
                     </rich:panel>
                     <rich:panel style="width:560px;">   
                         <f:facet name="header">
-                            <h:outputText value="Search query"></h:outputText>
+                            <h:outputText value="Expert search query"></h:outputText>
+                        </f:facet>
+                        <h:panelGrid columns="3">
+                            <h:panelGroup>
+                                <h:outputLabel value="Query: " style="font-weight:bold" />
+                                <h:inputTextarea value="#{searchDefinitionNew.searchDefinitionExpertQuery}" cols="80" rows="20"/>
+                            </h:panelGroup> 
+                        </h:panelGrid>   
+                    </rich:panel>    
+
+                    <rich:panel style="width:560px;">   
+                        <f:facet name="header">
+                            <h:outputText value="Standard search query"></h:outputText>
                         </f:facet>
                         <h:panelGrid columns="3">
                             <h:panelGroup>

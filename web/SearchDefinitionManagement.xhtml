@@ -19,14 +19,14 @@
               <h:messages styleClass="errorMessage" globalOnly="true" />
             <h:panelGrid id="grid" columns="1">
                 <h:panelGroup>
-                    <rich:select value="#{searchDefinitionManagement.selectedSearchDefinition}">
+                    <rich:select id="searchDefinitionSelectID" value="#{searchDefinitionManagement.selectedSearchDefinition}">
                         <a4j:ajax render="searchTermsForSearchDefinition searchExecutionForSearchDefinitions" listener="#{searchDefinitionManagement.loadTable()}" execute="@this" event="selectitem"/>
                         <f:selectItems value="#{searchDefinitionManagement.loadedSearchDefinitions}" var="searchDefinition" itemValue="#{searchDefinition.ID}" itemLabel="#{searchDefinition.name}"/>
                     </rich:select>
                     <h:commandButton value="New Search Definition" action="SearchDefinitionNew"/>
                     <h:commandButton value="Edit Search Definition" action="#{searchDefinitionManagement.redirectToEditPage()}"/>
-                    <h:commandButton value="Delete Search Definition" action="#{searchDefinitionManagement.deleteSearchDefinitionByID()}"/>
-
+                    <a4j:commandButton  value="Delete Search Definition" render="searchDefinitionSelectID searchTermsForSearchDefinition searchExecutionForSearchDefinitions" action="#{searchDefinitionManagement.deleteSearchDefinitionByID()}"/>
+        
                 </h:panelGroup>
                 <h:dataTable id="searchTermsForSearchDefinition" value="#{searchDefinitionManagement.loadedSearchTerms}" var="o"
                              styleClass="order-table"

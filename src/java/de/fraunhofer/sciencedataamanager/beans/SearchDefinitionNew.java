@@ -21,9 +21,11 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
- * The class provides logic and data for the search definition new web site. 
+ * The class provides logic and data for the search definition new web site.
+ *
  * @author Moritz Mars
  */
 @ManagedBean(name = "searchDefinitionNew")
@@ -31,37 +33,68 @@ import javax.faces.event.ComponentSystemEvent;
 public class SearchDefinitionNew {
 
     private String searchDefinitionName;
+    private String searchDefinitionItemTreshhold;
+    private String searchDefinitionExpertQuery;
+    private String searchDefinitionQueryMode;
 
     private String tempSearhTerm;
     private String tempOperation;
 
+    public void setSearchDefinitionQueryMode(String searchDefinitionQueryMode) {
+        this.searchDefinitionQueryMode = searchDefinitionQueryMode;
+    }
+
+    public String getSearchDefinitionQueryMode() {
+        return searchDefinitionQueryMode;
+    }
+
+    public String getSearchDefinitionExpertQuery() {
+        return searchDefinitionExpertQuery;
+    }
+
+    public void setSearchDefinitionExpertQuery(String searchDefinitionExpertQuery) {
+        this.searchDefinitionExpertQuery = searchDefinitionExpertQuery;
+    }
+
+    public String getSearchDefinitionItemTreshhold() {
+        return searchDefinitionItemTreshhold;
+    }
+
+    public void setSearchDefinitionItemTreshhold(String searchDefinitionItemTreshhold) {
+        this.searchDefinitionItemTreshhold = searchDefinitionItemTreshhold;
+    }
+
     /**
-     * Returns the selected system instance list. 
-     * @return the selected system instance list. 
+     * Returns the selected system instance list.
+     *
+     * @return the selected system instance list.
      */
     public LinkedList<SystemInstance> getSelectedSystemInstanceList() {
         return selectedSystemInstanceList;
     }
 
     /**
-     * Returns the selected system instance list. 
-     * @param selectedSystemInstanceList the selected system instance list. 
+     * Returns the selected system instance list.
+     *
+     * @param selectedSystemInstanceList the selected system instance list.
      */
     public void setSelectedSystemInstanceList(LinkedList<SystemInstance> selectedSystemInstanceList) {
         this.selectedSystemInstanceList = selectedSystemInstanceList;
     }
 
     /**
-     * Returns the system instance list. 
-     * @return the system instance list. 
+     * Returns the system instance list.
+     *
+     * @return the system instance list.
      */
     public LinkedList<SystemInstance> getSystemInstanceList() {
         return systemInstanceList;
     }
 
     /**
-     * Sets the system instance list. 
-     * @param systemInstanceList the system instance list. 
+     * Sets the system instance list.
+     *
+     * @param systemInstanceList the system instance list.
      */
     public void setSystemInstanceList(LinkedList<SystemInstance> systemInstanceList) {
         this.systemInstanceList = systemInstanceList;
@@ -74,7 +107,8 @@ public class SearchDefinitionNew {
     private ApplicationConfiguration applicationConfiguration = ApplicationConfigurationDataManagerFactory.getApplicationConfigurationDataProvider(null).getApplicationConfiguration();
 
     /**
-     * Returns the temp search terms. 
+     * Returns the temp search terms.
+     *
      * @return the temp search terms.
      */
     public Collection getTempSeachTerms() {
@@ -82,16 +116,18 @@ public class SearchDefinitionNew {
     }
 
     /**
-     * Sets the temp search terms. 
-     * @param tempSeachTerms the temp search terms. 
+     * Sets the temp search terms.
+     *
+     * @param tempSeachTerms the temp search terms.
      */
     public void setTempSeachTerms(LinkedList<SearchTerm> tempSeachTerms) {
         this.tempSeachTerms = tempSeachTerms;
     }
 
     /**
-     * Returns the search definition name. 
-     * @return the search definition name. 
+     * Returns the search definition name.
+     *
+     * @return the search definition name.
      */
     public String getSearchDefinitionName() {
         return searchDefinitionName;
@@ -99,15 +135,17 @@ public class SearchDefinitionNew {
 
     /**
      * Sets the search definition name.
-     * @param searchDefinitionName the search definition name. 
+     *
+     * @param searchDefinitionName the search definition name.
      */
     public void setSearchDefinitionName(String searchDefinitionName) {
         this.searchDefinitionName = searchDefinitionName;
     }
 
     /**
-     * Returns the temp search term. 
-     * @return the temp search term. 
+     * Returns the temp search term.
+     *
+     * @return the temp search term.
      */
     public String getTempSearhTerm() {
         return tempSearhTerm;
@@ -115,39 +153,44 @@ public class SearchDefinitionNew {
 
     /**
      * Sets the temp search term.
-     * @param tempSearhTerm the temp search term. 
+     *
+     * @param tempSearhTerm the temp search term.
      */
     public void setTempSearhTerm(String tempSearhTerm) {
         this.tempSearhTerm = tempSearhTerm;
     }
 
     /**
-     * Returns the temp operation. 
-     * @return the temp operation. 
+     * Returns the temp operation.
+     *
+     * @return the temp operation.
      */
     public String getTempOperation() {
         return tempOperation;
     }
 
     /**
-     * Sets the temp operation. 
-     * @param tempOperation the temp operation. 
+     * Sets the temp operation.
+     *
+     * @param tempOperation the temp operation.
      */
     public void setTempOperation(String tempOperation) {
         this.tempOperation = tempOperation;
     }
 
     /**
-     * Returns the selected system instances. 
-     * @return the selected system instances.  
+     * Returns the selected system instances.
+     *
+     * @return the selected system instances.
      */
     public Collection<String> getSelectedSystemInstances() {
         return selectedSystemInstances;
     }
 
     /**
-     * Sets the selected system instances. 
-     * @param selectedSystemInstances the selected system instances. 
+     * Sets the selected system instances.
+     *
+     * @param selectedSystemInstances the selected system instances.
      */
     public void setSelectedSystemInstances(Collection<String> selectedSystemInstances) {
         this.selectedSystemInstances = selectedSystemInstances;
@@ -164,10 +207,11 @@ public class SearchDefinitionNew {
     }
 
     /**
-     * This method save the search definition. 
+     * This method save the search definition.
      */
     public void saveSearchDefinition() {
-        try {
+        try
+        {
             SearchExecution searchExecution = new SearchExecution();
             searchExecution.getSystemInstances().addAll(this.getSelectedSystemInstanceList());
 
@@ -175,6 +219,19 @@ public class SearchDefinitionNew {
             SearchDefinition searchDefinition = new SearchDefinition();
             searchDefinition.setName(searchDefinitionName);
             searchDefinition.setSearchTerms(tempSeachTerms);
+
+            searchDefinition.setExpertQuery(StringEscapeUtils.escapeJava(this.searchDefinitionExpertQuery));
+            if (this.searchDefinitionItemTreshhold.matches("\\d+"))
+            {
+                searchDefinition.setItemTreshhold(Integer.parseInt(this.searchDefinitionItemTreshhold));
+            }
+            else
+            {
+                searchDefinition.setItemTreshhold(500);
+            }
+
+            searchDefinition.setSearchQueryMode(this.searchDefinitionQueryMode);
+
             searchExecution.setSearchDefiniton(searchDefinition);
 
             searchDefinitionDataProvider.addSearchDefinition(searchExecution);
@@ -187,7 +244,9 @@ public class SearchDefinitionNew {
 
             FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
 
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
             this.applicationConfiguration.getLoggingManager().logException(ex);
 
@@ -196,15 +255,19 @@ public class SearchDefinitionNew {
     }
 
     /**
-     * Returns the system instances. 
-     * @return the system instances. 
+     * Returns the system instances.
+     *
+     * @return the system instances.
      */
     public Collection getSystemInstances() {
         Collection systemInstances = null;
-        try {
+        try
+        {
             SystemInstanceDataManager systemInstanceDataProvider = new SystemInstanceDataManager(applicationConfiguration);
             systemInstances = systemInstanceDataProvider.getSystemInstances();
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
             this.applicationConfiguration.getLoggingManager().logException(ex);
 
@@ -213,17 +276,21 @@ public class SearchDefinitionNew {
     }
 
     /**
-     * This event is executed after the page is loaded. 
-     * @param event Informations about the page load event. 
+     * This event is executed after the page is loaded.
+     *
+     * @param event Informations about the page load event.
      */
     public void onLoad(ComponentSystemEvent event) {
 
-        try {
+        try
+        {
 
-            this.setSelectedSystemInstanceList(new LinkedList<>());
-            this.setSystemInstanceList(new LinkedList<>());
+            this.setSelectedSystemInstanceList(new LinkedList());
+            this.setSystemInstanceList(new LinkedList());
             this.getSystemInstanceList().addAll(this.getSystemInstances());
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
             this.applicationConfiguration.getLoggingManager().logException(ex);
 
@@ -231,12 +298,15 @@ public class SearchDefinitionNew {
     }
 
     /**
-     * This method performs a redirect to the index page. 
+     * This method performs a redirect to the index page.
      */
     public void redirectBack() {
-        try {
+        try
+        {
             FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
             this.applicationConfiguration.getLoggingManager().logException(ex);
 

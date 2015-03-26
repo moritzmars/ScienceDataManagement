@@ -13,6 +13,7 @@ import de.fraunhofer.sciencedataamanager.domain.DataExportInstance;
 import de.fraunhofer.sciencedataamanager.domain.SearchDefinition;
 import de.fraunhofer.sciencedataamanager.domain.SearchDefinitonExecution;
 import de.fraunhofer.sciencedataamanager.exampes.export.ExcelDataExport;
+import de.fraunhofer.sciencedataamanager.interfaces.IExportScientificPaperMetaInformation;
 import groovy.lang.GroovyClassLoader;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
@@ -76,8 +77,8 @@ public class DataExportExecutionManager {
         Class parsedGroocyClass = gcl.parseClass(StringEscapeUtils.unescapeJava(dataExportInstance.getGroovyCode()));
 
         Object groovyClassInstance = parsedGroocyClass.newInstance();
-        ExcelDataExport currentDataExportInstance = new ExcelDataExport();
-        //IExportScientificPaperMetaInformation currentDataExportInstance = (IExportScientificPaperMetaInformation) groovyClassInstance;
+        //ExcelDataExport currentDataExportInstance = new ExcelDataExport();
+        IExportScientificPaperMetaInformation currentDataExportInstance = (IExportScientificPaperMetaInformation) groovyClassInstance;
         currentDataExportInstance.export(allConnectorsToExport, externalContext.getResponseOutputStream());
     }
 

@@ -27,6 +27,12 @@ public class SearchDefinition {
     private Timestamp ChangedDate;
     private LinkedList<SearchTerm> searchTerms = new LinkedList<SearchTerm>();
 
+    private int itemTreshhold;
+    private String expertQuery;
+    private String searchQueryMode;
+    private SystemInstance systemInstance; 
+
+    
     public int getID() {
         return ID;
     }
@@ -83,16 +89,49 @@ public class SearchDefinition {
         this.searchTerms = searchTerms;
     }
 
-     public boolean equals(Object obj) {
-        if (obj == null) {
+    public boolean equals(Object obj) {
+        if (obj == null)
+        {
             return false;
         }
-        if (!(obj instanceof SearchDefinition)) {
+        if (!(obj instanceof SearchDefinition))
+        {
             return false;
         }
         SearchDefinition objectToCheck = (SearchDefinition) obj;
-        
+
         return this.getID() == objectToCheck.getID();
     }
 
+    public int getItemTreshhold() {
+        return itemTreshhold;
+    }
+
+    public void setItemTreshhold(int itemTreshhold) {
+        this.itemTreshhold = itemTreshhold;
+    }
+
+    public String getExpertQuery() {
+        return expertQuery;
+    }
+
+    public void setExpertQuery(String expertQuery) {
+        this.expertQuery = expertQuery;
+    }
+
+    public String getSearchQueryMode() {
+        return searchQueryMode;
+    }
+
+    public void setSearchQueryMode(String searchQueryMode) {
+        this.searchQueryMode = searchQueryMode;
+    }
+
+    public SystemInstance getSystemInstance() {
+        return systemInstance;
+    }
+
+    public void setSystemInstance(SystemInstance systemInstance) {
+        this.systemInstance = systemInstance;
+    }
 }

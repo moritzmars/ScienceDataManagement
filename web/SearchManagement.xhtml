@@ -21,7 +21,7 @@
             <rich:panel header="Search definition results">
                 <h:panelGrid columns="2" width="100%">
                     <h:panelGroup>
-                        <h:panelGrid columns="4" width="800px">
+                        <h:panelGrid columns="5" width="800px">
                             <rich:select id="selectSearchExecutionID" value="#{search.selectedItem}" defaultLabel="Select search definition..." >
                                 <a4j:ajax render="scientificPaperMetaInformations searchExecutionForSearchDefinitions search systemInstances" listener="#{search.loadTable()}" execute="@this" event="selectitem"/>
                                 <f:selectItems value="#{search.searchDefinitions}" var="searchDefinition" itemValue="#{searchDefinition.ID}" itemLabel="#{searchDefinition.name}"/>
@@ -30,7 +30,8 @@
                                               enabled="#{true}" minValue="0" maxValue="100" >
                                 <h:outputText value="#{search.currentProgressValue} %" />
                             </rich:progressBar>
-                            <h:commandButton value="Start search" action="#{search.execute()}"/>
+                            <h:commandButton value="Get Information Only" action="#{search.executeOnlyInformation()}"/>
+                            <h:commandButton value="Start Download Data" action="#{search.execute()}"/>
                             <h:selectManyCheckbox id="systemInstances" value="#{search.loadedSelectedSystemInstances}" layout="pageDirection" readonly="true">
                                 <f:selectItems value="#{search.loadedSystemInstances}" var="systemInstance" itemValue="#{systemInstance.ID}" itemLabel="#{systemInstance.name}" itemDisabled="true"/>
                             </h:selectManyCheckbox> 

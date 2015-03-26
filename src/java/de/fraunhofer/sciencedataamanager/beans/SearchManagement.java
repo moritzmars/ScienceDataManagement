@@ -350,7 +350,27 @@ public class SearchManagement implements Serializable {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
+        /**
+     * Executes the search algorithmus. 
+     */
+    public void executeOnlyInformation() {
+        try {
+            if (selectedItem == null || "".equals(selectedItem)) {
+                return;
+            }
+            this.setCurrentProgress(0);
+            searchExecutionManager.executeOnlyInformations(Integer.parseInt(selectedItem));
+            this.setCurrentProgress(0);
+            
+            //FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
+            this.applicationConfiguration.getLoggingManager().logException(ex);
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     /**
      * Returns the last search definition execution. 
      * @return the last search definition execution. 

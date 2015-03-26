@@ -18,7 +18,6 @@ import de.fraunhofer.sciencedataamanager.datamanager.SearchDefinitonExecutionRun
 import de.fraunhofer.sciencedataamanager.domain.DataExportInstance;
 import de.fraunhofer.sciencedataamanager.domain.SearchAnalyticDefinition;
 import de.fraunhofer.sciencedataamanager.domain.SearchDefinitionExecutionRun;
-import de.fraunhofer.sciencedataamanager.exampes.export.ExcelDataExportIncChart;
 import de.fraunhofer.sciencedataamanager.interfaces.IExportScientificPaperMetaInformation;
 import groovy.lang.GroovyClassLoader;
 import java.text.SimpleDateFormat;
@@ -538,10 +537,10 @@ public class SearchAnalyticsManagement {
 
             IExportScientificPaperMetaInformation currentDataExportInstance = (IExportScientificPaperMetaInformation) groovyClassInstance;
 
-            ExcelDataExportIncChart excelDataExportIncChart = new ExcelDataExportIncChart();
-            excelDataExportIncChart.export(allConnectorsToExport, externalContext.getResponseOutputStream());
+            //ExcelDataExportIncChart excelDataExportIncChart = new ExcelDataExportIncChart();
+            //excelDataExportIncChart.export(allConnectorsToExport, externalContext.getResponseOutputStream());
             
-            //currentDataExportInstance.export(allConnectorsToExport, externalContext.getResponseOutputStream());
+            currentDataExportInstance.export(allConnectorsToExport, externalContext.getResponseOutputStream());
 
             facesContext.responseComplete();
 

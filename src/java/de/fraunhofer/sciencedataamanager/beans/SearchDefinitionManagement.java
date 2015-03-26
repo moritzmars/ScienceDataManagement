@@ -249,6 +249,7 @@ public class SearchDefinitionManagement {
         try {
             SearchDefinitionDataManager searchDefinitionDataManager = new SearchDefinitionDataManager(applicationConfiguration);
             searchDefinitionDataManager.delete(id);
+                   this.loadedSearchDefinitions = getSearchDefinitions();
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);

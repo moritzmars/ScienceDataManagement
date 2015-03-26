@@ -18,8 +18,8 @@
 
 
         <h:form>
-                   <h:messages styleClass="errorMessage" globalOnly="true" />
-  
+            <h:messages styleClass="errorMessage" globalOnly="true" />
+
             <rich:panel header="Edit system instance">
                 <h:commandButton value="Save" action="#{systemInstanceEdit.updateSystemInstance()}" />
                 <h:commandButton value="Back" action="#{systemInstanceEdit.redirectBack()}" />
@@ -27,9 +27,51 @@
                 <h:panelGrid>
                     <h:outputLabel value="System Instance Name: " style="font-weight:bold" />
                     <h:inputText value="#{systemInstanceEdit.systemInstanceName}" />
+                    <rich:panel style="width:560px;">   
+                        <f:facet name="header">
+                            <h:outputText value="Search Field Mapping"></h:outputText>
+                        </f:facet>
+                        <h:panelGrid columns="3">
+                            <h:panelGroup>   
+                                <h:outputLabel value="Meta Field Name: " style="font-weight:bold" />
+                                    <rich:select id="MetaFieldNameSelect"
+                                                 value="#{systemInstanceEdit.selectedMetaField}">
+                                     <a4j:ajax render="selectedFieldMapping" listener="#{systemInstanceEdit.metaFieldNameSelectionChanged()}" execute="@this" event="selectitem"/>
+                     
+                                    <f:selectItems value="#{systemInstanceEdit.searchMetaFields}" var="metaFieldName"  itemValue="#{metaFieldName.ID}" itemLabel="#{metaFieldName.metaFieldName}"/>
+                                </rich:select>
+                            </h:panelGroup> 
+                            <h:panelGroup>
+
+                                <h:outputLabel value="Field Name: " style="font-weight:bold" />
+                                <h:inputText id="selectedFieldMapping" value="#{systemInstanceEdit.selectedField}" />
+                            </h:panelGroup> 
+
+                            <h:panelGroup>     
+                                <a4j:commandButton  value="Update Mapping" render="searchFieldMappings" action="#{systemInstanceEdit.updateFieldNameByMetaFieldName()}"/>
+                           </h:panelGroup> 
+
+                        </h:panelGrid>   
+                        <h:dataTable id="searchFieldMappings" value="#{systemInstanceEdit.searchFieldMappings}" var="searchFieldMapping"
+                                     styleClass="order-table"
+                                     headerClass="order-table-header"
+                                     rowClasses="order-table-odd-row,order-table-even-row"
+                                     >
+                            <h:column>
+                                <!-- column header -->
+                                <f:facet name="header">Meta Field Name: </f:facet>
+                                <!-- row record -->
+                                #{searchFieldMapping.metaFieldName}
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Field Name: </f:facet>
+                                    #{searchFieldMapping.fieldName}
+                            </h:column>
+                        </h:dataTable>
+                    </rich:panel>  
                     <h:outputLabel value="Connecotr Code:  " style="font-weight:bold" />
                     <h:inputTextarea id="search" value="#{systemInstanceEdit.systemInstanceGroovyCode}" style="width:100%;" cols="1000" rows="75"/>
-
                 </h:panelGrid>
                 <h:commandButton value="Save" action="#{systemInstanceEdit.updateSystemInstance()}" />
                 <h:commandButton value="Back" action="#{systemInstanceEdit.redirectBack()}" />

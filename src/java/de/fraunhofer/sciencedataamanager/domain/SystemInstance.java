@@ -28,6 +28,7 @@ public class SystemInstance {
     private String ChangedBy;
     private Timestamp CreateDate;
     private Timestamp ChangedDate;
+    private LinkedList<SearchFieldMapping> searchFieldMappings; 
 
     public int getID() {
         return ID;
@@ -84,7 +85,13 @@ public class SystemInstance {
     public void setChangedDate(Timestamp changedDate) {
         ChangedDate = changedDate;
     }
+    public LinkedList<SearchFieldMapping> getSearchFieldMappings() {
+        return searchFieldMappings;
+    }
 
+    public void setSearchFieldMappings(LinkedList<SearchFieldMapping> searchFieldMappings) {
+        this.searchFieldMappings = searchFieldMappings;
+    }
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {

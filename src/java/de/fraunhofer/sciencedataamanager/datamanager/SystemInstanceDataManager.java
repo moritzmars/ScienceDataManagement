@@ -50,10 +50,13 @@ public class SystemInstanceDataManager {
         preparedStatement.setString(1, systemInstance.getName());
         preparedStatement.setString(2, systemInstance.getGroovyCode());
         preparedStatement.setInt(3, systemInstance.getID());
-
+        
         preparedStatement.execute();
         preparedStatement.close();
         conn.close();
+         SearchFieldMappingManager searchFieldMappingManager = new SearchFieldMappingManager(this.applicationConfiguration); 
+        searchFieldMappingManager.updateSearchFieldMappings(systemInstance);
+       
     }
 
     /**
@@ -81,10 +84,13 @@ public class SystemInstanceDataManager {
             systemInstance.setGroovyCode(rs.getString("GroovyCode"));
 
         }
-
+        
         st.close();
         rs.close();
         conn.close();
+        
+        SearchFieldMappingManager searchFieldMappingManager = new SearchFieldMappingManager(this.applicationConfiguration); 
+        systemInstance.setSearchFieldMappings(searchFieldMappingManager.getFieldMappingBySystemInstance(systemInstance));
         return systemInstance;
     }
 

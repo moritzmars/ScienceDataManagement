@@ -26,21 +26,20 @@ import javax.faces.bean.SessionScoped;
 @ManagedBean(name = "searchDefinitionDataProvider")
 @SessionScoped
 public class SearchDefinitionDataManager {
-            private ApplicationConfiguration applicationConfiguration; 
+
+    private ApplicationConfiguration applicationConfiguration;
 
     /**
      *
      * @param applicationConfiguration
      */
-    public SearchDefinitionDataManager(ApplicationConfiguration applicationConfiguration)
-    {
-       this.applicationConfiguration = applicationConfiguration; 
+    public SearchDefinitionDataManager(ApplicationConfiguration applicationConfiguration) {
+        this.applicationConfiguration = applicationConfiguration;
     }
 
     /**
      *
-     * @return
-     * @throws Exception
+     * @return @throws Exception
      */
     public LinkedList<SearchDefinition> getSearchDefinitions() throws Exception {
         LinkedList<SearchDefinition> searchDefinitionList = new LinkedList();
@@ -52,7 +51,8 @@ public class SearchDefinitionDataManager {
 
         Statement st = conn.createStatement();
         ResultSet rs = st.executeQuery(query);
-        while (rs.next()) {
+        while (rs.next())
+        {
 
             SearchDefinition searchDefinition = new SearchDefinition();
             searchDefinition.setID(rs.getInt("ID"));
@@ -85,10 +85,16 @@ public class SearchDefinitionDataManager {
 
         Statement st = conn.createStatement();
         ResultSet rs = st.executeQuery(query);
-        while (rs.next()) {
+        while (rs.next())
+        {
 
             searchDefinition.setID(rs.getInt("ID"));
             searchDefinition.setName(rs.getString("Name"));
+
+            searchDefinition.setExpertQuery(rs.getString("ExpertQuery"));
+            searchDefinition.setItemTreshhold(rs.getInt("ItemTreshold"));
+            searchDefinition.setSearchQueryMode(rs.getString("QueryMode"));
+
             LinkedList<SearchTerm> searchTerms = new LinkedList<SearchTerm>();
             SearchTermDataManager searchTermDataProvider = new SearchTermDataManager(applicationConfiguration);
             searchDefinition.setSearchTerms(searchTermDataProvider.getSearchTermsBySearchDefinition(searchDefinition));
@@ -111,11 +117,15 @@ public class SearchDefinitionDataManager {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection conn = null;
         conn = DriverManager.getConnection(this.applicationConfiguration.getSqlConnection());
-        String sqlInsertStatement = "Update search_definiton set Name=? where ID =?";
+        String sqlInsertStatement = "Update search_definiton set Name=?, ItemTreshold =?, ExpertQuery=?, QueryMode=? where ID =?";
 
         java.sql.PreparedStatement preparedStatement = conn.prepareStatement(sqlInsertStatement);
         preparedStatement.setString(1, searchDefinition.getName());
-        preparedStatement.setInt(2, searchDefinition.getID());
+        preparedStatement.setInt(2, searchDefinition.getItemTreshhold());
+        preparedStatement.setString(3, searchDefinition.getExpertQuery());
+        preparedStatement.setString(4, searchDefinition.getSearchQueryMode());
+
+        preparedStatement.setInt(5, searchDefinition.getID());
 
         preparedStatement.execute();
         preparedStatement.close();
@@ -132,11 +142,14 @@ public class SearchDefinitionDataManager {
         Connection conn = null;
         conn = DriverManager.getConnection(this.applicationConfiguration.getSqlConnection());
 
-        String sqlInsertStatement = "INSERT INTO  search_definiton (Name)"
-                + " VALUES (?)";
+        String sqlInsertStatement = "INSERT INTO  search_definiton (Name, ItemTreshold, ExpertQuery, QueryMode)"
+                + " VALUES (?,?,?,?)";
 
         java.sql.PreparedStatement preparedStatement = conn.prepareStatement(sqlInsertStatement);
         preparedStatement.setString(1, searchExecution.getSearchDefiniton().getName());
+        preparedStatement.setInt(2, searchExecution.getSearchDefiniton().getItemTreshhold());
+        preparedStatement.setString(3, searchExecution.getSearchDefiniton().getExpertQuery());
+        preparedStatement.setString(4, searchExecution.getSearchDefiniton().getSearchQueryMode());
 
         preparedStatement.execute();
         preparedStatement.close();
@@ -150,14 +163,14 @@ public class SearchDefinitionDataManager {
         st.close();
         rs.close();
 
-        SearchTermDataManager searchTermDataProvider = new SearchTermDataManager(applicationConfiguration); 
+        SearchTermDataManager searchTermDataProvider = new SearchTermDataManager(applicationConfiguration);
         searchTermDataProvider.insertSearchTerms(searchExecution.getSearchDefiniton());
-        
+
         SearchExecutionDataManager searchExecutionDataProvider = new SearchExecutionDataManager(applicationConfiguration);
         searchExecutionDataProvider.saveSearchExecution(searchExecution);
-        
+
     }
-    
+
     /**
      *
      * @param id
