@@ -110,7 +110,37 @@ public class LoggingDatabaseManager implements ILoggingManager {
         return loggingEntriesList;
 
     }
+    /**
+     *
+     * @return
+     * @throws Exception
+     */
+    public LinkedList<LoggingEntry> getLoggingEntriesLast20() throws Exception {
+        LinkedList<LoggingEntry> loggingEntriesList = new LinkedList();
 
+        Class.forName("com.mysql.jdbc.Driver").newInstance();
+        Connection conn = null;
+        conn = DriverManager.getConnection(this.applicationConfiguration.getSqlConnection());
+        String query = "SELECT * FROM logging_entries order by ID DESC LIMIT 20";
+
+        Statement st = conn.createStatement();
+        ResultSet rs = st.executeQuery(query);
+        while (rs.next()) {
+
+            LoggingEntry loggingEntry = new LoggingEntry();
+            loggingEntry.setID(rs.getInt("ID"));
+            loggingEntry.setMessage(rs.getString("Message"));
+            loggingEntry.setLogLevel(LogLevel.valueOf(rs.getString("Category")));
+            loggingEntry.setCreatedDate(rs.getTimestamp("CreatedDate"));
+            loggingEntriesList.add(loggingEntry);
+        }
+
+        st.close();
+        rs.close();
+        conn.close();
+        return loggingEntriesList;
+
+    }
     /**
      *
      * @param message

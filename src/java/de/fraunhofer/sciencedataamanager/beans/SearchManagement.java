@@ -15,10 +15,13 @@ import de.fraunhofer.sciencedataamanager.domain.SystemInstance;
 import de.fraunhofer.sciencedataamanager.business.SearchExecutionManager;
 import de.fraunhofer.sciencedataamanager.datamanager.ApplicationConfigurationDataManagerFactory;
 import de.fraunhofer.sciencedataamanager.datamanager.DataExportInstanceDataManager;
+import de.fraunhofer.sciencedataamanager.datamanager.LoggingDatabaseManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SearchDefinitionDataManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SearchDefinitonExecutionDataManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SearchExecutionDataManager;
 import de.fraunhofer.sciencedataamanager.datamanager.SystemInstanceDataManager;
+import de.fraunhofer.sciencedataamanager.domain.LogLevel;
+import de.fraunhofer.sciencedataamanager.domain.LoggingEntry;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
@@ -34,7 +37,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 
 /**
- * This class provides logic and data for the search mangement site. 
+ * This class provides logic and data for the search mangement site.
+ *
  * @author Moritz Mars
  */
 @ManagedBean(name = "search")
@@ -48,6 +52,7 @@ public class SearchManagement implements Serializable {
     private int currentProgress = 0;
     private String selectedItem;
     private String searchMessage;
+    private boolean pollEnabled;
 
     private String selectedExportInstance;
     private String loadDataMessage;
@@ -57,72 +62,81 @@ public class SearchManagement implements Serializable {
     private Collection loadedSelectedSystemInstances;
 
     /**
-     * Returns the load data message. 
-     * @return the load data message. 
+     * Returns the load data message.
+     *
+     * @return the load data message.
      */
     public String getLoadDataMessage() {
         return loadDataMessage;
     }
 
     /**
-     * Returns the loaded data export instances. 
-     * @return the loaded data export instances. 
+     * Returns the loaded data export instances.
+     *
+     * @return the loaded data export instances.
      */
     public Collection getLoadedDataExportInstances() {
         return loadedDataExportInstances;
     }
 
     /**
-     *Return the selected system instances.
-     * @return the selected system instances. 
+     * Return the selected system instances.
+     *
+     * @return the selected system instances.
      */
     public Collection getLoadedSelectedSystemInstances() {
         return loadedSelectedSystemInstances;
     }
 
     /**
-     * Returns the loaded search execution list. 
-     * @return the loaded search execution list. 
+     * Returns the loaded search execution list.
+     *
+     * @return the loaded search execution list.
      */
     public Collection getLoadedSearchExecutionList() {
         return loadedSearchExecutionList;
     }
 
     /**
-     * Returns the loaded system instances. 
-     * @return the loaded system instances. 
+     * Returns the loaded system instances.
+     *
+     * @return the loaded system instances.
      */
     public Collection<SystemInstance> getLoadedSystemInstances() {
         return loadedSystemInstances;
     }
 
     /**
-     * Returns the selected export instance. 
-     * @return the selected export instance. 
+     * Returns the selected export instance.
+     *
+     * @return the selected export instance.
      */
     public String getSelectedExportInstance() {
         return selectedExportInstance;
     }
 
     /**
-     * Sets the selected export instance. 
-     * @param selectedExportInstance the selected export instance. 
+     * Sets the selected export instance.
+     *
+     * @param selectedExportInstance the selected export instance.
      */
     public void setSelectedExportInstance(String selectedExportInstance) {
         this.selectedExportInstance = selectedExportInstance;
     }
 
     /**
-     * Returns the application configuration. 
-     * @return the application configuration. 
+     * Returns the application configuration.
+     *
+     * @return the application configuration.
      */
     public ApplicationConfiguration getApplicationConfiguration() {
         return applicationConfiguration;
     }
 
     /**
-     * Sets the application configuration. 
-     * @param the application configuration. 
+     * Sets the application configuration.
+     *
+     * @param the application configuration.
      */
     public void setApplicationConfiguration(ApplicationConfiguration applicationConfiguration) {
         this.applicationConfiguration = applicationConfiguration;
@@ -132,39 +146,60 @@ public class SearchManagement implements Serializable {
     SearchExecutionManager searchExecutionManager = new SearchExecutionManager(applicationConfiguration);
 
     public String getSearchMessage() {
-        return searchMessage;
+        try
+        {
+            LoggingDatabaseManager loggingDatabaseManager = new LoggingDatabaseManager(this.applicationConfiguration);
+            searchMessage = "";
+            for (LoggingEntry currentLoggingEntry : loggingDatabaseManager.getLoggingEntriesLast20())
+            {
+                searchMessage += currentLoggingEntry.getCreatedDate() +"    "+ currentLoggingEntry.getMessage() + "\n";
+            }
+            return searchMessage;
+        }
+        catch (Exception ex)
+        {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
+            this.applicationConfiguration.getLoggingManager().logException(ex);
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+        }
+        return "";
     }
 
     public void setSearchMessage(String searchMessage) {
         this.searchMessage = searchMessage;
     }
+
     /**
-     * Returns the progress bar enabled attribute. 
-     * @return the progress bar enabled attribute. 
+     * Returns the progress bar enabled attribute.
+     *
+     * @return the progress bar enabled attribute.
      */
     public boolean isProgressBarEnabled() {
         return progressBarEnabled;
     }
 
     /**
-     * Sets the progress bar enabled attribute. 
-     * @param the progress bar enabled attribute. 
+     * Sets the progress bar enabled attribute.
+     *
+     * @param the progress bar enabled attribute.
      */
     public void setProgressBarEnabled(boolean progressBarEnabled) {
         this.progressBarEnabled = progressBarEnabled;
     }
 
     /**
-     * Returns the search execution manager. 
-     * @return the search execution manager. 
+     * Returns the search execution manager.
+     *
+     * @return the search execution manager.
      */
     public SearchExecutionManager getSearchExecutionManager() {
         return searchExecutionManager;
     }
 
     /**
-     * Sets the search execution manager. 
-     * @param searchExecutionManager the search execution manager. 
+     * Sets the search execution manager.
+     *
+     * @param searchExecutionManager the search execution manager.
      */
     public void setSearchExecutionManager(SearchExecutionManager searchExecutionManager) {
         this.searchExecutionManager = searchExecutionManager;
@@ -172,20 +207,25 @@ public class SearchManagement implements Serializable {
 
     /**
      * Sets the current progress.
-     * @param currentProgress the current progress. 
+     *
+     * @param currentProgress the current progress.
      */
     public void setCurrentProgress(int currentProgress) {
         this.currentProgress = currentProgress;
     }
 
     /**
-     * Returns the current progress values. 
-     * @return the current progress value. 
+     * Returns the current progress values.
+     *
+     * @return the current progress value.
      */
     public int getCurrentProgressValue() {
-        try {
+        try
+        {
             return searchExecutionManager.getProgressCurrentExecution();
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
@@ -193,24 +233,35 @@ public class SearchManagement implements Serializable {
         return 0;
     }
 
+    public boolean isPollEnabled() {
+        return pollEnabled;
+    }
+
+    public void setPollEnabled(boolean pollEnabled) {
+        this.pollEnabled = pollEnabled;
+    }
+
     /**
-     * Returns the is button rendered flag. 
-     * @return the is button rendered flar. 
+     * Returns the is button rendered flag.
+     *
+     * @return the is button rendered flar.
      */
     public boolean isButtonRendered() {
         return buttonRendered;
     }
 
     /**
-     * Sets the button rendered. 
-     * @param buttonRendered the button rendered. 
+     * Sets the button rendered.
+     *
+     * @param buttonRendered the button rendered.
      */
     public void setButtonRendered(boolean buttonRendered) {
         this.buttonRendered = buttonRendered;
     }
 
     /**
-     * Loads the system instances, data export instances, selected system instances and all search definition execution. 
+     * Loads the system instances, data export instances, selected system
+     * instances and all search definition execution.
      */
     public void loadData() {
         this.loadedSystemInstances = getSystemInstances();
@@ -220,23 +271,28 @@ public class SearchManagement implements Serializable {
     }
 
     /**
-     *Returns the scientific paper meta informations. 
+     * Returns the scientific paper meta informations.
+     *
      * @return the scientific paper meta information.
      */
     public SearchDefinitonExecution getScientificPaperMetaInformationBySearchDefinition() {
         SearchDefinitonExecution searchDefinitonExecution = null;
-        try {
+        try
+        {
             Collection<String> scientificPaperMetaInformation = new LinkedList();
 
             SearchDefinition searchDefinition = new SearchDefinition();
-            if (selectedItem == null || "".equals(selectedItem)) {
+            if (selectedItem == null || "".equals(selectedItem))
+            {
                 return null;
             }
             searchDefinition.setID(Integer.parseInt(selectedItem));
 
             SearchDefinitonExecutionDataManager searchDefinitonExecutionDataProvider = new SearchDefinitonExecutionDataManager(applicationConfiguration);
             searchDefinitonExecution = searchDefinitonExecutionDataProvider.getLastSearchDefinitionExecutionForSearchDefinition(searchDefinition);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
@@ -245,24 +301,30 @@ public class SearchManagement implements Serializable {
     }
 
     /**
-     * Returns the selected system instances. 
-     * @return the selected system instances. 
+     * Returns the selected system instances.
+     *
+     * @return the selected system instances.
      */
     public Collection getSelectedSystemInstances() {
         Collection<String> selectedSystemInstances = new LinkedList();
-        try {
+        try
+        {
             SearchExecutionDataManager searchExecutionDataProvider = new SearchExecutionDataManager(applicationConfiguration);
             SearchDefinition searchDefinition = new SearchDefinition();
 
-            if (selectedItem == null || "".equals(selectedItem)) {
+            if (selectedItem == null || "".equals(selectedItem))
+            {
                 return selectedSystemInstances;
             }
             searchDefinition.setID(Integer.parseInt(selectedItem));
             SearchExecution searchExecution = searchExecutionDataProvider.getSystemInstanceBySearchDefinition(searchDefinition);
-            for (SystemInstance systemInstanceLoop : searchExecution.getSystemInstances()) {
+            for (SystemInstance systemInstanceLoop : searchExecution.getSystemInstances())
+            {
                 selectedSystemInstances.add(systemInstanceLoop.getID() + "");
             }
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
@@ -271,31 +333,37 @@ public class SearchManagement implements Serializable {
     }
 
     /**
-     * Sets the selected item. 
-     * @param selectedItem the selected item. 
+     * Sets the selected item.
+     *
+     * @param selectedItem the selected item.
      */
     public void setSelectedItem(String selectedItem) {
         this.selectedItem = selectedItem;
     }
 
     /**
-     * Returns the selected item. 
-     * @return the selected item. 
+     * Returns the selected item.
+     *
+     * @return the selected item.
      */
     public String getSelectedItem() {
         return selectedItem;
     }
 
     /**
-     * Returns the system instances. 
-     * @return the system instances. 
+     * Returns the system instances.
+     *
+     * @return the system instances.
      */
     public Collection<SystemInstance> getSystemInstances() {
         Collection systemInstances = null;
-        try {
+        try
+        {
             SystemInstanceDataManager systemInstanceDataProvider = new SystemInstanceDataManager(applicationConfiguration);
             systemInstances = systemInstanceDataProvider.getSystemInstances();
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
@@ -304,16 +372,20 @@ public class SearchManagement implements Serializable {
     }
 
     /**
-     * Return the search definitions. 
-     * @return the search definitions. 
+     * Return the search definitions.
+     *
+     * @return the search definitions.
      */
     public Collection getSearchDefinitions() {
         Collection searchDefinitions = null;
         SearchDefinitionDataManager searchDefinitionDataProvider = new SearchDefinitionDataManager(applicationConfiguration);
-        try {
+        try
+        {
 
             searchDefinitions = searchDefinitionDataProvider.getSearchDefinitions();
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
@@ -322,17 +394,21 @@ public class SearchManagement implements Serializable {
     }
 
     /**
-     * Returns the data export instances. 
-     * @return the data export instances. 
+     * Returns the data export instances.
+     *
+     * @return the data export instances.
      */
     public Collection getDataExportInstances() {
         Collection dataExportInstances = null;
 
         DataExportInstanceDataManager dataExportInstanceDataManager = new DataExportInstanceDataManager(applicationConfiguration);
-        try {
+        try
+        {
 
             dataExportInstances = dataExportInstanceDataManager.getDataExportInstances();
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
@@ -341,56 +417,70 @@ public class SearchManagement implements Serializable {
     }
 
     /**
-     * Executes the search algorithmus. 
+     * Executes the search algorithmus.
      */
     public void execute() {
-        this.searchMessage = "Start getting data. Please be patient...";
-        try {
-            if (selectedItem == null || "".equals(selectedItem)) {
+        try
+        {
+             this.applicationConfiguration.getLoggingManager().log("Start to download data. Please be patient...", LogLevel.DEBUG);
+
+            if (selectedItem == null || "".equals(selectedItem))
+            {
                 return;
             }
             this.setCurrentProgress(0);
             searchExecutionManager.execute(Integer.parseInt(selectedItem));
             this.setCurrentProgress(0);
-            
+            this.applicationConfiguration.getLoggingManager().log("Stopped to download data.", LogLevel.DEBUG);
+
             FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-        /**
-     * Executes the search algorithmus. 
+
+    /**
+     * Executes the search algorithmus.
      */
     public void executeOnlyInformation() {
-          this.searchMessage = "Start getting search informations. Please be patient...";
-        try {
-            if (selectedItem == null || "".equals(selectedItem)) {
+        this.applicationConfiguration.getLoggingManager().log("Start getting search informations. Please be patient...", LogLevel.DEBUG);
+
+        try
+        {
+            if (selectedItem == null || "".equals(selectedItem))
+            {
                 return;
             }
             this.setCurrentProgress(0);
             searchExecutionManager.executeOnlyInformations(Integer.parseInt(selectedItem));
             this.setCurrentProgress(0);
-            
+
             //FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     /**
-     * Returns the last search definition execution. 
-     * @return the last search definition execution. 
+     * Returns the last search definition execution.
+     *
+     * @return the last search definition execution.
      */
     public Collection<SearchDefinitonExecution> getLastSearchDefinitionExecutinsBySearchID() {
         LinkedList<SearchDefinitonExecution> searchDefinitonExecutionList = new LinkedList<SearchDefinitonExecution>();
-        try {
+        try
+        {
 
-            if (selectedItem == null || "".equals(selectedItem)) {
+            if (selectedItem == null || "".equals(selectedItem))
+            {
                 return searchDefinitonExecutionList;
             }
             SearchDefinition searchDefinition = new SearchDefinition();
@@ -399,7 +489,9 @@ public class SearchManagement implements Serializable {
             SearchDefinitonExecutionDataManager searchDefinitonExecutionDataProvider = new SearchDefinitonExecutionDataManager(applicationConfiguration);
             searchDefinitonExecutionList.add(searchDefinitonExecutionDataProvider.getLastSearchDefinitionExecutionForSearchDefinition(searchDefinition));
 
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
@@ -409,13 +501,16 @@ public class SearchManagement implements Serializable {
 
     /**
      * Returns all search definition execution by search ID.
-     * @return all search definition execution 
+     *
+     * @return all search definition execution
      */
     public Collection<SearchDefinitonExecution> getAllSearchDefinitionExecutinsBySearchID() {
         LinkedList<SearchDefinitonExecution> searchDefinitonExecutionList = new LinkedList<SearchDefinitonExecution>();
-        try {
+        try
+        {
 
-            if (selectedItem == null || "".equals(selectedItem)) {
+            if (selectedItem == null || "".equals(selectedItem))
+            {
                 return searchDefinitonExecutionList;
             }
             SearchDefinition searchDefinition = new SearchDefinition();
@@ -423,8 +518,10 @@ public class SearchManagement implements Serializable {
 
             SearchDefinitonExecutionDataManager searchDefinitonExecutionDataProvider = new SearchDefinitonExecutionDataManager(applicationConfiguration);
             searchDefinitonExecutionList = searchDefinitonExecutionDataProvider.getSearchDefinitionExecutionForSearchDefinition(searchDefinition);
-       
-        } catch (Exception ex) {
+
+        }
+        catch (Exception ex)
+        {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
@@ -434,15 +531,18 @@ public class SearchManagement implements Serializable {
 
     /**
      * Returns all scientific meta informations.
-     * @return scientific meta informations. 
+     *
+     * @return scientific meta informations.
      */
     public Collection<ScientificPaperMetaInformation> getAllScientificMetaInformationBySearchID() {
         LinkedList<SearchDefinitonExecution> searchDefinitonExecutionList = new LinkedList<SearchDefinitonExecution>();
         LinkedList<ScientificPaperMetaInformation> scientificMetaInformationList = new LinkedList<ScientificPaperMetaInformation>();
 
-        try {
+        try
+        {
 
-            if (selectedItem == null || "".equals(selectedItem)) {
+            if (selectedItem == null || "".equals(selectedItem))
+            {
                 return scientificMetaInformationList;
             }
             SearchDefinition searchDefinition = new SearchDefinition();
@@ -450,10 +550,13 @@ public class SearchManagement implements Serializable {
 
             SearchDefinitonExecutionDataManager searchDefinitonExecutionDataProvider = new SearchDefinitonExecutionDataManager(applicationConfiguration);
             searchDefinitonExecutionList = searchDefinitonExecutionDataProvider.getSearchDefinitionExecutionForSearchDefinition(searchDefinition);
-            for (SearchDefinitonExecution searchDefinitionExecution : searchDefinitonExecutionList) {
+            for (SearchDefinitonExecution searchDefinitionExecution : searchDefinitonExecutionList)
+            {
                 scientificMetaInformationList.addAll(searchDefinitionExecution.getScientificPaperMetaInformation());
             }
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
@@ -462,13 +565,17 @@ public class SearchManagement implements Serializable {
     }
 
     /**
-     * Returns the current progress value. 
-     * @return the current progress value. 
+     * Returns the current progress value.
+     *
+     * @return the current progress value.
      */
     public int getCurrentProgress() {
-        try {
+        try
+        {
             return searchExecutionManager.getProgressCurrentExecution();
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
@@ -477,7 +584,7 @@ public class SearchManagement implements Serializable {
     }
 
     /**
-     * Loads the selected system instances and all search definitions. 
+     * Loads the selected system instances and all search definitions.
      */
     public void loadTable() {
         this.loadedSelectedSystemInstances = getSelectedSystemInstances();
@@ -485,19 +592,24 @@ public class SearchManagement implements Serializable {
     }
 
     /**
-     * The method is executed after the page is loaded. 
-     * @param Informations about the page load event. 
+     * The method is executed after the page is loaded.
+     *
+     * @param Informations about the page load event.
      */
     public void onLoad(ComponentSystemEvent event) {
-        try {
-            if (FacesContext.getCurrentInstance().isPostback()) {
+        try
+        {
+            if (FacesContext.getCurrentInstance().isPostback())
+            {
                 return;
             }
             this.loadDataMessage = "Data loading can take some time. Please be patient!";
             this.loadData();
             this.setProgressBarEnabled(false);
             this.setButtonRendered(true);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
@@ -509,9 +621,11 @@ public class SearchManagement implements Serializable {
      */
     public void exportToExcel() {
 
-        try {
+        try
+        {
 
-            if (selectedItem == null || "".equals(selectedItem)) {
+            if (selectedItem == null || "".equals(selectedItem))
+            {
                 return;
             }
 
@@ -532,7 +646,9 @@ public class SearchManagement implements Serializable {
             searchDefinitonExecutionDataProvider.exportToExcel(searchDefinitonExecutionList, externalContext.getResponseOutputStream());
             facesContext.responseComplete();
 
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
@@ -541,28 +657,32 @@ public class SearchManagement implements Serializable {
     }
 
     /**
-     * Executes the generic export algorithmus. 
+     * Executes the generic export algorithmus.
      */
     public void export() {
 
-        try {
+        try
+        {
 
-            if (selectedItem == null || "".equals(selectedItem)) {
+            if (selectedItem == null || "".equals(selectedItem))
+            {
                 return;
             }
-            if (selectedExportInstance == null || "".equals(selectedExportInstance)) {
+            if (selectedExportInstance == null || "".equals(selectedExportInstance))
+            {
                 return;
             }
 
-          
             SearchDefinition searchDefinition = new SearchDefinition();
             searchDefinition.setID(Integer.parseInt(selectedItem));
-        
+
             DataExportExecutionManager dataExportExecutionManager = new DataExportExecutionManager(applicationConfiguration);
             dataExportExecutionManager.export(searchDefinition, Integer.parseInt(selectedExportInstance), FacesContext.getCurrentInstance().getExternalContext());
             FacesContext.getCurrentInstance().responseComplete();
 
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);

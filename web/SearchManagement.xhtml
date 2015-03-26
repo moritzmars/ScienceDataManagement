@@ -17,6 +17,7 @@
 
         </f:view>
         <h:form id="form">
+            <a4j:poll id="poll" interval="2000" enabled="#{true}" render="searchStateMessageIDTextArea" />
             <h:messages styleClass="errorMessage" globalOnly="true" />
             <rich:panel header="Search definition results">
                 <h:panelGrid columns="3" width="100%">
@@ -39,8 +40,8 @@
                         </h:panelGrid>
                     </h:panelGroup>
                     <h:panelGroup>
-                        <h:outputLabel value="Query: " style="font-weight:bold" />
-                        <h:inputTextarea value="#{search.searchMessage}" cols="80" rows="5"/>
+                        <h:outputLabel id="searchStateMessageID" value="Query: " style="font-weight:bold" />
+                        <h:inputTextarea id="searchStateMessageIDTextArea" value="#{search.searchMessage}" cols="80" rows="5"/>
 
                     </h:panelGroup>
                     <h:panelGroup>
