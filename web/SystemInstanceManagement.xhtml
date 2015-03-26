@@ -7,13 +7,13 @@
                 xmlns:a4j="http://richfaces.org/a4j"
                 xmlns:rich="http://richfaces.org/rich">
     <h:body>
-         <f:view contentType="text/html">
+        <f:view contentType="text/html">
             <f:event type="preRenderView" listener="#{systemInstanceManagement.onLoad}" />
             <f:attribute name="roles" value="ROLE" />
         </f:view>
         <h:form id="systemInstanceManagementForm">
-                 <h:messages styleClass="errorMessage" globalOnly="true" />
-    
+            <h:messages styleClass="errorMessage" globalOnly="true" />
+
             <rich:panel header="">
                 <h:panelGrid id="grid" columns="1">
                     <h:panelGroup>
@@ -24,16 +24,32 @@
                         <h:outputText value="Connector:"  />
                         <br></br>
                         <rich:select value="#{systemInstanceManagement.selectedItem}" style="width:300px;">
-                            <a4j:ajax render="groovyCodePreview" execute="@this" event="selectitem"/>
+                            <a4j:ajax render="groovyCodePreview searchFieldMappings" execute="@this" event="selectitem"/>
                             <f:selectItems value="#{systemInstanceManagement.loadedSystemInstances}" var="systemInstance" itemValue="#{systemInstance.ID}" itemLabel="#{systemInstance.name}"/>
                         </rich:select>
                         <h:commandButton value="Edit Connector" action="#{systemInstanceManagement.redirectToEditPage()}"/>
                         <h:commandButton value="Delete Connector" action="#{systemInstanceManagement.deleteSystemInstanceByID()}"/>
+                        <h:commandButton value="Meta Field Definition" action="#{systemInstanceManagement.redirectToSearchFieldMapping()}"/>
+               
+                     </h:panelGroup>
+                    <h:panelGroup>
+                        <h:dataTable id="searchFieldMappings" value="#{systemInstanceManagement.getSystemInstanceByID().searchFieldMappings}" var="searchFieldMapping"
+                                     styleClass="order-table"
+                                     headerClass="order-table-header"
+                                     rowClasses="order-table-odd-row,order-table-even-row"
+                                     >
+                            <h:column>
+                                <!-- column header -->
+                                <f:facet name="header">Meta Field Name: </f:facet>
+                                <!-- row record -->
+                                #{searchFieldMapping.metaFieldName}
+                            </h:column>
 
-                    </h:panelGroup>
-                    <h:panelGroup>
-                    </h:panelGroup>
-                    <h:panelGroup>
+                            <h:column>
+                                <f:facet name="header">Field Name: </f:facet>
+                                    #{searchFieldMapping.fieldName}
+                            </h:column>
+                        </h:dataTable>
 
                     </h:panelGroup>
 

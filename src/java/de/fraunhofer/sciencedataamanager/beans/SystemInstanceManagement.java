@@ -9,6 +9,7 @@ import de.fraunhofer.sciencedataamanager.domain.ApplicationConfiguration;
 import de.fraunhofer.sciencedataamanager.domain.SystemInstance;
 import de.fraunhofer.sciencedataamanager.datamanager.ApplicationConfigurationDataManagerFactory;
 import de.fraunhofer.sciencedataamanager.datamanager.SystemInstanceDataManager;
+import de.fraunhofer.sciencedataamanager.domain.SearchFieldMapping;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -21,7 +22,8 @@ import javax.faces.event.ComponentSystemEvent;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
- * This class provides logic and data for the system instance management. 
+ * This class provides logic and data for the system instance management.
+ *
  * @author Moritz Mars
  */
 @ManagedBean(name = "systemInstanceManagement")
@@ -31,11 +33,13 @@ public class SystemInstanceManagement {
     private SystemInstance selectedSystemInstance;
     private String selectedItem;
     private ApplicationConfiguration applicationConfiguration = ApplicationConfigurationDataManagerFactory.getApplicationConfigurationDataProvider(null).getApplicationConfiguration();
+    private LinkedList<SearchFieldMapping> searchFieldMappings;
 
     private LinkedList<SystemInstance> loadedSystemInstances;
 
     /**
-     * Returns the loaded system instances. 
+     * Returns the loaded system instances.
+     *
      * @return
      */
     public LinkedList<SystemInstance> getLoadedSystemInstances() {
@@ -44,22 +48,25 @@ public class SystemInstanceManagement {
 
     /**
      * Returns the selected item.
-     * @param selectedItem the selected item. 
+     *
+     * @param selectedItem the selected item.
      */
     public void setSelectedItem(String selectedItem) {
         this.selectedItem = selectedItem;
     }
 
     /**
-     * Returns the selected item. 
-     * @return the selected item. 
+     * Returns the selected item.
+     *
+     * @return the selected item.
      */
     public String getSelectedItem() {
         return selectedItem;
     }
 
     /**
-     * Sets the selected connector. 
+     * Sets the selected connector.
+     *
      * @param selectedSystemInstance the selected connector
      */
     public void setSelectedSystemInstance(SystemInstance selectedSystemInstance) {
@@ -67,24 +74,38 @@ public class SystemInstanceManagement {
     }
 
     /**
-     * Returns the selected system instance. 
-     * @return the selected system instance. 
+     * Returns the selected system instance.
+     *
+     * @return the selected system instance.
      */
     public SystemInstance getSelectedSystemInstance() {
         return selectedSystemInstance;
     }
 
+    public LinkedList<SearchFieldMapping> getSearchFieldMappings() {
+        return searchFieldMappings;
+    }
+
+    public void setSearchFieldMappings(LinkedList<SearchFieldMapping> searchFieldMappings) {
+        this.searchFieldMappings = searchFieldMappings;
+    }
+
     /**
-     * This method is executed after the page is loaded. 
-     * @param event objects has information about the page load. 
+     * This method is executed after the page is loaded.
+     *
+     * @param event objects has information about the page load.
      */
     public void onLoad(ComponentSystemEvent event) {
-        try {
-            if (FacesContext.getCurrentInstance().isPostback()) {
+        try
+        {
+            if (FacesContext.getCurrentInstance().isPostback())
+            {
                 return;
             }
             this.loadedSystemInstances = getSystemInstances();
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             this.applicationConfiguration.getLoggingManager().logException(ex);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
@@ -92,17 +113,21 @@ public class SystemInstanceManagement {
     }
 
     /**
-     * Returns the system instances. 
-     * @return the system instances. 
+     * Returns the system instances.
+     *
+     * @return the system instances.
      */
     public LinkedList<SystemInstance> getSystemInstances() {
         LinkedList<SystemInstance> systemInstances = null;
-        try {
+        try
+        {
             SystemInstanceDataManager systemInstanceDataProvider = new SystemInstanceDataManager(applicationConfiguration);
             systemInstances = systemInstanceDataProvider.getSystemInstances();
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
-     Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
             this.applicationConfiguration.getLoggingManager().logException(ex);
 
         }
@@ -110,24 +135,31 @@ public class SystemInstanceManagement {
     }
 
     /**
-     * Returns the system instance. 
-     * @return the system instance. 
+     * Returns the system instance.
+     *
+     * @return the system instance.
      */
     public SystemInstance getSystemInstanceByID() {
-        try {
-            if (selectedItem == null || "".equals(selectedItem)) {
+        try
+        {
+            if (selectedItem == null || "".equals(selectedItem))
+            {
                 return null;
             }
             int id = Integer.parseInt(selectedItem);
 
-            for (SystemInstance currentSystemIntance : loadedSystemInstances) {
-                if (currentSystemIntance.getID() == id) {
+            for (SystemInstance currentSystemIntance : loadedSystemInstances)
+            {
+                if (currentSystemIntance.getID() == id)
+                {
                     currentSystemIntance.setGroovyCode(StringEscapeUtils.unescapeJava(currentSystemIntance.getGroovyCode()));
                     return currentSystemIntance;
                 }
             }
 
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
             this.applicationConfiguration.getLoggingManager().logException(ex);
@@ -137,12 +169,32 @@ public class SystemInstanceManagement {
     }
 
     /**
-     * Execute a redirect to the edit page. 
+     * Execute a redirect to the edit page.
      */
     public void redirectToEditPage() {
-        try {
+        try
+        {
             FacesContext.getCurrentInstance().getExternalContext().redirect("SystemInstanceEdit.xhtml?SystemInstanceID=" + selectedItem);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
+
+        }
+    }
+    
+        /**
+     * Execute a redirect to the edit page.
+     */
+    public void redirectToSearchFieldMapping() {
+        try
+        {
+            FacesContext.getCurrentInstance().getExternalContext().redirect("SearchMetaFieldsManagement.xhtml");
+        }
+        catch (Exception ex)
+        {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
             this.applicationConfiguration.getLoggingManager().logException(ex);
@@ -151,12 +203,15 @@ public class SystemInstanceManagement {
     }
 
     /**
-     * Deletes the connector. 
-     * @throws IOException during database access. 
+     * Deletes the connector.
+     *
+     * @throws IOException during database access.
      */
     public void deleteSystemInstanceByID() throws IOException {
-        try {
-            if (selectedItem == null || "".equals(selectedItem)) {
+        try
+        {
+            if (selectedItem == null || "".equals(selectedItem))
+            {
                 return;
             }
             int id = Integer.parseInt(selectedItem);
@@ -164,7 +219,9 @@ public class SystemInstanceManagement {
             SystemInstanceDataManager systemInstanceDataProvider = new SystemInstanceDataManager(applicationConfiguration);
             systemInstanceDataProvider.delete(id);
             FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The following error occured: " + ex.toString()));
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
             this.applicationConfiguration.getLoggingManager().logException(ex);

@@ -6,6 +6,9 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets" 
                 xmlns:a4j="http://richfaces.org/a4j"
                 xmlns:rich="http://richfaces.org/rich">
+    <h:head>
+        <title></title>
+    </h:head>
     <h:body>
         <f:view contentType="text/html">
             <f:event type="preRenderView" listener="#{searchMetaFieldsManagement.onLoad}" />
@@ -15,6 +18,7 @@
             <h:messages styleClass="errorMessage" globalOnly="true" />
 
             <rich:panel style="width:560px;">   
+                <h:commandButton value="Back" action="#{searchMetaFieldsManagement.redirectBack()}" />
                 <f:facet name="header">
                     <h:outputText value="Search Field Mapping"></h:outputText>
                 </f:facet>
@@ -30,7 +34,7 @@
                     </h:panelGroup> 
 
                 </h:panelGrid>   
-                <h:dataTable id="searchFieldMappings" value="#{searchMetaFieldsManagement.searchMetaFields}" var="searchMetaField"
+                <h:dataTable id="searchFieldMappings" value="#{searchMetaFieldsManagement.searchMetaFields}" var="o"
                              styleClass="order-table"
                              headerClass="order-table-header"
                              rowClasses="order-table-odd-row,order-table-even-row"
@@ -39,16 +43,17 @@
                         <!-- column header -->
                         <f:facet name="header">Meta Field Name: </f:facet>
                         <!-- row record -->
-                        #{searchMetaField.metaFieldName}
+                        #{o.metaFieldName}
                     </h:column>
                     <h:column>
 
                         <f:facet name="header">Action</f:facet>
 
-                        <h:commandLink value="Delete" action="#{searchMetaFieldsManagement.deleteMetaField(searchMetaField)}" />
+                        <h:commandLink value="Delete" action="#{searchMetaFieldsManagement.deleteMetaField(o)}" />
 
                     </h:column>
                 </h:dataTable>
+                <h:commandButton value="Back" action="#{searchMetaFieldsManagement.redirectBack()}" />
             </rich:panel>  
         </h:form>
     </h:body>

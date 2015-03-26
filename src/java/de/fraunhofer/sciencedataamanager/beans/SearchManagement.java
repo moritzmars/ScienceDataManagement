@@ -47,6 +47,8 @@ public class SearchManagement implements Serializable {
     private boolean progressBarEnabled = true;
     private int currentProgress = 0;
     private String selectedItem;
+    private String searchMessage;
+
     private String selectedExportInstance;
     private String loadDataMessage;
     private Collection loadedSearchExecutionList;
@@ -129,6 +131,13 @@ public class SearchManagement implements Serializable {
     private ApplicationConfiguration applicationConfiguration = ApplicationConfigurationDataManagerFactory.getApplicationConfigurationDataProvider(null).getApplicationConfiguration();
     SearchExecutionManager searchExecutionManager = new SearchExecutionManager(applicationConfiguration);
 
+    public String getSearchMessage() {
+        return searchMessage;
+    }
+
+    public void setSearchMessage(String searchMessage) {
+        this.searchMessage = searchMessage;
+    }
     /**
      * Returns the progress bar enabled attribute. 
      * @return the progress bar enabled attribute. 
@@ -335,6 +344,7 @@ public class SearchManagement implements Serializable {
      * Executes the search algorithmus. 
      */
     public void execute() {
+        this.searchMessage = "Start getting data. Please be patient...";
         try {
             if (selectedItem == null || "".equals(selectedItem)) {
                 return;
@@ -355,6 +365,7 @@ public class SearchManagement implements Serializable {
      * Executes the search algorithmus. 
      */
     public void executeOnlyInformation() {
+          this.searchMessage = "Start getting search informations. Please be patient...";
         try {
             if (selectedItem == null || "".equals(selectedItem)) {
                 return;

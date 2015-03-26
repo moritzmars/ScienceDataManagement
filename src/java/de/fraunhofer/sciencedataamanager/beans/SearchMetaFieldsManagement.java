@@ -95,6 +95,7 @@ public class SearchMetaFieldsManagement {
         {
             SearchFieldMappingManager searchFieldMappingManager = new SearchFieldMappingManager(this.applicationConfiguration);
             searchFieldMappingManager.deleteSearchFieldMappings(searchFieldMapping);
+             this.setSearchMetaFields(searchFieldMappingManager.getFieldMappings());
         }
         catch (Exception ex)
         {
@@ -121,6 +122,20 @@ public class SearchMetaFieldsManagement {
             this.applicationConfiguration.getLoggingManager().logException(ex);
 
         }
+    }
+    
+      public void redirectBack() {
+        try
+        {
+            FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
+        }
+        catch (Exception ex)
+        {
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+            this.applicationConfiguration.getLoggingManager().logException(ex);
+
+        }
+
     }
 
 }

@@ -31,7 +31,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
  */
 @ManagedBean(name = "searchExecutionManager")
 @SessionScoped
-public class SearchExecutionManager {
+public class SearchExecutionManager{
 
     private ApplicationConfiguration applicationConfiguration;
 

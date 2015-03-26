@@ -6,6 +6,7 @@
 package de.fraunhofer.sciencedataamanager.datamanager;
 
 import de.fraunhofer.sciencedataamanager.domain.ApplicationConfiguration;
+import de.fraunhofer.sciencedataamanager.domain.SearchFieldMapping;
 import de.fraunhofer.sciencedataamanager.domain.SystemInstance;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -24,15 +25,15 @@ import javax.faces.bean.SessionScoped;
 @ManagedBean(name = "systemInstanceDataProvider")
 @SessionScoped
 public class SystemInstanceDataManager {
-       private ApplicationConfiguration applicationConfiguration; 
+
+    private ApplicationConfiguration applicationConfiguration;
 
     /**
      *
      * @param applicationConfiguration
      */
-    public SystemInstanceDataManager(ApplicationConfiguration applicationConfiguration)
-    {
-       this.applicationConfiguration = applicationConfiguration; 
+    public SystemInstanceDataManager(ApplicationConfiguration applicationConfiguration) {
+        this.applicationConfiguration = applicationConfiguration;
     }
 
     /**
@@ -50,13 +51,13 @@ public class SystemInstanceDataManager {
         preparedStatement.setString(1, systemInstance.getName());
         preparedStatement.setString(2, systemInstance.getGroovyCode());
         preparedStatement.setInt(3, systemInstance.getID());
-        
+
         preparedStatement.execute();
         preparedStatement.close();
         conn.close();
-         SearchFieldMappingManager searchFieldMappingManager = new SearchFieldMappingManager(this.applicationConfiguration); 
+        SearchFieldMappingManager searchFieldMappingManager = new SearchFieldMappingManager(this.applicationConfiguration);
         searchFieldMappingManager.updateSearchFieldMappings(systemInstance);
-       
+
     }
 
     /**
@@ -77,27 +78,27 @@ public class SystemInstanceDataManager {
 
         Statement st = conn.createStatement();
         ResultSet rs = st.executeQuery(query);
-        while (rs.next()) {
+        while (rs.next())
+        {
 
             systemInstance.setID(rs.getInt("ID"));
             systemInstance.setName(rs.getString("Name"));
             systemInstance.setGroovyCode(rs.getString("GroovyCode"));
 
         }
-        
+
         st.close();
         rs.close();
         conn.close();
-        
-        SearchFieldMappingManager searchFieldMappingManager = new SearchFieldMappingManager(this.applicationConfiguration); 
+
+        SearchFieldMappingManager searchFieldMappingManager = new SearchFieldMappingManager(this.applicationConfiguration);
         systemInstance.setSearchFieldMappings(searchFieldMappingManager.getFieldMappingBySystemInstance(systemInstance));
         return systemInstance;
     }
 
     /**
      *
-     * @return
-     * @throws Exception
+     * @return @throws Exception
      */
     public LinkedList<SystemInstance> getSystemInstances() throws Exception {
         LinkedList<SystemInstance> systemInstanceList = new LinkedList<SystemInstance>();
@@ -109,13 +110,16 @@ public class SystemInstanceDataManager {
 
         Statement st = conn.createStatement();
         ResultSet rs = st.executeQuery(query);
-        while (rs.next()) {
+        while (rs.next())
+        {
 
             SystemInstance systemInstance = new SystemInstance();
             systemInstance.setID(rs.getInt("ID"));
             systemInstance.setName(rs.getString("Name"));
             systemInstance.setGroovyCode(rs.getString("GroovyCode"));
 
+            SearchFieldMappingManager searchFieldMappingManager = new SearchFieldMappingManager(this.applicationConfiguration);
+            systemInstance.setSearchFieldMappings(searchFieldMappingManager.getFieldMappingBySystemInstance(systemInstance));
             systemInstanceList.add(systemInstance);
         }
         st.close();
@@ -142,7 +146,22 @@ public class SystemInstanceDataManager {
         preparedStatement.execute();
 
         preparedStatement.close();
+
+        String query2 = "SELECT MAX(ID) lastID FROM system_instance";
+        Statement st = conn.createStatement();
+        ResultSet rs = st.executeQuery(query2);
+        rs.next();
+        systemInstance.setID(rs.getInt("lastID"));
+        st.close();
+        rs.close();
+
         conn.close();
+
+        SearchFieldMappingManager searchFieldMappingManager = new SearchFieldMappingManager(this.applicationConfiguration);
+        for (SearchFieldMapping searchFieldMapping : systemInstance.getSearchFieldMappings())
+        {
+            searchFieldMappingManager.insertSearchFieldMapping(systemInstance, searchFieldMapping);
+        }
     }
 
     /**
@@ -154,7 +173,7 @@ public class SystemInstanceDataManager {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection conn = null;
         conn = DriverManager.getConnection(this.applicationConfiguration.getSqlConnection());
-        String query = "delete from from system_instance where ID = ?";
+        String query = "delete from system_instance where ID = ?";
         PreparedStatement preparedStatement = conn.prepareStatement(query);
         preparedStatement.setInt(1, id);
 

@@ -157,12 +157,6 @@ public class SearchFieldMappingManager {
         Connection conn = null;
         conn = DriverManager.getConnection(this.applicationConfiguration.getSqlConnection());
 
-        String sqlInsertStatement = "Delete from search_field_mapping_system_instance where search_field_mapping_ID =?";
-        java.sql.PreparedStatement preparedStatement = conn.prepareStatement(sqlInsertStatement);
-        preparedStatement.setInt(1, searchFieldMapping.getID());
-        preparedStatement.execute();
-        preparedStatement.close();
-
         String sqlDeleteStatement = "Delete from search_field_mapping where ID =?";
         java.sql.PreparedStatement preparedDeleteStatement = conn.prepareStatement(sqlDeleteStatement);
         preparedDeleteStatement.setInt(1, searchFieldMapping.getID());
