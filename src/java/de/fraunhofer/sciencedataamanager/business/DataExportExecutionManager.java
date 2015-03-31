@@ -55,10 +55,13 @@ public class DataExportExecutionManager {
      */
     public void export(SearchDefinition searchDefintion, int dataExportInstanceID, ExternalContext externalContext) throws Exception {
 
+        //In the first step, the method gets all search definition execution and loops afterwards through each of the object.
+        
         SearchDefinitonExecutionDataManager searchDefinitonExecutionDataManager = new SearchDefinitonExecutionDataManager(applicationConfiguration);
         LinkedList<SearchDefinitonExecution> searchDefinitonExecutionList = searchDefinitonExecutionDataManager.getSearchDefinitionExecutionForSearchDefinition(searchDefintion);
         Map<String, Map<String, List<Object>>> allConnectorsToExport = new HashMap<String, Map<String, List<Object>>>();
         int i = 0;
+        //get the downloaded data for each system instance
         for (SearchDefinitonExecution currentSearchDefinitonExecution : searchDefinitonExecutionList)
         {
             ScientificPaperMetaInformationDataManager scientificPaperMetaInformationDataManager = new ScientificPaperMetaInformationDataManager(applicationConfiguration);
@@ -66,6 +69,8 @@ public class DataExportExecutionManager {
             allConnectorsToExport.put(currentSearchDefinitonExecution.getSystemInstance().getName(), dataToExport);
             i++;
         }
+        
+        //select instance modul, compile it and write data to the outputstream
         DataExportInstanceDataManager dataExportInstanceDataManager = new DataExportInstanceDataManager(applicationConfiguration);
         DataExportInstance dataExportInstance = dataExportInstanceDataManager.getDataExportInstanceByID(dataExportInstanceID);
 

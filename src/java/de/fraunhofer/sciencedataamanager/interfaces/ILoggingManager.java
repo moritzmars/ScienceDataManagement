@@ -9,7 +9,7 @@ import de.fraunhofer.sciencedataamanager.domain.ApplicationConfiguration;
 import de.fraunhofer.sciencedataamanager.domain.LogLevel;
 
 /**
- *
+ * A logging manager should implement this interface
  * @author Moritz Mars
  */
 public interface ILoggingManager {

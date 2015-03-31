@@ -44,29 +44,7 @@ public class SearchDefinitionEdit {
     private LinkedList<SystemInstance> systemInstanceList;
     private ApplicationConfiguration applicationConfiguration = ApplicationConfigurationDataManagerFactory.getApplicationConfigurationDataProvider(null).getApplicationConfiguration();
 
-    public String getSearchDefinitionItemTreshhold() {
-        return searchDefinitionItemTreshhold;
-    }
 
-    public void setSearchDefinitionItemTreshhold(String searchDefinitionItemTreshhold) {
-        this.searchDefinitionItemTreshhold = searchDefinitionItemTreshhold;
-    }
-
-    public String getSearchDefinitionExpertQuery() {
-        return searchDefinitionExpertQuery;
-    }
-
-    public void setSearchDefinitionExpertQuery(String searchDefinitionExpertQuery) {
-        this.searchDefinitionExpertQuery = searchDefinitionExpertQuery;
-    }
-
-    public String getSearchDefinitionQueryMode() {
-        return searchDefinitionQueryMode;
-    }
-
-    public void setSearchDefinitionQueryMode(String searchDefinitionQueryMode) {
-        this.searchDefinitionQueryMode = searchDefinitionQueryMode;
-    }
 
     /**
      * Returns the selected system instance list.
@@ -371,6 +349,29 @@ public class SearchDefinitionEdit {
 
         }
 
+    }
+        public String getSearchDefinitionItemTreshhold() {
+        return searchDefinitionItemTreshhold;
+    }
+
+    public void setSearchDefinitionItemTreshhold(String searchDefinitionItemTreshhold) {
+        this.searchDefinitionItemTreshhold = searchDefinitionItemTreshhold;
+    }
+
+    public String getSearchDefinitionExpertQuery() {
+        return searchDefinitionExpertQuery;
+    }
+
+    public void setSearchDefinitionExpertQuery(String searchDefinitionExpertQuery) {
+        this.searchDefinitionExpertQuery = searchDefinitionExpertQuery;
+    }
+
+    public String getSearchDefinitionQueryMode() {
+        return searchDefinitionQueryMode;
+    }
+
+    public void setSearchDefinitionQueryMode(String searchDefinitionQueryMode) {
+        this.searchDefinitionQueryMode = searchDefinitionQueryMode;
     }
 
 }

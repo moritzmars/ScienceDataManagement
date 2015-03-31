@@ -40,30 +40,6 @@ public class SearchDefinitionNew {
     private String tempSearhTerm;
     private String tempOperation;
 
-    public void setSearchDefinitionQueryMode(String searchDefinitionQueryMode) {
-        this.searchDefinitionQueryMode = searchDefinitionQueryMode;
-    }
-
-    public String getSearchDefinitionQueryMode() {
-        return searchDefinitionQueryMode;
-    }
-
-    public String getSearchDefinitionExpertQuery() {
-        return searchDefinitionExpertQuery;
-    }
-
-    public void setSearchDefinitionExpertQuery(String searchDefinitionExpertQuery) {
-        this.searchDefinitionExpertQuery = searchDefinitionExpertQuery;
-    }
-
-    public String getSearchDefinitionItemTreshhold() {
-        return searchDefinitionItemTreshhold;
-    }
-
-    public void setSearchDefinitionItemTreshhold(String searchDefinitionItemTreshhold) {
-        this.searchDefinitionItemTreshhold = searchDefinitionItemTreshhold;
-    }
-
     /**
      * Returns the selected system instance list.
      *
@@ -312,6 +288,30 @@ public class SearchDefinitionNew {
 
         }
 
+    }
+
+    public void setSearchDefinitionQueryMode(String searchDefinitionQueryMode) {
+        this.searchDefinitionQueryMode = searchDefinitionQueryMode;
+    }
+
+    public String getSearchDefinitionQueryMode() {
+        return searchDefinitionQueryMode;
+    }
+
+    public String getSearchDefinitionExpertQuery() {
+        return searchDefinitionExpertQuery;
+    }
+
+    public void setSearchDefinitionExpertQuery(String searchDefinitionExpertQuery) {
+        this.searchDefinitionExpertQuery = searchDefinitionExpertQuery;
+    }
+
+    public String getSearchDefinitionItemTreshhold() {
+        return searchDefinitionItemTreshhold;
+    }
+
+    public void setSearchDefinitionItemTreshhold(String searchDefinitionItemTreshhold) {
+        this.searchDefinitionItemTreshhold = searchDefinitionItemTreshhold;
     }
 
 }

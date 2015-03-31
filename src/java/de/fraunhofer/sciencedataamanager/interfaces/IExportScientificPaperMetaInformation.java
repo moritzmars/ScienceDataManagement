@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * By implementing the interface, the implementing calls is able to export data. 
  * @author Moritz Mars
  */
 public interface IExportScientificPaperMetaInformation {

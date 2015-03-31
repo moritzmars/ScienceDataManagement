@@ -8,7 +8,7 @@ package de.fraunhofer.sciencedataamanager.interfaces;
 import de.fraunhofer.sciencedataamanager.domain.ApplicationConfiguration;
 
 /**
- *
+ * By implementing the interface the implementing class is able to provide an Application Configuration object
  * @author Moritz Mars
  */
 public interface IApplicationConfigurationDataProvider {

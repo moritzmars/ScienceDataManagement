@@ -9,7 +9,7 @@ import de.fraunhofer.sciencedataamanager.domain.SearchDefinition;
 import de.fraunhofer.sciencedataamanager.domain.SearchDefinitonExecution;
 
 /**
- *
+ * By implementing this interface, the implementing class is able to perform search tasks at scientific database 
  * @author Moritz Mars
  */
 public interface ICloudPaperConnector {

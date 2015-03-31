@@ -36,30 +36,6 @@ public class DataExportInstanceEdit {
 
     private ApplicationConfiguration applicationConfiguration = ApplicationConfigurationDataManagerFactory.getApplicationConfigurationDataProvider(null).getApplicationConfiguration();
 
-    public String getDataExportFilePrefix() {
-        return dataExportFilePrefix;
-    }
-
-    public void setDataExportFilePrefix(String dataExportFilePrefix) {
-        this.dataExportFilePrefix = dataExportFilePrefix;
-    }
-
-    public String getDataExportFilePostfix() {
-        return dataExportFilePostfix;
-    }
-
-    public void setDataExportFilePostfix(String dataExportFilePostfix) {
-        this.dataExportFilePostfix = dataExportFilePostfix;
-    }
-
-    public String getResponseContentType() {
-        return ResponseContentType;
-    }
-
-    public void setResponseContentType(String ResponseContentType) {
-        this.ResponseContentType = ResponseContentType;
-    }
-
     /**
      * Return the data export instance name.
      *
@@ -134,11 +110,11 @@ public class DataExportInstanceEdit {
 
             dataExportInstance.setID(dataExportInstanceID);
             dataExportInstance.setName(dataExportInstanceName);
-            
-             dataExportInstance.setExportFilePrefix(getDataExportFilePrefix());
+
+            dataExportInstance.setExportFilePrefix(getDataExportFilePrefix());
             dataExportInstance.setExportFilePostfix(getDataExportFilePostfix());
             dataExportInstance.setResponseContentType(getResponseContentType());
-            
+
             dataExportInstance.setGroovyCode(StringEscapeUtils.escapeJava(dataExportInstanceGroovyCode));
             DataExportInstanceDataManager dataExportInstanceDataProvider = new DataExportInstanceDataManager(applicationConfiguration);
             dataExportInstanceDataProvider.updateDataExportInstance(dataExportInstance);
@@ -168,6 +144,30 @@ public class DataExportInstanceEdit {
 
         }
 
+    }
+
+    public String getDataExportFilePrefix() {
+        return dataExportFilePrefix;
+    }
+
+    public void setDataExportFilePrefix(String dataExportFilePrefix) {
+        this.dataExportFilePrefix = dataExportFilePrefix;
+    }
+
+    public String getDataExportFilePostfix() {
+        return dataExportFilePostfix;
+    }
+
+    public void setDataExportFilePostfix(String dataExportFilePostfix) {
+        this.dataExportFilePostfix = dataExportFilePostfix;
+    }
+
+    public String getResponseContentType() {
+        return ResponseContentType;
+    }
+
+    public void setResponseContentType(String ResponseContentType) {
+        this.ResponseContentType = ResponseContentType;
     }
 
 }

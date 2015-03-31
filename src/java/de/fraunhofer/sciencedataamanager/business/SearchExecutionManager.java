@@ -26,18 +26,20 @@ import java.util.LinkedList;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
- * This class implements the search definition execution algorithmus. 
+ * This class implements the search definition execution algorithmus.
+ *
  * @author Moritz Mars
  */
 @ManagedBean(name = "searchExecutionManager")
 @SessionScoped
-public class SearchExecutionManager{
+public class SearchExecutionManager {
 
     private ApplicationConfiguration applicationConfiguration;
 
     /**
-     * The application configuration constructor. 
-     * @param applicationConfiguration the current confguration. 
+     * The application configuration constructor.
+     *
+     * @param applicationConfiguration the current confguration.
      */
     public SearchExecutionManager(ApplicationConfiguration applicationConfiguration) {
         this.applicationConfiguration = applicationConfiguration;
@@ -47,12 +49,15 @@ public class SearchExecutionManager{
 
     /**
      * Executes the search definition.
-     * @param searchDefinitionID the search definition to be executed. 
+     *
+     * @param searchDefinitionID the search definition to be executed.
      * @throws Exception
      */
     public void execute(int searchDefinitionID) throws Exception {
+
+        //get all search definitions and loop through each of them. 
         this.applicationConfiguration.getLoggingManager().log("Prepare execution by getting all required data from database.", LogLevel.DEBUG);
-         
+
         LinkedList<SearchDefinitonExecution> searchDefinitonExecutionList = new LinkedList<SearchDefinitonExecution>();
         SearchDefinitionDataManager searchDefinitionDataProvider = new SearchDefinitionDataManager(applicationConfiguration);
         SearchDefinition searchDefinition = searchDefinitionDataProvider.getSearchDefinitionByID(searchDefinitionID);
@@ -60,7 +65,8 @@ public class SearchExecutionManager{
         SearchExecutionDataManager searchExecutionDataProvider = new SearchExecutionDataManager(applicationConfiguration);
         SearchExecution searchExecution = searchExecutionDataProvider.getSystemInstanceBySearchDefinition(searchDefinition);
 
-        SearchDefinitionExecutionRun  searchDefinitionExecutionRun = new SearchDefinitionExecutionRun();
+        //construct search definition execution run object and set current timestamp
+        SearchDefinitionExecutionRun searchDefinitionExecutionRun = new SearchDefinitionExecutionRun();
         searchDefinitionExecutionRun.setDescription(searchDefinition.getName() + " - " + Calendar.getInstance().getTime().toString());
         searchDefinitionExecutionRun.setStartExecutionTimestamp(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
         searchDefinitionExecutionRun.setSearchExecution(searchExecution);
@@ -70,39 +76,52 @@ public class SearchExecutionManager{
         searchDefinitionExecutionRun = searchDefinitonExecutionRunDataManager.insertSearchDefinitionExecutionRunLastID(searchDefinitionExecutionRun);
         this.applicationConfiguration.getLoggingManager().log("System is now accessing each data source through connector.", LogLevel.DEBUG);
 
-        for (SystemInstance connectorLoop : searchExecution.getSystemInstances()) {
-            this.applicationConfiguration.getLoggingManager().log("Preparing connector " + connectorLoop.getName() +"for execution!", LogLevel.DEBUG);
+        //loop through each system instance and compile connector code. 
+        for (SystemInstance connectorLoop : searchExecution.getSystemInstances())
+        {
+            this.applicationConfiguration.getLoggingManager().log("Preparing connector " + connectorLoop.getName() + "for execution!", LogLevel.DEBUG);
 
             SearchDefinitonExecution searchDefinitonExecution = null;
-            try {
+            try
+            {
+
+                //get groovy code and compile it
                 GroovyClassLoader gcl = new GroovyClassLoader();
                 Class parsedGroocyClass = gcl.parseClass(StringEscapeUtils.unescapeJava(connectorLoop.getGroovyCode()));
                 Class[] constructorParameterConnector = new Class[1];
                 constructorParameterConnector[0] = this.applicationConfiguration.getClass();
                 //Object groovyClassInstance = parsedGroocyClass.newInstance(constructorParameterConnector);
-                Object groovyClassInstance= null;
+                Object groovyClassInstance = null;
                 Constructor connectorConstructor = parsedGroocyClass.getDeclaredConstructor(constructorParameterConnector);
-                if (connectorConstructor != null) {
-                    groovyClassInstance= connectorConstructor.newInstance(this.applicationConfiguration);
-                } else {
-                    groovyClassInstance=parsedGroocyClass.newInstance();
+                if (connectorConstructor != null)
+                {
+                    groovyClassInstance = connectorConstructor.newInstance(this.applicationConfiguration);
+                }
+                else
+                {
+                    groovyClassInstance = parsedGroocyClass.newInstance();
                 }
                 currentExecutedConnector = (ICloudPaperConnector) groovyClassInstance;
                 //currentExecutedConnector = new ElsevierScienceDirectConnectorBufferAbstract(this.applicationConfiguration); 
                 //currentExecutedConnector = new WebOfScienceLightConnector(this.applicationConfiguration); 
                 searchExecution.getSearchDefiniton().setSystemInstance(connectorLoop);
                 this.applicationConfiguration.getLoggingManager().log("Crawling started for connector: " + connectorLoop.getName(), LogLevel.DEBUG);
+
+                //execute search method and wait for return
                 searchDefinitonExecution = currentExecutedConnector.getCloudPapers(searchExecution.getSearchDefiniton());
                 this.applicationConfiguration.getLoggingManager().log("Crawling stopped for connector: " + connectorLoop.getName(), LogLevel.DEBUG);
 
+                //set search result
                 searchDefinitonExecution.setSearchState("Success");
                 searchDefinitonExecution.setSearch_Definiton_ID(searchDefinitionID);
                 searchDefinitonExecution.setSystemInstance(connectorLoop);
                 searchDefinitionExecutionRun.getSearchDefinitionExecutionList().add(searchDefinitonExecution);
-                 this.applicationConfiguration.getLoggingManager().log("Connector search finished. Deconstruct connector: " + connectorLoop.getName(), LogLevel.DEBUG);
+                this.applicationConfiguration.getLoggingManager().log("Connector search finished. Deconstruct connector: " + connectorLoop.getName(), LogLevel.DEBUG);
 
-            } catch (Exception ex) {
-                 searchDefinitonExecution = new SearchDefinitonExecution();
+            }
+            catch (Exception ex)
+            {
+                searchDefinitonExecution = new SearchDefinitonExecution();
                 searchDefinitonExecution.setSearch_Definiton_ID(searchDefinitionID);
                 searchDefinitonExecution.setSystemInstance(connectorLoop);
                 searchDefinitonExecution.setSearchState("Failure");
@@ -113,36 +132,45 @@ public class SearchExecutionManager{
                 continue;
             }
         }
-       this.applicationConfiguration.getLoggingManager().log("Start writing data to local database.", LogLevel.DEBUG);
+
+        //write crawled data to the db
+        this.applicationConfiguration.getLoggingManager().log("Start writing data to local database.", LogLevel.DEBUG);
 
         searchDefinitionExecutionRun.setFinishedExecutionTimestamp(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
         searchDefinitonExecutionRunDataManager.updateSearchDefinitionExecutionRun(searchDefinitionExecutionRun);
 
-        for (SearchDefinitonExecution searchDefinitonExecution : searchDefinitionExecutionRun.getSearchDefinitionExecutionList()) {
-            for (ScientificPaperMetaInformationParseException scientificPaperMetaInformationParseException : searchDefinitonExecution.getScientificPaperMetaInformationParseException()) {
+        for (SearchDefinitonExecution searchDefinitonExecution : searchDefinitionExecutionRun.getSearchDefinitionExecutionList())
+        {
+            for (ScientificPaperMetaInformationParseException scientificPaperMetaInformationParseException : searchDefinitonExecution.getScientificPaperMetaInformationParseException())
+            {
                 this.applicationConfiguration.getLoggingManager().logException(scientificPaperMetaInformationParseException.getParseException());
             }
         }
-       this.applicationConfiguration.getLoggingManager().log("Stopped writing data to local database.", LogLevel.DEBUG);
-
+        this.applicationConfiguration.getLoggingManager().log("Stopped writing data to local database.", LogLevel.DEBUG);
 
     }
-   /**
+
+    /**
      * Executes the search definition.
-     * @param searchDefinitionID the search definition to be executed. 
+     *
+     * @param searchDefinitionID the search definition to be executed.
      * @throws Exception
      */
     public void executeOnlyInformations(int searchDefinitionID) throws Exception {
         this.applicationConfiguration.getLoggingManager().log("Entering methode (public void execute(int searchDefinitionID) throws Exception)", LogLevel.DEBUG);
-         
+
+        //get groovy code and compile it
+        
         LinkedList<SearchDefinitonExecution> searchDefinitonExecutionList = new LinkedList<SearchDefinitonExecution>();
         SearchDefinitionDataManager searchDefinitionDataProvider = new SearchDefinitionDataManager(applicationConfiguration);
         SearchDefinition searchDefinition = searchDefinitionDataProvider.getSearchDefinitionByID(searchDefinitionID);
 
         SearchExecutionDataManager searchExecutionDataProvider = new SearchExecutionDataManager(applicationConfiguration);
         SearchExecution searchExecution = searchExecutionDataProvider.getSystemInstanceBySearchDefinition(searchDefinition);
-
-        SearchDefinitionExecutionRun  searchDefinitionExecutionRun = new SearchDefinitionExecutionRun();
+        
+        //construct search definition execution run object and set current timestamp
+   
+        SearchDefinitionExecutionRun searchDefinitionExecutionRun = new SearchDefinitionExecutionRun();
         searchDefinitionExecutionRun.setDescription(searchDefinition.getName() + " - " + Calendar.getInstance().getTime().toString());
         searchDefinitionExecutionRun.setStartExecutionTimestamp(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
         searchDefinitionExecutionRun.setSearchExecution(searchExecution);
@@ -150,35 +178,52 @@ public class SearchExecutionManager{
 
         SearchDefinitonExecutionRunDataManager searchDefinitonExecutionRunDataManager = new SearchDefinitonExecutionRunDataManager(applicationConfiguration);
         searchDefinitionExecutionRun = searchDefinitonExecutionRunDataManager.insertSearchDefinitionExecutionRunLastID(searchDefinitionExecutionRun);
-
-        for (SystemInstance connectorLoop : searchExecution.getSystemInstances()) {
+    
+        //loop through each system instance and compile connector code. 
+    
+        for (SystemInstance connectorLoop : searchExecution.getSystemInstances())
+        {
             SearchDefinitonExecution searchDefinitonExecution = null;
-            try {
+            try
+            {
+                 //get groovy code and compile it
+                
                 GroovyClassLoader gcl = new GroovyClassLoader();
                 Class parsedGroocyClass = gcl.parseClass(StringEscapeUtils.unescapeJava(connectorLoop.getGroovyCode()));
                 Class[] constructorParameterConnector = new Class[1];
                 constructorParameterConnector[0] = this.applicationConfiguration.getClass();
                 //Object groovyClassInstance = parsedGroocyClass.newInstance(constructorParameterConnector);
-                Object groovyClassInstance= null;
+                Object groovyClassInstance = null;
                 Constructor connectorConstructor = parsedGroocyClass.getDeclaredConstructor(constructorParameterConnector);
-                if (connectorConstructor != null) {
-                    groovyClassInstance= connectorConstructor.newInstance(this.applicationConfiguration);
-                } else {
-                    groovyClassInstance=parsedGroocyClass.newInstance();
+                if (connectorConstructor != null)
+                {
+                    groovyClassInstance = connectorConstructor.newInstance(this.applicationConfiguration);
+                }
+                else
+                {
+                    groovyClassInstance = parsedGroocyClass.newInstance();
                 }
                 currentExecutedConnector = (ICloudPaperConnector) groovyClassInstance;
                 //currentExecutedConnector = new ElsevierScienceDirectConnectorBufferAbstract(this.applicationConfiguration); 
                 //currentExecutedConnector = new WebOfScienceLightConnector(this.applicationConfiguration); 
                 searchExecution.getSearchDefiniton().setSystemInstance(connectorLoop);
+                
+                //set to 0 because no data should be downloaded
+                
                 searchExecution.getSearchDefiniton().setItemTreshhold(0);
+                     //execute search method and wait for return
+                
                 searchDefinitonExecution = currentExecutedConnector.getCloudPapers(searchExecution.getSearchDefiniton());
                 searchDefinitonExecution.setSearchState("Success");
+                //set result
                 searchDefinitonExecution.setSearch_Definiton_ID(searchDefinitionID);
                 searchDefinitonExecution.setSystemInstance(connectorLoop);
                 searchDefinitionExecutionRun.getSearchDefinitionExecutionList().add(searchDefinitonExecution);
 
-            } catch (Exception ex) {
-                 searchDefinitonExecution = new SearchDefinitonExecution();
+            }
+            catch (Exception ex)
+            {
+                searchDefinitonExecution = new SearchDefinitonExecution();
                 searchDefinitonExecution.setSearch_Definiton_ID(searchDefinitionID);
                 searchDefinitonExecution.setSystemInstance(connectorLoop);
                 searchDefinitonExecution.setSearchState("Failure");
@@ -189,23 +234,30 @@ public class SearchExecutionManager{
                 continue;
             }
         }
+        //write data to db
+        
         searchDefinitionExecutionRun.setFinishedExecutionTimestamp(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
         searchDefinitonExecutionRunDataManager.updateSearchDefinitionExecutionRun(searchDefinitionExecutionRun);
 
-        for (SearchDefinitonExecution searchDefinitonExecution : searchDefinitionExecutionRun.getSearchDefinitionExecutionList()) {
-            for (ScientificPaperMetaInformationParseException scientificPaperMetaInformationParseException : searchDefinitonExecution.getScientificPaperMetaInformationParseException()) {
+        for (SearchDefinitonExecution searchDefinitonExecution : searchDefinitionExecutionRun.getSearchDefinitionExecutionList())
+        {
+            for (ScientificPaperMetaInformationParseException scientificPaperMetaInformationParseException : searchDefinitonExecution.getScientificPaperMetaInformationParseException())
+            {
                 this.applicationConfiguration.getLoggingManager().logException(scientificPaperMetaInformationParseException.getParseException());
             }
         }
 
     }
+
     /**
-     * Returns the current progress. 
-     * @return the current progress. 
+     * Returns the current progress.
+     *
+     * @return the current progress.
      * @throws Exception
      */
     public int getProgressCurrentExecution() throws Exception {
-        if (currentExecutedConnector == null) {
+        if (currentExecutedConnector == null)
+        {
             return 0;
         }
         return currentExecutedConnector.getCurrentProgress();
